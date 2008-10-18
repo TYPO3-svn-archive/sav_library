@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<type>database</type>
+		<description>Language labels for database tables/fields belonging to extension 'sav_library'</description>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="tx_savlibrary_export_configuration">SAV Library (Export configuration)</label>
+			<label index="tx_savlibrary_export_configuration.name">Name</label>
+			<label index="tx_savlibrary_export_configuration.cid">Content uid</label>
+			<label index="tx_savlibrary_export_configuration.configuration">Configuration</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="tx_savlibrary_export_configuration">SAV Library (Configuration d'exportation)</label>
+			<label index="tx_savlibrary_export_configuration.name">Nom</label>
+			<label index="tx_savlibrary_export_configuration.cid">Content uid</label>
+			<label index="tx_savlibrary_export_configuration.configuration">Configuration</label>
+		</languageKey>
+	</data>
+</T3locallang>
