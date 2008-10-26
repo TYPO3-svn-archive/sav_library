@@ -76,7 +76,7 @@
 			<label index="error.templateNeeded">A template file is needed and the defaut template was not found. Please contact the WebMaster.</label>
 			<label index="error.unauthentified">You must be authentified to save these data</label>
 			<label index="error.underMaintenance">This service is temporarily unavailable due to maintenance - please come back later.</label>
-			<label index="error.unknownFormName">Please contact the Webmaster. The following form is unknown:</label>
+			<label index="error.unknownFormName">Please contact the Webmaster. The following form type is unknown or undefined:</label>
 			<label index="error.unknownFunctionInWhere">The following function, used in a WHERE clause(###func:whereClause###), is not defined: </label>
 			<label index="error.unknownType">Please contact the Webmaster. The following type is unknown:</label>
 			<label index="error.uploadedIncorrect">Error: Upload aborted</label>
@@ -85,6 +85,8 @@
 			<label index="error.isValidLength">The input has a length greater than the allowed length.</label>
 			<label index="error.isValidInterval">The input is not in the given interval.</label>
 			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
+			
+			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the "Local table" field of the query associated with your form. </label>
 
 		  <!-- Buttons -->		
 			<label index="button.edit">Edit</label>
@@ -114,6 +116,8 @@
     	<label index="button.saveExportConfiguration">Save export configuration</label>    	
     	<label index="button.loadExportConfiguration">Load export configuration</label>    	
 			<label index="button.deleteExportConfiguration">Delete export configuration</label> 
+			<label index="button.toggleExportDisplay_1">Display all fields</label> 
+			<label index="button.toggleExportDisplay_0">Display only selected fields</label> 
       	
 		  <!-- Icons -->		
 			<label index="icon.required">Required field</label>
@@ -132,6 +136,7 @@
 			<label index="itemviewer.noMult">- </label>
 			<label index="itemviewer.configuration">Configuration</label>
 			<label index="itemviewer.whereClause">Where clause</label>
+			<label index="itemviewer.orderClause">Order clause</label>
 			<label index="itemviewer.error">Error</label>
 			<label index="itemviewer.warning">Warning</label>
 			<label index="itemviewer.additionalTables">Additional tables</label>
@@ -139,6 +144,8 @@
 			<label index="itemviewer.exportMM">Export MM records</label>
 			<label index="itemviewer.groupBy">Group By Clause</label>
 			<label index="itemviewer.includeAllFields">Include all fields</label>
+			<label index="itemviewer.exportFieldNames">Export field names</label>
+			<label index="itemviewer.orderedFieldList">Order of the fields</label>
     
       <!-- General labels --> 
 			<label index="general.clickHere">Click here</label>
@@ -218,7 +225,7 @@
 			<label index="error.templateNeeded">Un fichier "template" est nécessaire et le fichier par n'a pas été trouvé.</label>
 			<label index="error.unauthentified">Vous devez être authentifié pour sauver ces données</label>
 			<label index="error.underMaintenance">Ce service est temporairement inacessible pour cause de maintenance - merci de revenir ultérieurement.</label>
-			<label index="error.unknownFormName">Merci de contacter le webmestre. Le nom suivant de formulaire est inconnu : </label>
+			<label index="error.unknownFormName">Merci de contacter le webmestre. Le type de formulaire est inconnu ou non défini : </label>
 			<label index="error.unknownFunctionInWhere">La fonction suivante, utilisée dans une clause WHERE (###func:whereClause###), n'est pas définie : </label>
 			<label index="error.unknownType">Merci de contacter le webmestre. Le type suivant est inconnu : </label>
 			<label index="error.uploadedIncorrect">Erreur : chargement du fichier non effectué</label>
@@ -227,6 +234,8 @@
 			<label index="error.isValidLength">La longueur de l'information saisie est supérieure à la taille maximale autorisée.</label>
 			<label index="error.isValidInterval">La saisie n'est pas dans l'intervalle attendu.</label>
 			<label index="error.isValidPattern">La saisie ne correspond pas au format attendu.</label>
+
+			<label index="fatal.incorrectTCA">Erreur fatale. la table locale a un TCA incorrect. Vous n'avez peut-être pas utilisé le bon nom dans le champ "Local table" dans la requête associée à votre formulaire.</label>
 	
 		  <!-- Buttons -->		
 			<label index="button.edit">Editer</label>
@@ -276,6 +285,7 @@
 			<label index="itemviewer.noMult">- </label>	
 			<label index="itemviewer.configuration">Configuration</label>
 			<label index="itemviewer.whereClause">Clause Where</label>
+			<label index="itemviewer.orderClause">Clause Order</label>
 			<label index="itemviewer.error">Erreur</label>
 			<label index="itemviewer.warning">Attention</label>
 			<label index="itemviewer.additionalTables">Tables additionnelles</label>
@@ -283,6 +293,8 @@
 			<label index="itemviewer.exportMM">Exporter les enregistrements MM</label>
 			<label index="itemviewer.groupBy">Clause Group By</label>
 			<label index="itemviewer.includeAllFields">Inclure tous les champs</label>
+			<label index="itemviewer.exportFieldNames">Exporter le nom des champs</label>
+			<label index="itemviewer.orderedFieldList">Ordre des champs</label>
 			
       <!-- General labels --> 
 			<label index="general.clickHere">Cliquer ici</label>

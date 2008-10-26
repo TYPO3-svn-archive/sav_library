@@ -63,7 +63,7 @@ class tx_savlibrary_defaultQueriers {
       $search = $extFilter['search'];
       $searchOrder = $extFilter['searchOrder'];
 			$addWhere = ' AND '.($extFilter['addWhere'] ? $extFilter['addWhere'] : 0);
-			
+
 			// Get the additionnal table
 			if ($extFilter['tableName']) {
         $tables = explode(',', $extFilter['tableName']);
@@ -168,7 +168,7 @@ class tx_savlibrary_defaultQueriers {
 		while ($row = $this->sql_fetch_assoc_with_tablename($res, $cpt++)) {
 		  $row['__nbitem__'] = $nbitem;
 		  $row['uid'] = $row[$query['tableLocal'].'.uid'];
-		  $row['cruser_id'] = $row[$query['tableLocal'].'.cruser_id'];	  
+		  $row['cruser_id'] = $row[$query['tableLocal'] . '.cruser_id'];
 			$array[] = $row;
 		}
 		$GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -188,7 +188,7 @@ class tx_savlibrary_defaultQueriers {
 
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_'.str_replace('_', '', $this->savlibrary->extObj->extKey).'.'][$this->savlibrary->formConfig['title'].'.']['showSingle.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_'.str_replace('_', '', $this->savlibrary->extObj->extKey).'.'][$this->savlibrary->formConfig['title'] . '.']['showSingle.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -218,8 +218,8 @@ class tx_savlibrary_defaultQueriers {
 		$array = array();
 
 		while ($row = $this->sql_fetch_assoc_with_tablename($res)) {
-		  $row['uid'] = $row[$query['tableLocal'].'.uid'];
-		  $row['cruser_id'] = $row[$query['tableLocal'].'.cruser_id'];		  
+		  $row['uid'] = $row[$query['tableLocal'] . '.uid'];
+		  $row['cruser_id'] = $row[$query['tableLocal'] . '.cruser_id'];
 			$array[] = $row;
 		}
     $GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -239,7 +239,7 @@ class tx_savlibrary_defaultQueriers {
 	
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_'.str_replace('_', '', $this->savlibrary->extObj->extKey).'.'][$this->savlibrary->formConfig['title'].'.']['inputForm.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_'.str_replace('_', '', $this->savlibrary->extObj->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['inputForm.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -262,7 +262,7 @@ class tx_savlibrary_defaultQueriers {
 					'',
  			/* WHERE    */	' 1'.
 					($query['link'] ? ' AND '.$query['link'] : '').
-					' AND '.$query['tableLocal'].'.uid='.intval($uid).
+					' AND '.$query['tableLocal'] . '.uid=' . intval($uid).
 					'',  		
 			/* GROUP BY */	$query['group'].
 					'',
@@ -273,7 +273,7 @@ class tx_savlibrary_defaultQueriers {
 
 		$array = array();
 		while ($row = $this->sql_fetch_assoc_with_tablename($res)) {
-		  $row['uid'] = $row[$query['tableLocal'].'.uid'];
+		  $row['uid'] = $row[$query['tableLocal'] . '.uid'];
 			$array[] = $row;
 		}
     $GLOBALS['TYPO3_DB']->sql_free_result($res);
@@ -293,7 +293,7 @@ class tx_savlibrary_defaultQueriers {
 	
 		  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_'.str_replace('_', '', $this->savlibrary->extKey).'.'][$this->savlibrary->formConfig['title'].'.']['updateForm.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_'.str_replace('_', '', $this->savlibrary->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -460,6 +460,7 @@ class tx_savlibrary_defaultQueriers {
 					'',
  			/* WHERE    */	' 1'.
  			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']).
+ 			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND '.$query['tableLocal'].'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : ''). 			    
  			    ($query['where'] ? ' AND '.$this->processWhereClause($query['where']) : '').
 					'',  
 			/* GROUP BY */	$query['group'].
@@ -1605,23 +1606,27 @@ class tx_savlibrary_defaultQueriers {
   public function buidTableReference(&$query, $addTables='') {
 
     $this->aliasTable = array();
-		t3lib_div::loadTCA($query['tableLocal']);
     $tableName = $query['tableLocal'];
     
-    $TCA = $GLOBALS['TCA'][$query['tableLocal']]['columns'];
+		t3lib_div::loadTCA($tableName);    
+    $TCA = $GLOBALS['TCA'][$tableName]['columns'];
 
-    foreach ($TCA as $field => $descr) {
-      $TCA[$field]['tableLocal'] = $query['tableLocal'];
-      if ($descr['config']['type']=='group' && $descr['config']['internal_type']=='db') {
-        t3lib_div::loadTCA($descr['config']['allowed']);
-        $temp = $GLOBALS['TCA'][$descr['config']['allowed']]['columns'];
-        if (is_array($temp)) {
-          foreach ($temp as $fieldTemp => $descrTemp) {
-            $temp[$fieldTemp]['tableLocal'] = $descr['config']['allowed'];        
+    if (isset($TCA)) {
+      foreach ($TCA as $field => $descr) {
+        $TCA[$field]['tableLocal'] = $tableName;
+        if ($descr['config']['type']=='group' && $descr['config']['internal_type']=='db') {
+          t3lib_div::loadTCA($descr['config']['allowed']);
+          $temp = $GLOBALS['TCA'][$descr['config']['allowed']]['columns'];
+          if (is_array($temp)) {
+            foreach ($temp as $fieldTemp => $descrTemp) {
+              $temp[$fieldTemp]['tableLocal'] = $descr['config']['allowed'];        
+            }
+            $TCA += $temp;
           }
-          $TCA += $temp;
         }
       }
+    } else {
+      die($this->savlibrary->getLibraryLL('fatal.incorrectTCA'));
     }
    
     // Add the columns for existing tables
@@ -1694,7 +1699,7 @@ class tx_savlibrary_defaultQueriers {
       }
     }
     $addTables = implode(',', $temp);
-    
+
     // Check for duplicate table names with $query['tableForeign']
     $temp = explode(',',$query['tableForeign']);
     foreach ($temp as $key=>$table) {
@@ -1703,8 +1708,8 @@ class tx_savlibrary_defaultQueriers {
       }
     }
     $temp = implode(',', $temp);
-    $addTables = ($temp ? ', '.$temp : '');
-       
+    $addTables .= ($temp ? ', '.$temp : '');
+
     return $tableReference.$addTables;    
   }
 

@@ -96,6 +96,42 @@ class tx_savlibrary_defaultItemviewers {
 
 
 
+	/**
+	 * String Input viewer
+	 *
+	 * @param $config array (Configuration array)
+	 *
+	 * @return string (item to display)
+	 */	      
+  public function viewStringPassword(&$config) {
+
+    $htmlArray = array();
+    
+    $htmlArray[] = $config['value'] ? str_repeat('*', 7) : '';
+    
+    return $this->savlibrary->arrayToHTML($htmlArray);
+  } 
+
+	/**
+	 * String Input viewer in edit mode
+	 *
+	 * @param $config array (Configuration array)
+	 *
+	 * @return string (item to display)
+	 */	  
+  public function viewStringPasswordEditMode(&$config) {
+		
+    $htmlArray = array();
+    
+		$class = ($config['classhtmltag'] ? 'class="'.$config['classhtmltag'].'" ' : '');
+		$style = ($config['stylehtmltag'] ? 'style="'.$config['stylehtmltag'].'" ' : '');
+
+    $htmlArray[] = '<input type="password" '.$class.$style.'name="'.$config['elementControlName'].'" value="'.stripslashes($config['value']).'" size="'.$config['size'].'" onchange="document.changed=1" />';
+
+    return $this->savlibrary->arrayToHTML($htmlArray);
+  } 
+
+
 
 	/**
 	 * Label viewer
@@ -583,7 +619,7 @@ class tx_savlibrary_defaultItemviewers {
         }
         
         // It's an image. Set parameters
-		    if (file_exists($folder.'/'.$file)) {
+		    if ($file && file_exists($folder.'/'.$file)) {
           $params['width'] = $config['width'];
           $params['height'] = $config['height'];
           $params['folder'] = $folder;
@@ -593,11 +629,16 @@ class tx_savlibrary_defaultItemviewers {
           if ($config['func']=='makeNewWindowLink') {
             $out = $this->savlibrary->makeNewWindowLink ($out, $uid='', array('windowurl' => $folder.'/'.$file));
           } elseif ($config['func']=='makeItemLink') {
-            $out = str_replace($file, $out, $config['value']);          
+//            $out = str_replace($file, $out, $config['value']);
+            $out = preg_replace('/(<a[^>]*>)[^<]*(<\/a>)/', '$1' . $out . '$2', $config['value']);
           }
           $htmlArray[] = $out;          
         } else {
-          $htmlArray[] = $this->savlibrary->makeImage(t3lib_extMgm::siteRelPath('sav_library').'res/images/unknown.gif','',$params);        
+          $params['width'] = $config['width'];
+          $params['height'] = $config['height'];
+          $out = $this->savlibrary->makeImage(t3lib_extMgm::siteRelPath('sav_library').'res/images/unknown.gif','',$params);
+          $out = preg_replace('/(<a[^>]*>)[^<]*(<\/a>)/', '$1' . $out . '$2', $config['value']);
+          $htmlArray[] = $out;
         }
       } else {
         // It's a file. Make an hyperlink
@@ -882,7 +923,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDbRelationSingleSelectorMultiple(&$config) {
-//debug($config,'viewDbRelationSingleSelectorMultiple');  
+//debug($config,'viewDbRelationSingleSelectorMultiple');
   
     $htmlArray = array();
     
@@ -916,7 +957,7 @@ class tx_savlibrary_defaultItemviewers {
   				}
   			}
   		}
-  		return $this->savlibrary->arrayToHTML($htmlArray);
+  		return $this->savlibrary->arrayToHTML($htmlArray, $config['nohtmlprefix']);
  		}    
 		else {
   		if ($config['content']) {
@@ -1107,6 +1148,7 @@ class tx_savlibrary_defaultItemviewers {
                ).
   						  ' AND '.$table.'.uid='.intval($uid).
   			        ($config['overrideenablefields'] ? '' : $this->savlibrary->extObj->cObj->enableFields($table)).
+  			        ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND '.$table.'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : '').
   						  ($config['where'] ? ' AND '.$config['where'] : '').
   						  '',
   				  /* GROUP BY */	
@@ -1115,7 +1157,7 @@ class tx_savlibrary_defaultItemviewers {
   						  '',
   				  /* LIMIT    */	''
   		  );
-    
+
   		  // get all selected fields
   		  while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
           $config['mm_uid_local'] = $rows['mm_uid_local'];
@@ -1132,6 +1174,12 @@ class tx_savlibrary_defaultItemviewers {
     }	else {
       if (isset($config['selected'])) {
         $selected = $selected + array($config['selected'] => 1);
+      } elseif (!$config['MM'] && $config['maxitems']>1) {
+        $temp = explode(',', $config['_value']);
+
+        foreach ($temp as $v) {
+          $selected = $selected + array($v => 1);
+        }
       }
     }  
 
@@ -1162,6 +1210,7 @@ class tx_savlibrary_defaultItemviewers {
 						'',
 				/* WHERE    */	'1'.
  			      ($config['overrideenablefields'] ? '' : $this->savlibrary->extObj->cObj->enableFields($foreign_table)).
+ 			      ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND '.$foreign_table.'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : '').
 						($config['whereselect'] ? ' AND '.$config['whereselect'] : '').
 						'',
 				/* GROUP BY */	
@@ -1171,7 +1220,7 @@ class tx_savlibrary_defaultItemviewers {
 						'',
 				/* LIMIT    */	''
 		);
- 
+
 		if (!isset($config['items'])) {
 		  if($config['addedit'] && $config['addedit'] && $config['singlewindow'] && !$config['MM'] && $config['maxitems']>1) {
         $config['items'][0] = array('uid'=>0, 'label'=>'', 'selected' => $selected[0]);
@@ -1269,6 +1318,7 @@ class tx_savlibrary_defaultItemviewers {
       } else {    
 		    $viewItem = ($config['edit'] ? 'viewDbRelationSingleSelectorEditMode' : 'viewDbRelationSingleSelector');
 		  }
+
 		  $htmlArray[] = $this->$viewItem($config);
 		  
       return $this->savlibrary->arrayToHTML($htmlArray);

@@ -728,22 +728,22 @@ class tx_savlibrary_defaultViewers {
       $exportOK = 0;      
       }
 
-      // Build the list of the fields to export 
+      // Build the list of the fields to export            
       if ($exportOK && is_array($extPOSTVars['fields'][0])) {
         $fields = array_keys($extPOSTVars['fields'][0]);
         foreach($fields as $key => $field) {
-          if (strpos($field, '.') === false) {
+          if (strpos($field, '.') === false || !$extPOSTVars['fields'][0][$field]) {
             unset($fields[$key]);
           }
         }
-        $query['fields'] = implode(',', $fields);      
+        $query['fields'] = $query['tableLocal'].'.uid,'.implode(',', $fields);    
       }
       $query['fields'] = ($extPOSTVars['includeAllFields'][0] ? '*' : $query['fields']);
-
 
       $query['tableForeign']  = $extPOSTVars['additionalTables'][0];
       $query['aliases'] = trim($extPOSTVars['additionalFields'][0] ? $query['aliases'].','.$extPOSTVars['additionalFields'][0] : $query['aliases']);
       $query['where'] = $this->savlibrary->queriers->processWhereClause($extPOSTVars['where'][0]);  
+      $query['order'] = ($extPOSTVars['order'][0] ? $extPOSTVars['order'][0] : $query['order']);
       $query['group'] = ($extPOSTVars['exportMM'][0] ? ($extPOSTVars['groupBy'][0] ? $extPOSTVars['groupBy'][0] : '' ) : $query['group']);
       $exportOK = $exportOK && !$extPOSTVars['includeAllFields'][0] && (($extPOSTVars['additionalTablesValidated'][0] && $extPOSTVars['additionalTables'][0]) || !$extPOSTVars['additionalTables'][0]) ;
       $extPOSTVars['additionalTablesValidated'][0] = ($extPOSTVars['additionalTablesValidated'][0] && $extPOSTVars['additionalTables'][0]);
@@ -867,7 +867,7 @@ class tx_savlibrary_defaultViewers {
           $this->savlibrary->queriers->sqlFieldsExport[$cpt++] = $field;
         }
       }
-      
+
       $extPOSTVars['includeAllFields'][0] = 0;
 
       // Build Alias fields. An alias field is defined by a reqValue attribute in the showAll form
@@ -934,7 +934,29 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
     $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
-    
+
+    // Display the textarea for the order clause
+    $config = array(
+      'size' => 70,
+      '_field' => 'order',
+      'uid' => 0,
+  		'elementControlName' => $this->savlibrary->formName.'[order][0]',
+      'value' => $extPOSTVars['order'][0],
+    );
+    $key++;
+    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.orderClause');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+ 
     // Display the textinput for additional tables
     $config = array(
       'size' => 70,
@@ -1018,14 +1040,59 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 1;
     $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.includeAllFields');
     $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';        
+    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';  
+    
+    // Display the checkbox to include the field names
+    $config = array(
+      '_field' => 'exportFieldNames',
+      'uid' => 0,
+  		'elementControlName' => $this->savlibrary->formName.'[exportFieldNames][0]',
+      'value' => $extPOSTVars['exportFieldNames'][0],
+    );
+    $key++;
+    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.exportFieldNames');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';  
+
+    // Display the input to order the fields
+    $config = array(
+      'rows' => 5,
+      'cols' => 70,
+      '_field' => 'orderedFieldList',
+      'uid' => 0,
+  		'elementControlName' => $this->savlibrary->formName.'[orderedFieldList][0]',
+      'value' => $extPOSTVars['orderedFieldList'][0],
+    );
+    $key++;
+    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.orderedFieldList');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';  
+          
     // Processing for the title
 		if (!isset($ta['MARKERS']['formTitle'])) {
       $ta['MARKERS']['formTitle'] = $this->savlibrary->extObj->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']]['config']['title'];
@@ -1052,14 +1119,16 @@ class tx_savlibrary_defaultViewers {
 		  if ($fileHandle = fopen($strFilepath,'ab')) {
 	  
 		    // Export the field names
-		    $arrValues = array();
-		    if ($extPOSTVars['fields'][0]) {
-  		    foreach($extPOSTVars['fields'][0] as $key => $field) {
-            if ($field) {
-              $arrValues[] = $key;
+        if ($extPOSTVars['exportFieldNames'][0]) {	    
+  		    $arrValues = array();
+  	 	    if ($extPOSTVars['fields'][0]) {
+    		    foreach($extPOSTVars['fields'][0] as $key => $field) {
+              if ($field) {
+                $arrValues[] = $key;
+              }
             }
+            fwrite($fileHandle, $this->csvValues( $arrValues,';').chr(10));
           }
-          fwrite($fileHandle, $this->csvValues( $arrValues,';').chr(10));
         }
         
 		    // Export the fields        
@@ -1068,10 +1137,16 @@ class tx_savlibrary_defaultViewers {
 
 		      $arrValues = array();
 		      if ($extPOSTVars['fields'][0]) {
-            foreach ($extPOSTVars['fields'][0] as $key => $field) {
-              if ($field) {
-                if (array_key_exists($key, $aliasFields)) {
-                  $config = $this->savlibrary->getConfig($aliasFields[$key]);                  
+
+            $orderedFieldList = explode(';', preg_replace('/[\n\r]/', '', $extPOSTVars['orderedFieldList'][0]));
+            $fields = array_keys($extPOSTVars['fields'][0]);
+            $fieldList = array_merge($orderedFieldList, array_diff($fields, $orderedFieldList));
+
+            foreach ($fieldList as $key => $field) {
+              if ($extPOSTVars['fields'][0][$field]) {
+                if (array_key_exists($field, $aliasFields)) {
+
+                  $config = $this->savlibrary->getConfig($aliasFields[$field]);                 
            			  $config['type'] = ($config['type'] ? $config['type'] : 'input');
        				
            				// Process the query
@@ -1096,7 +1171,7 @@ class tx_savlibrary_defaultViewers {
 		              }   
          				
                 } else {
-                  $config = $this->savlibrary->getConfig($key, 1);
+                  $config = $this->savlibrary->getConfig($field, 1);
                  
                   // Special processing for exclude fields
                   switch ($config['field']) {
@@ -1106,20 +1181,28 @@ class tx_savlibrary_defaultViewers {
                       break;
                   }            
            			  $config['type'] = ($config['type'] ? $config['type'] : 'input');
-                  $config['_value'] = stripslashes($row[$key]);
-                  $config['value'] = stripslashes($row[$key]);
+                  $config['_value'] = stripslashes($row[$field]);
+                  $config['value'] = stripslashes($row[$field]);
                 }
 
                 if (($func = $this->savlibrary->getFunc($config))) {
                 
+                  // Special preprocessing according to the type
+                  switch ($config['type']) {
+                    case 'select':
+                      $config['separator'] = ',';
+                      $config['nohtmlprefix'] = true;
+                      break;
+                  }
+
                   $value = html_entity_decode($this->savlibrary->itemviewers->$func($config));
                 
-                  // Special processing according to the type
+                  // Special postprocessing according to the type
                   switch ($config['type']) {
                     case 'text':
                       $value = preg_replace('/<br \/>/','', $value);
                       $value = str_replace(chr(13), '', $value); 
-                      break;                  
+                      break;
                   }                      
                 } else {
                   $value = $config['value'];                
@@ -1132,7 +1215,7 @@ class tx_savlibrary_defaultViewers {
           }
         }       
       }
-		    
+
 			$arrError['close'] = fclose($fileHandle);
 			t3lib_div::fixPermissions($strFilepath);
 
