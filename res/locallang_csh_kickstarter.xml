@@ -11,17 +11,37 @@
 			<label index=".details">
       </label>
       
+		  <!-- Also  -->
+			<label index="all.description"></label>
+			<label index="all.seeAlso">
+        sav_library:check
+        sav_library:check_4
+        sav_library:check_10
+        sav_library:date
+        sav_library:datetime
+        sav_library:files
+        sav_library:functions
+        sav_library:general
+        sav_library:input
+        sav_library:link
+        sav_library:radio
+        sav_library:rel
+        sav_library:select
+        sav_library:textarea
+        sav_library:textarea_rte
+      </label>
+      
 		  <!-- checkbox  -->
 			<label index="check.description">Attributes for "checkbox"</label>
-			<label index="check.seeAlso">sav_library:general</label>
+			<label index="check.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check.syntax">
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
         Do not display the checkbox value (that is "No") if it is not checked (obviously it does not apply when in edit mode)                       
       </label>
-      >
+      
 		  <!-- checkbox - 4 boxes -->
 			<label index="check_4.description">Attributes for "checkbox - 4 boxes"</label>
-			<label index="check_4.seeAlso">sav_library:general</label>
+			<label index="check_4.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_4.syntax">
         &lt;b&gt;cols = number;&lt;/b&gt;
         Number of columns to display.
@@ -35,7 +55,7 @@
       			
 		  <!-- checkbox - 10 boxes -->
 			<label index="check_10.description">Attributes for "checkbox - 10 boxes"</label>
-			<label index="check_10.seeAlso">sav_library:general</label>
+			<label index="check_10.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_10.syntax">
         &lt;b&gt;cols = number;&lt;/b&gt;
         Number of columns to display.
@@ -49,7 +69,7 @@
            
 		  <!-- date -->
       <label index="date.description">Attributes for "date"</label>
-			<label index="date.seeAlso">sav_library:general</label>
+			<label index="date.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="date.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
         Set a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
@@ -60,7 +80,7 @@
       
 		  <!-- datetime -->
       <label index="datetime.description">Attributes for "datetime"</label>
-			<label index="datetime.seeAlso">sav_library:general</label>
+			<label index="datetime.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="datetime.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
         Set a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
@@ -71,7 +91,7 @@
 
 		  <!-- files -->
       <label index="files.description">Attributes for "files"</label>
-			<label index="files.seeAlso">sav_library:general</label>
+			<label index="files.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="files.syntax">
         &lt;b&gt;addIcon = 1;&lt;/b&gt;
         Add an icon in front of the hyperlink associated with the file.
@@ -305,7 +325,7 @@
          
 		  <!-- Functions -->
       <label index="functions.description">Functions attributes</label>
-			<label index="functions.seeAlso">sav_library:general</label>
+			<label index="functions.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="functions.syntax">
       
         Functions are applied to the value of the field. It can be also applied to left and right contents.
@@ -344,6 +364,7 @@
         This function generates an hyperlink associated with the value of the field. It will open the "showSingle" view associated with the selected item.
         Optional attributes can be added:
         . updateForm = 1; makes it possible to open an "update" view instead of the "Show single" view.
+        . inputForm = 1; makes it possible to open an "Input form" view instead of the "Show single" view.
 
         &lt;b&gt;func = makeLink;&lt;/b&gt;
         This function generates an internal link (typolink).
@@ -380,7 +401,7 @@
       			
 		  <!-- General -->
       <label index="general.description">General Attributes</label>
-			<label index="general.seeAlso">sav_library:functions</label>
+			<label index="general.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="general.syntax">
         &lt;b&gt;addEdit = 1;&lt;/b&gt; 
         When the field is used in an "Update form" view, it will add an input element for update that can be used with the tag ###field_name_Edit### where "field_name" is the name of the field.
@@ -394,13 +415,19 @@
              
         &lt;b&gt;addLeftIfNotNull = string;&lt;/b&gt;
         String will be added to the left if the field value is not null.
-        
+
+        &lt;b&gt;addLeftIfNull = string;&lt;/b&gt;
+        String will be added to the left if the field value is null.
+
         &lt;b&gt;addNewIcon = int;&lt;/b&gt;
         A new icon, will be displayed in front of the field during the number of days given by the int number.
                 
         &lt;b&gt;addRighIfNotNull = string;&lt;/b&gt;
         String will be added to the right if the field value is not null.
-        
+
+        &lt;b&gt;addRighIfNull = string;&lt;/b&gt;
+        String will be added to the right if the field value is null.
+
         &lt;b&gt;alias = field_name;&lt;/b&gt;
         The displayed value will be provided by the fieldname value for the current record.
         
@@ -446,6 +473,18 @@
         extKey_Admin=value where extKey is the extension key and value is one of the possible value of the "Input Admin Field" defined in the flexform associated with the extension.
         The user becomes an "Admin+" user, if his TSConfig contains a line as follows:
         extKey_Admin=value+
+
+        &lt;b&gt;funcAddLeftIfNotNull = string;&lt;/b&gt;
+        String will be added to the left if the result of the applied function "func" is not null.
+
+        &lt;b&gt;funcAddLeftIfNull = string;&lt;/b&gt;
+        String will be added to the left if the result of the applied function "func" is null.
+
+        &lt;b&gt;funcAddRightIfNotNull = string;&lt;/b&gt;
+        String will be added to the right if the result of the applied function "func" is not null.
+
+        &lt;b&gt;funcAddRightIfNull = string;&lt;/b&gt;
+        String will be added to the right if the result of the applied function "func" is null.
         
         &lt;b&gt;fusion = begin;&lt;/b&gt;
         Start the fusion of the field, that is the following fields will be displayed on the same line.
@@ -471,7 +510,6 @@
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
         . mailMessageLanguage=string; This parameter will force the language for the message to the value of the string.
         . mailMessageLanguageFromField=fieldname; This parameter will force the language for the message to the value of the field (for example a selector box).
-        
         
         &lt;b&gt;mailAlways = 1;&lt;/b&gt; (mail must be set to 1)
         The mail is always sent when saving. Mail information are the following:
@@ -567,7 +605,7 @@
 						
 		  <!-- input -->
       <label index="input.description">Attributes for "String input"</label>
-			<label index="input.seeAlso">sav_library:general</label>
+			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="input.syntax">
         &lt;b&gt;size = number;&lt;/b&gt;
         Size of the field.
@@ -575,7 +613,7 @@
 			
 		  <!-- link -->
       <label index="link.description">Attributes for "Link"</label>
-			<label index="link.seeAlso">sav_library:general</label>
+			<label index="link.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="link.syntax">
         &lt;b&gt;generateRTF=1;&lt;/b&gt;
         Set the RTF generator.
@@ -587,7 +625,7 @@
       
       <!-- radio -->
 			<label index="radio.description">Attributes for "radio buttons"</label>
-			<label index="radio.seeAlso">sav_library:general</label>
+			<label index="radio.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="radio.syntax">
         &lt;b&gt;cols = number;;&lt;/b&gt;
         Number of columns to display.     
@@ -595,7 +633,7 @@
 
 		  <!-- rel -->
       <label index="rel.description">Attributes for "Database relation"</label>
-			<label index="rel.seeAlso">sav_library:general</label>
+			<label index="rel.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="rel.syntax">
         1) Selectorbox, select global
         
@@ -660,7 +698,7 @@
 
 		  <!-- select -->
       <label index="select.description">Attributes for "selectorbox"</label>
-			<label index="select.seeAlso">sav_library:general, sav_library:functions</label>
+			<label index="select.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="select.syntax">
         &lt;b&gt;func = function_name;&lt;/b&gt;
         It associates a function with the selectorbox items. The parameter function_name can be:
@@ -677,11 +715,11 @@
       
       <!-- ShowOnly -->
       <label index="ShowOnly.description">Attributes for "Not created, only shown in savform"</label>
-			<label index="ShowOnly.seeAlso">sav_library:general</label>
+			<label index="ShowOnly.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			
 		  <!-- textarea -->
       <label index="textarea.description">Attributes for "Textarea"</label>
-			<label index="textarea.seeAlso">sav_library:general</label>
+			<label index="textarea.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea.syntax">
         &lt;b&gt;rows = integer;&lt;/b&gt;
         Define the number of rows  of the textarea. This attribute overwrites the same attribute in the TCA.
@@ -692,7 +730,7 @@
       
 		  <!-- textarea_rte -->
       <label index="textarea_rte.description">Attributes for "Textarea with RTE"</label>
-			<label index="textarea_rte.seeAlso">sav_library:general</label>
+			<label index="textarea_rte.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea_rte.syntax">
         &lt;b&gt;width = integer;&lt;/b&gt;
         Define the width of the textarea. This attribute overwrites the same attribute in the TCA.
@@ -716,7 +754,7 @@
 
 		  <!-- checkbox  -->
 			<label index="check.description">Attributes for "checkbox"</label>
-			<label index="check.seeAlso">sav_library:general</label>			
+			<label index="check.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>		
 			<label index="check.syntax">
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
         Permet de ne pas afficher la valeur de la "Checkbox" (i.e. "Non") lorsqu'elle n'est pas activée (évidemment cela ne s'applique pas lorsque l'on est en mode "edit").                       
@@ -724,7 +762,7 @@
 
 		  <!-- checkbox - 4 boxes -->
 			<label index="check_4.description">Attributs pour "checkbox - 4 boxes"</label>
-			<label index="check_4.seeAlso">sav_library:general</label>
+			<label index="check_4.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_4.syntax">
         &lt;b&gt;cols = number;&lt;/b&gt;
         Nombre de colonnes à afficher.
@@ -738,7 +776,7 @@
       
 		  <!-- checkbox - 10 boxes -->
 			<label index="check_10.description">Attributs pour "checkbox - 10 boxes"</label>
-			<label index="check_10.seeAlso">sav_library:general</label>
+			<label index="check_10.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_10.syntax">
         &lt;b&gt;cols = number;&lt;/b&gt;
         Nombre de colonnes à afficher.
@@ -752,7 +790,7 @@
       
 		  <!-- date -->
       <label index="date.description">Attributs pour "date"</label>
-			<label index="date.seeAlso">sav_library:general</label>
+			<label index="date.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="date.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
         Définit un format pour l'affichage d'une date. Le format est le même que celui de la fonction php strftime, e.g. format = %d/%m/%Y;
@@ -763,7 +801,7 @@
            
 		  <!-- datetime -->
       <label index="datetime.description">Attributs pour "datetime"</label>
-			<label index="datetime.seeAlso">sav_library:general</label>
+			<label index="datetime.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="datetime.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
         Définit un format pour l'affichage d'une date. Le format est le même que celui de la fonction php strftime, e.g. format = %d/%m/%Y;
@@ -774,7 +812,7 @@
 
 		  <!-- files -->
       <label index="files.description">Attributs pour "files"</label>
-			<label index="files.seeAlso">sav_library:general</label>
+			<label index="files.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="files.syntax">
         &lt;b&gt;addIcon = 1;&lt;/b&gt;
         Ajoute une icône devant l'hyperlien associé au fichier.
@@ -1006,7 +1044,7 @@
          
 		  <!-- Functions -->
       <label index="functions.description">Functions attributes</label>
-			<label index="functions.seeAlso">sav_library:general</label>
+			<label index="functions.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="functions.syntax">
 
         Les fonctions s'appliquent à la valeur d'un champ. Elles peuvent être aussi appliquées aux contenus de gauche et de droite. 
@@ -1045,6 +1083,7 @@
         Cette fonction engendre un lien associé à la valeur du champ. Cet hyperlien permet d'ouvrir la vue de type "Show single" associée à l'item.
         Des attributs optionnels peuvent être ajoutés :
         . updateForm = 1; permet d'ouvrir une vue de type "update" à la place de la vue de type "Show single".
+        . inputForm = 1; permet d'ouvrir une vue de type "Input form" à la place de la vue de type "Show single".
      
         &lt;b&gt;func = makeLink;&lt;/b&gt;
         Cette fonction engendre un lien interne au sens typolink.
@@ -1081,7 +1120,7 @@
       			
 		  <!-- General -->
       <label index="general.description">Attributs généraux</label>
-			<label index="general.seeAlso">sav_library:functions</label>
+			<label index="general.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="general.syntax">
         &lt;b&gt;addEdit = 1;&lt;/b&gt; 
         Quand le champ est utilisé dans une vue "Update form", cela ajoute un élément de saisie pour la mise à jour qui peut être utilisé avec le tag ###field_name_Edit### où "field_name" est le nom du champ.
@@ -1095,13 +1134,19 @@
 
         &lt;b&gt;addLeftIfNotNull = string;&lt;/b&gt;
         La chaîne sera ajoutée à gauche si la valeur du champ n'est pas nulle.
-        
+
+        &lt;b&gt;addLeftIfNull = string;&lt;/b&gt;
+        La chaîne sera ajoutée à gauche si la valeur du champ est nulle.
+
         &lt;b&gt;addNewIcon = int;&lt;/b&gt;
         Une nouvelle icône sera affichée devant le champ pendant le nombre de jours indiqué par le nombre entier. 
                 
         &lt;b&gt;addRighIfNotNull = string;&lt;/b&gt;
         La chaîne sera ajoutée à droite si la valeur du champ n'est pas nulle.
         
+        &lt;b&gt;addRighIfNull = string;&lt;/b&gt;
+        La chaîne sera ajoutée à droite si la valeur du champ est nulle.
+
         &lt;b&gt;alias = field_name;&lt;/b&gt;
         La valeur affichée sera fournie par la valeur du champ "field_name" pour l'enregistrement courant.
         
@@ -1148,7 +1193,19 @@
         où "extKey" est la clé d'une extension et "value" est une valeur possible du champ "Input Admin Field" défini dans leflexform associé à l'extension.
         L'utilisateur est "Admin+" si son TSConfig contient une ligne du type :
         extKey_Admin=value+  
-        
+
+        &lt;b&gt;funcAddLeftIfNotNull = string;&lt;/b&gt;
+        La chaîne sera ajoutée à gauche si le résultat de la fonction "func" n'est pas nulle.
+
+        &lt;b&gt;funcAddLeftIfNull = string;&lt;/b&gt;
+        La chaîne sera ajoutée à gauche si le résultat de la fonction "func" est nulle.
+
+        &lt;b&gt;funcAddRightIfNotNull = string;&lt;/b&gt;
+        La chaîne sera ajoutée à droite si le résultat de la fonction "func" n'est pas nulle.
+
+        &lt;b&gt;funcAddRightIfNull = string;&lt;/b&gt;
+        La chaîne sera ajoutée à droite si le résultat de la fonction "func" est nulle.
+
         &lt;b&gt;fusion = begin;&lt;/b&gt;
         Commence la fusion pour le champ,c'est-à-dire que les champs suivants seront affichés sur la même ligne.
         &lt;b&gt;fusion = end;&lt;/b&gt;
@@ -1268,7 +1325,7 @@
 			
 		  <!-- input -->
       <label index="input.description">Attributs pour "String input"</label>
-			<label index="input.seeAlso">sav_library:general</label>
+			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="input.syntax">
         &lt;b&gt;size = number;&lt;/b&gt;
         Définit la taille du champ.
@@ -1276,7 +1333,7 @@
 			
 		  <!-- link -->
       <label index="link.description">Attributs pour "Link"</label>
-			<label index="link.seeAlso">sav_library:general</label>
+			<label index="link.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="link.syntax">
         &lt;b&gt;generateRTF=1;&lt;/b&gt;
         Active le générateur RTF.
@@ -1288,7 +1345,7 @@
       
       <!-- radio -->
 			<label index="radio.description">Attributs pour "radio buttons"</label>
-			<label index="radio.seeAlso">sav_library:general</label>
+			<label index="radio.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="radio.syntax">
         &lt;b&gt;cols = number;;&lt;/b&gt;
         Nombre de colonnes à afficher. 
@@ -1296,7 +1353,7 @@
 
 		  <!-- rel -->
       <label index="rel.description">Attributs pour "Database relation"</label>
-			<label index="rel.seeAlso">sav_library:general</label>
+			<label index="rel.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="rel.syntax">
         1) Selectorbox, select global
         
@@ -1362,7 +1419,7 @@
 
 		  <!-- select -->
       <label index="select.description">Attributs pour "selectorbox"</label>
-			<label index="select.seeAlso">sav_library:general, sav_library:functions</label>
+			<label index="select.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="select.syntax">
         &lt;b&gt;func = function_name;&lt;/b&gt;
         Associe une fonction aux items d'un sélecteur. Le paramètre function_name peut être :
@@ -1379,11 +1436,11 @@
       
       <!-- ShowOnly -->
       <label index="ShowOnly.description">Attributs pour "Not created, only shown in savform"</label>
-			<label index="ShowOnly.seeAlso">sav_library:general</label>
-			
+			<label index="ShowOnly.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
+      			
 		  <!-- textarea -->
       <label index="textarea.description">Attributs pour "Textarea"</label>
-			<label index="textarea.seeAlso">sav_library:general</label>
+			<label index="textarea.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea.syntax">
         &lt;b&gt;rows = integer;&lt;/b&gt;
         Définit le nombre de lignes du "textarea". Cet attribut remplace celui défini dans le TCA.
@@ -1394,7 +1451,7 @@
       
 		  <!-- textarea_rte -->
       <label index="textarea_rte.description">Attributs pour "Textarea with RTE"</label>
-			<label index="textarea_rte.seeAlso">sav_library:general</label>
+			<label index="textarea_rte.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea_rte.syntax">
         &lt;b&gt;width = integer;&lt;/b&gt;
         Définit la largeur du "textarea". Cet attribut remplace celui défini dans le TCA.

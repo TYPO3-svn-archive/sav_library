@@ -182,7 +182,7 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
                 onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'importTable'.'\';
                  setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
       			     document.kickstarter_wizard.submit();
-      			     return false;" >Import fields from table as "Show Only"</a> '.'</td></tr>';
+      			     return false;" >Import fields from table as "Only shown in SAV form"</a> '.'</td></tr>';
 
 				  $lines[]='<tr'.$this->bgCol(1).'><td><strong> Fields Overview </strong></td></tr>';
 				  $lines[]='<tr><td></td></tr>';
@@ -213,8 +213,7 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 
           // Import the table fields as "Show Only" if activated
           if ($this->wizard->modData['wizSpecialCmd'] == 'importTable') {
-  				  // Recover the wizard_form data
-          
+  				  // Recover the wizard_form data         
     				preg_match('/EXT:([^\/]+)\//',$GLOBALS['TCA'][$piConf['which_table']]['ctrl']['title'], $matches);
             if(file_exists(t3lib_extMgm::extPath($matches[1]).'doc/wizard_form.dat')) {
     				  $temp = unserialize(file_get_contents(t3lib_extMgm::extPath($matches[1]).'doc/wizard_form.dat'));
@@ -269,32 +268,62 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
                   $this->wizard->wizArray['fields'][$action[1]]['fields'] = $temp['tables'][$keyTable]['fields'];
               
             }
+          $this->wizard->modData['wizSpecialCmd'] ='';
           }
 
           // Reorder the fields if activated
-          if ($this->wizard->modData['wizSpecialCmd'] == 'reorderFields') {         
+          if ($this->wizard->modData['wizSpecialCmd'] == 'reorderFields') {                  
             foreach ($piConf['fields'] as $k =>$v) {
               $this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showOrder'][$wizKey] = 	$this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showOrder'][$piConf['conf_opt_formViews']];
             }
+             
           $this->wizard->modData['wizSpecialCmd'] = ''; 
           $this->wizard->wizArray[$this->sectionID][$action[1]]['conf_opt_formViews'] = 0;
           $piConf['conf_opt_formViews'] = 0;
           }  
 
-      			     
-          // Selector for reordering the field 
+          // Copy the fields if activated
+          if ($this->wizard->modData['wizSpecialCmd'] == 'copyFields') {   
+            foreach ($piConf['fields'] as $k =>$v) {
+              // Copy the order
+              $this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showOrder'][$wizKey] = 	$this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showOrder'][$piConf['conf_opt_formViews']];
+              // Copy the display
+              $this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showFieldDisp'][$wizKey] = 	$this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showFieldDisp'][$piConf['conf_opt_formViews']];
+              // Copy the field
+              $this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showField'][$wizKey] = 	$this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showField'][$piConf['conf_opt_formViews']];
+              // Copy the expand
+              $this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showFieldExpand'][$wizKey] = 	$this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showFieldExpand'][$piConf['conf_opt_formViews']];
+              // Copy the folder
+              $this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showFolders'][$wizKey] = 	$this->wizard->wizArray[$this->sectionID][$action[1]]['fields'][$k]['conf_showFolders'][$piConf['conf_opt_formViews']];
+            }             
+            
+          $this->wizard->modData['wizSpecialCmd'] = ''; 
+          $this->wizard->wizArray[$this->sectionID][$action[1]]['conf_opt_formViews'] = 0;
+          $piConf['conf_opt_formViews'] = 0;
+          }  
+
+
+          // Selector and buttons for action on the fields 
           if (isset($this->wizard->wizArray['formviews'])) {
             $opt_formViews = array();
             $opt_formViews[0] = '';
             foreach($this->wizard->wizArray['formviews'] as $key => $view) {
               $opt_formViews[$key] = $view['title'];
             }
-            $subContent .='<tr><td colspan="5"><a href="#"               
-                onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'reorderFields'.'\';
+
+            $subContent .='<tr><td colspan="5">Use fields as in</a> '.$this->renderSelectBox($ffPrefix.'[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews).
+                 '&nbsp;&nbsp;<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'reorderFields'.'\';
                  setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();
-      			     return false;" >Reorder the fields as in</a> '.$this->renderSelectBox($ffPrefix.'[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews).'</td></tr>';
-          }
+      			     document.kickstarter_wizard.submit();" name="'.$this->piFieldName('reOrder').'" value="Reorder?">'.
+                 '&nbsp;&nbsp;<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'copyFields'.'\';
+                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
+      			     document.kickstarter_wizard.submit();" name="'.$this->piFieldName('copy').'" value="Copy?">'.      			     
+                 '&nbsp;&nbsp;<input type="submit" name="'.$this->piFieldName('viewResult').'" value="View result">'.
+                 '&nbsp;&nbsp;<input type="submit" name="'.$this->piFieldName('WRITE').'" value="Write?" onclick="
+                 return confirm(\'If you are not sure, use the View result button\');               
+                 " />'.
+                 '</td></tr>';
+          } 
           				  
 				  //  Add the overview
           $subContent .= '<tr><td colspan="5" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;"><div style="float: left;width: 100%; background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuBorder.gif) repeat-x bottom;"><ul style="margin: 0px;padding: 0px;list-style: none;">';
@@ -492,7 +521,7 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 //--------------------------
 // Begin - Modified 
 //--------------------------			
-      'ShowOnly'  => 'Not created, only shown in savform',
+      'ShowOnly'  => 'Not created, only shown in SAV form',
 //--------------------------
 // End - Modified 
 //--------------------------				

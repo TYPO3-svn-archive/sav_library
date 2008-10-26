@@ -64,6 +64,17 @@
       <conditions>
       </conditions>
     </viewStringInput>
+
+    <viewStringPassword>
+      <type>input</type>
+      <conditions>
+        <condition index="0">
+          <field>eval</field>
+          <ope>isInString</ope>
+          <value>password</value>
+        </condition>      
+      </conditions>
+    </viewStringPassword>
     
     <viewLabel>
       <type>label</type>
