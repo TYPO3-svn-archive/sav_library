@@ -1,0 +1,300 @@
+<T3DataStructure>
+  <meta>
+    <langDisable>1</langDisable>
+  </meta>
+  <sheets>
+    <sDEF>
+      <ROOT>
+        <TCEforms>
+          <sheetTitle>LLL:EXT:sav_library/locallang.php:pi_flexform.sheetTitle.sDEF</sheetTitle>
+					<cshFile>LLL:EXT:sav_library/res/locallang_csh_flexform.xml</cshFile>
+        </TCEforms>
+        <type>array</type>
+        <el>
+          <helpGeneral>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.xml:pi_flexform.help</label>
+              <config>
+                <type>user</type>
+                <userFunc>user_helpIcon_savlibrary</userFunc>
+              </config>
+            </TCEforms>                
+          </helpGeneral>
+          <formId>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.formId</label>
+              <config>
+                <type>select</type>
+                <items type="array">
+                  <numIndex index="0" type="array">
+                    <numIndex index="0"></numIndex>
+                    <numIndex index="1"></numIndex>
+                  </numIndex>
+                  ###FORM_SELECTOR###
+                </items>
+                <maxitems>1</maxitems>
+              </config>
+            </TCEforms>
+          </formId>
+          <noFilterShowAll>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.noFilterShowAll</label>
+              <config>
+                <type>check</type>
+                <default>1</default>
+              </config>
+            </TCEforms>
+          </noFilterShowAll>
+          <showNoAvailableInformation>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.showNoAvailableInformation</label>
+              <config>
+                <type>select</type>
+                <items type="array">
+                  <numIndex index="0" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.showNoAvailableInformation.I.0</numIndex>
+                    <numIndex index="1"></numIndex>
+                  </numIndex>
+                  <numIndex index="1" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.showNoAvailableInformation.I.1</numIndex>
+                    <numIndex index="1">1</numIndex>
+                  </numIndex>
+                  <numIndex index="2" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.showNoAvailableInformation.I.2</numIndex>
+                    <numIndex index="1">2</numIndex>
+                  </numIndex>
+                </items>
+                <maxitems>1</maxitems>
+              </config>
+            </TCEforms>
+          </showNoAvailableInformation>
+
+          <maxItems>
+            <TCEforms>
+            <exclude>1</exclude>
+            <label>LLL:EXT:sav_library/locallang.php:pi_flexform.maxItems</label>
+              <config>
+								<type>input</type>
+								<eval>int</eval>
+								<size>2</size>
+                <default>10</default>
+              </config>
+            </TCEforms>
+          </maxItems>
+          <helpPage>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.helpPage</label>
+              <config>
+                <type>group</type>
+                <internal_type>db</internal_type>
+                <allowed>pages</allowed>
+                <size>3</size>
+                <maxitems>1</maxitems>
+                <minitems>0</minitems>
+                <show_thumbs>1</show_thumbs>
+              </config>
+            </TCEforms>
+          </helpPage>
+          ###ADDITIONAL_CODE###
+        </el>
+      </ROOT>
+    </sDEF>
+    <sInput>
+      <ROOT>
+        <TCEforms>
+          <sheetTitle>LLL:EXT:sav_library/locallang.php:pi_flexform.sheetTitle.sInput</sheetTitle>
+					<cshFile>LLL:EXT:sav_library/res/locallang_csh_flexform.xml</cshFile>
+        </TCEforms>
+        <type>array</type>
+        <el>
+          <helpInput>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.xml:pi_flexform.help</label>
+              <config>
+                <type>user</type>
+                <userFunc>user_helpIcon_savlibrary</userFunc>
+              </config>
+            </TCEforms>                
+          </helpInput>
+          <inputOnForm>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.inputOnForm</label>
+              <config>
+                <type>check</type>
+                <default>1</default>
+              </config>
+            </TCEforms>
+          </inputOnForm>
+          <allowedGroups>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.allowedGroups</label>
+              <config>
+                <type>group</type>
+                <internal_type>db</internal_type>
+                <allowed>fe_groups</allowed>
+                <size>3</size>
+                <maxitems>22</maxitems>
+                <minitems>0</minitems>
+                <show_thumbs>1</show_thumbs>
+              </config>
+            </TCEforms>
+          </allowedGroups>
+          <inputAdminField>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.inputAdminField</label>
+              <config>
+                <type>input</type>
+                <size>30</size>
+              </config>
+            </TCEforms>
+          </inputAdminField>
+          <noNewButton>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.noNewButton</label>
+              <config>
+								<type>check</type>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </noNewButton>
+          <noEditButton>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.noEditButton</label>
+              <config>
+                <type>check</type>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </noEditButton>
+          <noDeleteButton>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.noDeleteButton</label>
+              <config>
+                <type>check</type>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </noDeleteButton>
+          <deleteButtonOnlyForCruser>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.deleteButtonOnlyForCruser</label>
+              <config>
+                <type>check</type>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </deleteButtonOnlyForCruser>
+          <inputStartDate>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.inputStartDate</label>
+              <config>
+                <type>input</type>
+                <eval>datetime</eval>
+                <size>12</size>
+                <max>20</max>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </inputStartDate>
+          <inputEndDate>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.inputEndDate</label>
+              <config>
+                <type>input</type>
+                <eval>datetime</eval>
+                <size>12</size>
+                <max>20</max>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </inputEndDate>
+          <inputApplyLimit>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.inputApplyLimit</label>
+              <config>
+                <type>select</type>
+                <items type="array">
+                  <numIndex index="0" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.inputApplyLimit.I.0</numIndex>
+                    <numIndex index="1"></numIndex>
+                  </numIndex>
+                  <numIndex index="1" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.inputApplyLimit.I.1</numIndex>
+                    <numIndex index="1">1</numIndex>
+                  </numIndex>
+                  <numIndex index="2" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.inputApplyLimit.I.2</numIndex>
+                    <numIndex index="1">2</numIndex>
+                  </numIndex>
+                  <numIndex index="3" type="array">
+                    <numIndex index="0">LLL:EXT:sav_library/locallang.php:pi_flexform.inputApplyLimit.I.3</numIndex>
+                    <numIndex index="1">3</numIndex>
+                  </numIndex>
+                </items>
+                <maxitems>1</maxitems>
+              </config>
+            </TCEforms>
+          </inputApplyLimit>
+        </el>
+      </ROOT>
+    </sInput>  
+    <sAdvanced>
+      <ROOT>
+        <TCEforms>
+          <sheetTitle>LLL:EXT:sav_library/locallang.php:pi_flexform.sheetTitle.sAdvanced</sheetTitle>
+					<cshFile>LLL:EXT:sav_library/res/locallang_csh_flexform.xml</cshFile>
+        </TCEforms>
+        <type>array</type>
+        <el>
+          <helpAdvanced>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.xml:pi_flexform.help</label>
+              <config>
+                <type>user</type>
+                <userFunc>user_helpIcon_savlibrary</userFunc>
+              </config>
+            </TCEforms>                
+          </helpAdvanced>
+          <permanentFilter>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.permanentFilter</label>
+              <config>
+                <type>input</type>
+                <size>60</size>
+              </config>
+            </TCEforms>
+          </permanentFilter>
+          <addFragment>
+            <TCEforms>
+              <exclude>1</exclude>
+              <label>LLL:EXT:sav_library/locallang.php:pi_flexform.addFragment</label>
+              <config>
+                <type>check</type>
+                <default>0</default>
+              </config>
+            </TCEforms>
+          </addFragment>
+        </el>
+      </ROOT>
+    </sAdvanced>       		
+  </sheets>
+</T3DataStructure>
+

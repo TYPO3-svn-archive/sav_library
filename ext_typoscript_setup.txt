@@ -1,0 +1,886 @@
+/***************************************************************
+ * Copyright notice
+ *
+ * (c) 2004 Yolf (yolf.typo3@orange.fr)
+ * All rights reserved
+ *
+ * This script is part of the TYPO3 project. The TYPO3 project is 
+  * free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * The GNU General Public License can be found at
+ * http://www.gnu.org/copyleft/gpl.html.
+ *
+ * This script is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * This copyright notice MUST APPEAR in all copies of the script!
+ ***************************************************************/
+
+/**
+ * Default TS setup - Extension 'SAV Library'
+ *
+ * @author		Yolf <yolf.typo3@orange.fr>
+ * @version		0.0
+ */
+
+
+plugin.sav_library {
+		
+  // Default CSS styling
+  _CSS_DEFAULT_STYLE (
+
+      /**
+      * General definitions
+      */     
+    .sav-library {
+      position:relative;
+      float:left; 
+      clear:left; 
+      width:100%; 
+      background-color:inherit;
+      color:#004898;
+    }     
+    .sav-library A {
+      text-decoration:none;
+      background-color:inherit;
+      font-weight:bold; 
+      color:#4176FF; 
+    }
+    .sav-library A:hover { 
+      color:#EA6900; 
+    } 
+    .sav-library A:active {
+      color:#4176FF; 
+    } 
+  
+      /**
+      * Errors or messages
+      */
+
+    .sav-library DIV.error {
+      display:block; 
+      background-color:inherit;
+      color:red;
+    } 
+    .sav-library INPUT.error {
+      color:red; font-weight:bold;
+    }         
+    .sav-library-errors LI.error {
+      background-color:inherit;
+      color:red;
+    }   
+    .sav-library-messages LI.datasaved {
+      background-color:inherit;
+      color:red;
+      font-weight:bold;
+    }   
+
+      /**
+      * Icons 
+      */   
+    .sav-library IMG {float:left; padding:0px 1px 0px 1px; margin:0px;border-width:0px;}      
+    .sav-library IMG.toggleModeButton {width:18px; height:16px;}      
+    .sav-library IMG.inputModeButton {width:18px; height:16px;}           
+    .sav-library IMG.printButton {width:18px; height:16px;}  
+    .sav-library INPUT.generateRTFButton {width:20px; height:20px;}    
+    .sav-library IMG.exportButton {padding-right:5px;}        
+    .sav-library INPUT.exportokButton {float:left;padding-right:5px;}        
+    .sav-library INPUT.submitButton {font-size:9px;margin-top:1px;}        
+    .sav-library IMG.rightArrowButton {float:none; padding-left:2px;margin:0px;}      
+    .sav-library IMG.leftArrowButton {float:none; padding-right:2px;margin:0px;}      
+    .sav-library IMG.rightArrowButtonSubForm {float:none; padding-left:2px;margin:0px;}
+    .sav-library IMG.leftArrowButtonSubForm {float:none; padding-left:2px;margin:0px;}
+           
+        /* Special tags */
+    .sav-library DIV.right {
+      float:right; 
+      height:1px;
+    }    
+    .sav-library SPAN.left {   
+      float:left; 
+      padding:0px 3px 0px 3px;
+    }  
+    .sav-library DIV.left {
+      float:left;  
+    }  
+    .sav-library DIV.separator {
+      float:left;  
+      width:5px;
+    }  
+
+    
+        /* Title */
+    .sav-library DIV.title {
+      float:left;
+      width:100%;
+      background-color:#9999cc;
+      color:inherit;
+      margin:0px;
+      padding:0px; 
+    }    
+    .sav-library DIV.title DIV.titleIconLeft {
+      float:left;
+      background-color:inherit;
+      color:inherit;
+      padding:2px 5px 2px 2px;
+    }
+    .sav-library DIV.title DIV.titleIconLeft INPUT {
+      float:left;
+    }
+    .sav-library DIV.title DIV.titleIconLeft A {
+      float:left;
+    }
+    .sav-library DIV.title DIV.titleLabel { 
+      float:left;
+      background-color:inherit;
+      color:#ffffff;
+      font-size:115%;
+      font-weight:bold;
+      vertical-align:middle;
+      padding:4px;
+    }    
+    .sav-library DIV.title DIV.titleLabel UL { 
+      float:left;
+      margin:0px;
+      padding:0px; 
+      list-style:none;  
+    }        
+    .sav-library DIV.title DIV.titleLabel LI { 
+      float:left;
+      width:150px;
+      background-color:#9999cc;
+      color:#ffffff;
+      font-size:115%;
+      font-weight:bold;
+      text-align:left;
+      background-image:none;
+      margin:0px;
+      padding:0px 5px 0px 5px; 
+    } 
+    .sav-library DIV.title DIV.titleLabel LI A { 
+      background-color:inherit;
+      color:#ffffff;
+    }           
+    .sav-library DIV.title DIV.titleLabel LI A:hover { 
+      background-color:inherit;
+      color:#EA6900;
+    }
+    .sav-library DIV.title DIV.titleIconRight {
+      float:right;
+      padding:2px;
+    }
+
+        /* Page Folder */       
+    .sav-library DIV.pages {
+      float:left;
+      width:100%;
+      background:#ffffff url({$plugin.sav_library.extDir}res/images/taMenuBorder.gif) repeat-x bottom;
+      color:inherit;
+      margin-top:1px;
+      padding:0px;
+    }
+    .sav-library DIV.pages UL.pages {
+      float:left;
+      margin:0px;
+      padding:0px;
+      list-style:none; 
+    }
+    .sav-library DIV.pages LI {
+      display:inline;
+      margin:0px;
+      padding:0px;
+    }
+    .sav-library DIV.pages LI A {
+      float:left;
+      background:url({$plugin.sav_library.extDir}res/images/taMenuRight.gif) no-repeat right top;
+      border-bottom:1px solid #84B0C7;
+      font-weight:bold;
+      text-decoration:none;
+    }
+    .sav-library DIV.pages LI A SPAN {
+      display:block;
+      background:url({$plugin.sav_library.extDir}res/images/taMenuLeft.gif) no-repeat left top;
+      padding:5px 9px;
+      white-space:nowrap;
+    } 
+    .sav-library DIV.pages LI#currentPage A {
+      background-position:100% -150px;
+      border-width:0px;
+    }
+    .sav-library DIV.pages LI A:hover {
+      background-position:100% -150px;
+    }    
+    .sav-library DIV.pages LI A:hover SPAN {
+      background-position:0% -150px;
+    }
+    .sav-library DIV.pages LI#currentPage A SPAN {
+      background-position:0% -150px;
+      padding-bottom:6px;
+    } 
+       
+        /* Subitem */             
+    .sav-library DIV.subitems {
+      float:left;  
+      width:inherit;
+    }
+    .sav-library DIV.subitems DIV.subitem {
+      float:left;
+      width:inherit;
+      border:2px #f1fbfd solid; 
+      margin:0px;
+      padding:0px;
+    }
+      
+        /* Arrows */
+    .sav-library DIV.arrows {
+      float:left;
+      width:100%; 
+      background-color:inherit;
+      color:inherit;
+      margin:0px;
+      padding:1px 0px 0px 0px;
+      text-align:center;   
+    }  
+
+     
+      /**
+      * showAll Form 
+      */
+          
+    .sav-library DIV.showAllHidden {
+      display:none;
+    }
+    .sav-library DIV.showAll, .sav-library DIV.updateForm, .sav-library DIV.printForm {
+      float:left;
+      width:100%;
+      border:1px  #000099 solid;
+      background-color:#f1fbfd;
+      color:inherit;
+      margin:0px 0px 15px 0px;
+      padding:1px; 
+      overflow:hidden;
+    }
+          
+        /* Item */
+    .sav-library DIV.showAll DIV.items, .sav-library DIV.updateForm DIV.items, .sav-library DIV.printForm DIV.items {
+      float:left;     
+      width:inherit;
+      background-color:#ffffff;      
+      color:inherit;
+      padding:0px; 
+      margin:0px;
+    }
+        
+    .sav-library DIV.showAll DIV.items DIV.item, .sav-library DIV.updateForm DIV.items DIV.item, .sav-library DIV.printForm DIV.items DIV.item {
+      float:left;
+      width:inherit;     
+      border-top:1px #ddeeee solid;
+      border-bottom:1px #ddeeee solid;
+      background-color:#f1fbfd;
+      color:inherit;
+      margin-bottom:1px;
+      padding:0px; 
+    }    
+        
+    .sav-library DIV.showAll DIV.items DIV.item DIV.itemIconLeft, .sav-library DIV.updateForm DIV.items DIV.item DIV.itemIconLeft, .sav-library DIV.printForm DIV.items DIV.item  DIV.itemIconLeft {
+      float:left;
+      padding:2px 5px 2px 2px; 
+      width:18px;
+    }
+    .sav-library DIV.showAll DIV.items DIV.item DIV.value, .sav-library DIV.updateForm DIV.items DIV.item DIV.value, .sav-library DIV.printForm DIV.items DIV.item DIV.value {
+      float:left;     
+      background-color:inherit;
+      color:inherit;
+      margin:0px;
+      padding:0px; 
+    }      
+    .sav-library DIV.showAll UL, .sav-library DIV.updateForm UL, .sav-library DIV.printForm UL {
+      float:left;
+      background-color:inherit;
+      color:inherit;
+      list-style:none;
+      margin:0px;
+      padding:0px; 
+    }    
+    .sav-library DIV.showAll LI, .sav-library DIV.updateForm LI, .sav-library DIV.printForm LI {
+      float:left;
+      background-image:none;
+      background-color:inherit;
+      color:inherit;
+      width:150px;
+      margin:0px;
+      padding:5px;
+      text-align:left;
+    }   
+    .sav-library DIV.showAll DIV.block, .sav-library DIV.updateForm DIV.block, .sav-library DIV.printForm DIV.block {
+      float:left;
+      width:100%;
+      border-top:solid 1px #004898;
+      border-bottom:solid 1px #004898;
+      padding:5px; 
+      margin-top:2px;
+      margin-bottom:2px;
+    }
+    .sav-library DIV.showAll DIV.blockHide, .sav-library DIV.updateForm DIV.blockHide, .sav-library DIV.printForm DIV.blockHide  {
+      float:left;
+      visibility:hidden; 
+      height:0px;
+    }
+    .sav-library DIV.showAll DIV.blockTitle, .sav-library DIV.updateForm DIV.blockTitle, .sav-library DIV.printForm DIV.blockTitle  {
+      float:left;
+      font-weight:bold;
+      border-bottom:solid 1px #004898;
+      width:30%; 
+      min-width:210px;
+      padding-bottom:5px; 
+      margin-bottom:5px;
+    }    
+    
+
+      /* Update form */
+    .sav-library DIV.updateForm DIV.label {
+      font-weight:bold;
+      padding:0px 5px 0px 5px;
+    }
+    .sav-library DIV.updateForm DIV.field {
+      padding:2px 5px 2px 5px;
+    }
+    .sav-library DIV.updateForm span.required {
+      background-color:inherit;
+      color:red;
+      font-weight:bold;
+      padding:0px 5px 0px 5px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol1 {
+      clear:both; 
+      float:left; 
+      width:20%;
+      min-width:140px; 
+      font-weight:bold; 
+      min-height:25px;    
+    }
+    .sav-library DIV.updateForm DIV.updateCol2 {
+      float:left; 
+      width:30%; 
+      min-width:210px; 
+      min-height:25px; 
+      padding:0px 10px 0px 10px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol2 SPAN.checkbox{
+      float:left; 
+      text-align:left; 
+    }
+    .sav-library DIV.updateForm DIV.updateCol3 {
+      float:left; 
+      width:40%; 
+      min-width:300px; 
+      min-height:25px; 
+    }
+    .sav-library DIV.updateForm DIV.updateCol3 INPUT {
+      font-size:12px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol3 SELECT {
+      font-size:12px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol3 TEXTAREA {
+      font-size:12px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol4 {
+      float:right;
+      width:20px; 
+      background-color:red; 
+      margin-right:10px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol4Manual {
+      float:right; 
+      width:20px; 
+      background-color:green; 
+      margin-right:10px;
+    }
+
+      /* Print form */
+    .sav-library DIV.printForm DIV.label {
+      float:left; 
+      clear:left;
+      width:130px; 
+      font-weight:bold; 
+      min-height:20px;     
+      padding:0px 10px 0px 10px;
+    }    
+    .sav-library DIV.printForm DIV.field {
+      float:left; 
+      width:450px; 
+      min-height:20px; 
+      padding:0px 10px 0px 10px;
+    }
+    .sav-library DIV.printForm DIV.printCol1 {
+      clear:left; 
+      float:left; 
+      width:130px; 
+      font-weight:bold; 
+      min-height:25px;     
+    }    
+    .sav-library DIV.printForm DIV.printCol2 {
+      float:left; 
+      width:450px; 
+      min-height:25px; 
+      padding:0px 10px 0px 10px;
+    }
+
+              
+      /* Browse links (showAllAlt template) */     
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap {  
+      padding:5px;
+    }   
+   .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap SPAN.activeLinkWrap {  
+      background-color:inherit; 
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }   
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap SPAN.inactiveLinkWrap {  
+      background-color:inherit; 
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }        
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap SPAN.disabledLinkWrap {  
+      background-color:inherit; 
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }        
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap SPAN.activeLinkWrap A {  
+      background-color:inherit; 
+      color:#EA6900;
+    }   
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap SPAN.inactiveLinkWrap A {  
+    }   
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap IMG {  
+      float:none;
+      padding-left:2px;
+      margin:0px;
+      vertical-align:middle; 
+    } 
+    .sav-library DIV.showAll DIV.arrows DIV.browseLinksWrap IMG {  
+      float:none;
+      padding-left:2px;
+      margin:0px;
+      vertical-align:middle; 
+    } 
+    
+      /**
+      * showSingle Item 
+      */
+    .sav-library DIV.showSingle {
+      float:left;
+      width:100%;
+      border:1px #000099 solid;
+      background-color:#f1fbfd;
+      color:inherit;
+      margin:0px 0px 15px 0px;
+      padding:1px; 
+    }                 
+    .sav-library DIV.showSingle DIV.items {
+      float:left;  
+      width:100%;
+      background-color:#ffffff;      
+      color:inherit;
+      padding:0px; 
+      margin:2px 0px 0px 0px;
+    }        
+    .sav-library DIV.showSingle DIV.items DIV.item {
+      float:left;    
+      width:100%;
+      border-top:1px #ddeeee solid;
+      border-bottom:1px #ddeeee solid;
+      background-color:#ffffff;
+      color:inherit;
+      padding:0px;       
+      margin-bottom:1px;
+    } 
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.label {
+      float:left;
+      width:100px;
+      background-color:#d7e8e8;
+      color:#000099;
+      font-weight:bold;
+      text-align:left;
+      margin:0px;
+      padding:5px;
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.value {
+      float:left;
+      min-width:150px;
+      background-color:#ffffff;
+      color:inherit;
+      margin:0px;
+      padding:0px;  
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.value_subForm {
+      float:left;
+      width:100%;
+      background-color:#ffffff;
+      color:inherit;
+      margin:0px;
+      padding:0px;  
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.inner {
+      float:left;
+      background-color:inherit;
+      color:inherit;
+      margin:0px;
+      padding:5px;        
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.inner_subForm {
+      float:left;
+      width:100%;
+      background-color:inherit;
+      color:inherit;
+      margin:0px;
+      padding:0px;    
+    }  
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.inner P {
+      display:block;
+    }  
+   
+    /* hack to emulate min-width for IE ! */
+        
+   	* html .sav-library DIV.showSingle DIV.items DIV.item DIV.value {
+      position: relative;
+      float: left;
+		  border-left: 150px solid #ffffff;
+      padding: 0px;
+      margin: 0px;
+    }
+  	* html .sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner {
+      position: relative;
+      float: left;
+      background-color: #ffffff;
+      color: inherit;
+      padding: 5px;    
+      margin: 0px 0px 0px -145px;
+      vertical-align: baseline;
+    }       
+  
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner SPAN.checkbox {
+      float:left;
+      padding:0px 5px 0px 5px;    
+		  margin:0px;
+    } 
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner BR.checkbox {
+      clear:left;
+      padding:0px;    
+		  margin:0px;
+    }   	
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.export DIV.inner INPUT {
+      float:left;
+      padding:0px 5px 0px 5px;    
+		  margin:0px;
+    }                   
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.export DIV.inner SPAN.checkbox {
+      float:left;
+      padding:0px 5px 0px 5px;    
+		  margin:0px;
+		  width:400px;
+		  text-align:left;
+    }                   
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.export DIV.inner BR.checkbox {
+      clear:left;
+      padding:0px;    
+		  margin:0px;
+    } 
+  	.sav-library DIV.showSingle DIV.block {
+      float:left;
+      min-width:97.5%;      
+      margin:5px;
+      padding:5px;
+      border:1px #004898 solid;
+    }
+  	.sav-library DIV.showSingle DIV.blockTitle {
+      float:left;
+      background-color:inherit;
+      font-weight:normal;
+      color:#000099;
+      font-weight:bold;
+      font-size:10px;
+      border-bottom:solid 1px #004898;
+      width:300px;
+      padding-bottom:5px;
+      margin-bottom:5px;
+    } 
+           	
+        /* Subform */  
+    .sav-library DIV.showSingle DIV.subForm {
+      float:left; 
+      width:100%;
+      border-top:2px #000099 solid;
+      border-bottom:2px #000099 solid;
+      background-color:#ffffff;
+      color:inherit;
+      margin:0px;
+      padding:0px;
+    }
+    .sav-library DIV.showSingle DIV.subForm DIV.title {
+      float:left;
+      width:100%;  
+      background-color:#9999cc;
+      color:inherit;
+      margin:0px;
+      padding:0px; 
+    }     
+    .sav-library DIV.showSingle DIV.subForm DIV.items {
+      float:left;
+      margin-bottom:1px;
+      padding:0px;     
+    }    
+    .sav-library DIV.showSingle DIV.subForm DIV.items DIV.item {
+      float:left;
+      width:inherit;  
+      margin-bottom:1px;
+      padding:0px;     
+    }    
+                     
+      /**
+      * inputForm Item 
+      */
+    .sav-library DIV.inputForm {
+      float:left;
+      width:100%;
+      border:1px #000099 solid;
+      background-color:#f1fbfd;
+      color:inherit;
+      margin:0px 0px 15px 0px;
+      padding:1px; 
+    }                 
+    .sav-library DIV.inputForm DIV.items {  
+      float:left; 
+      width:100%;
+      background-color:#ffffff;      
+      color:inherit;
+      padding:0px; 
+      margin:2px 0px 0px 0px;
+    }        
+    .sav-library DIV.inputForm DIV.items DIV.item {
+      float:left;     
+      width:100%;
+      border-top:1px #ddeeee solid;
+      border-bottom:1px #ddeeee solid;
+      background-color:#ffffff;
+      color:inherit;
+      padding:0px; 
+      margin:1px 0px 0px 0px;     
+    }  
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.label {
+      float:left;
+      width:100px;
+      border:0px #ddeeee solid;
+      background-color:#d7e8e8;
+      color:#000099;
+      font-weight:bold;
+      text-align:left;
+      margin:0px;
+      padding:5px;
+    }
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.value {
+      float:left;
+      min-width:150px;
+      background-color:#ffffff;
+      color:inherit;
+      margin:0px;
+      padding:0px;  
+    }
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.value_subForm {
+      float:left;
+      width:100%;
+      background-color:#ffffff;
+      color:inherit;
+      margin:0px;
+      padding:0px;  
+    }
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.inner {
+      float:left;
+      background-color:inherit;
+      color:inherit;
+      margin:0px;
+      padding:5px;        
+    }
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.inner_subForm {
+      float:left;
+      width:100%;
+      background-color:inherit;
+      color:inherit;
+      margin:0px;
+      padding:0px;    
+    }  
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.inner P {
+      display:block;
+    }  
+   
+    /* hack to emulate min-width for IE ! */
+    
+   	* html .sav-library DIV.inputForm DIV.items DIV.item DIV.value {
+      position: relative;
+      float: left;
+		  border-left: 150px solid #ffffff;
+      padding: 0px;
+      margin: 0px;
+    }
+  	* html .sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner {
+      position: relative;
+      float: left;
+      background-color: #ffffff;
+      color: inherit;
+      padding: 5px;    
+      margin: 0px 0px 0px -145px;
+      vertical-align: baseline;
+    }       
+         
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.inner {
+      float:left;
+      margin:0px;
+      padding:1px;  
+    }
+    .sav-library DIV.inputForm DIV.items DIV.itemIconLeft {
+      float:left;
+      width:35px;
+      padding:2px; 
+    }
+    .sav-library DIV.inputForm DIV.items DIV.itemIconLeftVoid {
+      display:none;
+    }    
+  	.sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner INPUT {
+      float:left;
+      padding:0px;    
+		  margin:0px;
+    }        
+  	.sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner SPAN.checkbox {
+      float:left;
+      padding:0px 5px 0px 5px;    
+		  margin:0px;
+    }        
+  	.sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner BR.checkbox {
+      clear:left;
+      padding:0px;    
+		  margin:0px;
+    }   	
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner BR.radio {
+      clear:left;
+      padding:0px;    
+		  margin:0px;
+    }   	
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner TEXTAREA {
+      float:left;
+      padding:0px;    
+		  margin:0px;
+    }          
+  	.sav-library DIV.inputForm DIV.block {
+      float:left;
+      min-width:97.5%;      
+      margin:5px;
+      padding:5px;
+      border:1px #004898 solid;
+    }
+  	.sav-library DIV.inputForm DIV.blockTitle {
+      float:left;
+      background-color:inherit;
+      font-weight:normal;
+      color:#000099;
+      font-weight:bold;
+      font-size:10px;
+      border-bottom:solid 1px #004898;
+      width:300px;
+      padding-bottom:5px;
+      margin-bottom:5px;
+    } 
+    
+        /* Subform */  
+    .sav-library DIV.inputForm DIV.subForm {
+      float:left; 
+      width:100%;
+      border-top:1px #000099 solid;
+      border-bottom:1px #000099 solid;
+      background-color:#ffffff;
+      color:inherit;
+      margin:0px;
+      padding:0px;
+    }
+    .sav-library DIV.inputForm DIV.subForm DIV.title {
+      float:left;
+      width:100%;  
+      background-color:#9999cc;
+      color:inherit;
+      margin:0px;
+      padding:0px; 
+    }
+    .sav-library DIV.inputForm DIV.subForm DIV.title DIV.titleLabel { 
+      float:left;
+      background-color:inherit;
+      color:#ffffff;
+      font-size:100%;
+      font-weight:bold;
+      vertical-align:middle;
+      padding:3px;
+    }    
+         
+    .sav-library DIV.inputForm DIV.subForm DIV.items {
+      float:left;
+      width:100%;
+      margin-bottom:1px;
+      padding:0px;     
+    }    
+    .sav-library DIV.inputForm DIV.subForm DIV.items DIV.item {
+      float:left;
+      width:100%;  
+      margin-bottom:1px;
+      padding:0px;     
+    }    
+
+    
+    /* Media print */ 
+    @media print {
+
+      .break{
+        float:left;
+        clear:left;
+        width:1px;
+        page-break-after:always;
+        border: 1px solid white;
+      }   
+  
+      .sav-library DIV.showAll, .sav-library DIV.printForm {float:left;border:none;overflow:visible;color:black;background-color:inherit;}
+      .sav-library DIV.showAll DIV.title, .sav-library DIV.printForm DIV.title {font-size:12px;font-weight:bold;color:black;background-color:inherit;}
+      .sav-library DIV.showAll DIV.block, .sav-library DIV.printForm DIV.block {float:none;border:none;}
+      .sav-library DIV.showAll DIV.blockTitle, .sav-library DIV.printForm DIV.blockTitle {border-top:solid 1px #004898;margin-top:10px;} 
+      .sav-library DIV.showAll DIV.items, .sav-library DIV.printForm DIV.items {float:none;border:none;}     
+      .sav-library DIV.showAll DIV.items DIV.item, .sav-library DIV.printForm DIV.items DIV.item {float:left;border:none;}
+        
+     	* html .sav-library DIV.showAll DIV.items DIV.item DIV.value {
+        float:left;
+        padding:0px;
+        border:none;
+        margin:0px;
+      }
+    	* html .sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner {
+        float:left;
+        background-color:#ddddee;
+        color:inherit;
+        padding:5px;   
+        margin:0px;
+        width:150px;
+      }
+    	* html .sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner {
+        float:left;
+        padding:2px 0px 0px 0px;     
+        margin:0px;
+        width:150px;
+      }
+    }         
+      
+	)
+}

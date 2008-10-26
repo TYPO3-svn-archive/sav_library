@@ -1,0 +1,183 @@
+<sav_library>
+
+	<!-- Definition of the queriers -->
+  <queriers>
+    <select>
+      <showAll>
+        showAll_SELECT_defaultQuerier
+      </showAll>
+      <showSingle>
+        showSingle_SELECT_defaultQuerier
+      </showSingle>
+      <inputForm>
+        inputForm_SELECT_defaultQuerier
+      </inputForm>
+      <updateForm>
+        updateForm_SELECT_defaultQuerier
+      </updateForm>
+      <export>
+        export_SELECT_defaultQuerier
+      </export>
+    </select> 
+    <delete>
+      DELETE_defaultQuerier
+    </delete>
+    <update>
+      UPDATE_defaultQuerier
+    </update> 
+  </queriers>
+  
+	<!-- Definition of the viewers -->
+  <viewers>
+    <showAll>
+      showAll_defaultViewer
+    </showAll>
+    <showSingle>
+      showSingle_defaultViewer
+    </showSingle>
+    <inputForm>
+      inputForm_defaultViewer
+    </inputForm>
+    <updateForm>
+      updateForm_defaultViewer
+    </updateForm>
+    <export>
+      export_defaultViewer
+    </export>
+  </viewers>
+
+	<!-- Definition of the item viewers -->
+	<itemviewers>	
+    <viewTextArea>
+      <type>text</type>
+      <conditions>
+        <condition index="0">
+          <field>type</field>
+          <ope>isEqual</ope>
+          <value>text</value>
+        </condition>
+      </conditions>
+    </viewTextArea>
+    
+    <viewStringInput>
+      <type>input</type>
+      <conditions>
+      </conditions>
+    </viewStringInput>
+
+    <viewStringPassword>
+      <type>input</type>
+      <conditions>
+        <condition index="0">
+          <field>eval</field>
+          <ope>isInString</ope>
+          <value>password</value>
+        </condition>      
+      </conditions>
+    </viewStringPassword>
+    
+    <viewLabel>
+      <type>label</type>
+      <conditions>
+      </conditions>
+    </viewLabel>
+
+    <viewCheckbox>
+      <type>check</type>
+      <conditions>
+      </conditions>
+    </viewCheckbox>
+    
+    <viewRadio>
+      <type>radio</type>
+      <conditions>
+      </conditions>
+    </viewRadio>
+    
+    <viewLink>
+      <type>input</type>
+      <conditions>
+        <condition index="0">
+          <field>wizards</field>
+          <ope>arrayKeyExists</ope>
+          <value>link</value>
+        </condition>
+      </conditions>
+    </viewLink>  
+      
+    <viewDateTime>    
+      <type>input</type>
+      <conditions>
+        <condition index="0">
+          <field>eval</field>
+          <ope>isEqual</ope>
+          <value>datetime</value>
+        </condition>
+      </conditions>
+    </viewDateTime>
+    
+    <viewDate>    
+      <type>input</type>
+      <conditions>
+        <condition index="0">
+          <field>eval</field>
+          <ope>isEqual</ope>
+          <value>date</value>
+        </condition>
+      </conditions>
+    </viewDate>
+    
+    <viewFile>    
+      <type>group</type>
+      <conditions>
+        <condition index="0">
+          <field>internal_type</field>
+          <ope>isEqual</ope>
+          <value>file</value>
+        </condition>
+      </conditions>
+    </viewFile>
+
+    <viewSchedule>
+      <type>schedule</type>
+      <conditions>
+      </conditions>
+    </viewSchedule>
+    
+    <viewSelectorbox>    
+      <type>select</type>
+      <conditions>
+        <condition index="0">
+          <field>foreign_table</field>
+          <ope>isNull</ope>
+          <value></value>
+        </condition>
+      </conditions>
+    </viewSelectorbox>
+
+    <viewDbRelationSelectorGlobal>    
+      <type>select</type>
+      <conditions>
+        <condition index="0">
+          <field>foreign_table</field>
+          <ope>isNotNull</ope>
+          <value></value>
+        </condition>
+      </conditions>
+    </viewDbRelationSelectorGlobal>
+    
+    <viewDbRelationElementBrowser>    
+      <type>group</type>
+      <conditions>
+        <condition index="0">
+          <field>internal_type</field>
+          <ope>isEqual</ope>
+          <value>db</value>
+        </condition>
+      </conditions>
+    </viewDbRelationElementBrowser>    
+  </itemviewers>
+  
+</sav_library>
+
+
