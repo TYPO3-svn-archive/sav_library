@@ -580,7 +580,7 @@
                 
         &lt;b&gt;stdWrapValue = TS syntax;&lt;/b&gt;
         It defines a conventional TS stdWrap property. You can add here full TS syntax. 
-        Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it “\;”
+        Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it "\;"
 
         &lt;b&gt;verifier = verifier_name;&lt;/b&gt;
         Verifiers can be used to check if a field satisfy a constraint. Each field can have one verifier. Each verifier is associated with a parameter.
@@ -677,7 +677,9 @@
         &lt;b&gt;overrideEnableFields = 1;&lt;/b&gt;    
         The method enableFields of the class tslib_cObj which filters out records with start/end times or hidden/fe_groups fields is not applied to the query associated with the selectorbox.
         It may be used in specific cases when you needed to retreive all the records.
-        
+        &lt;b&gt;overrideStartingPoint = 1;&lt;/b&gt;
+        By default, when starting points are provided, information associated with the selector is searched in these page. This property overrides the default behavior.
+
         2) Field with element browser
         
         This type should is used to generate a subform. Special parameters can be added.
@@ -1398,7 +1400,9 @@
         &lt;b&gt;overrideEnableFields = 1;&lt;/b&gt;    
         La méthode enableFields de la classe tslib_cObj qui filtre les enregistrements avec les champs start/end et hidden/fe_groups n'est pas appliquée à la requête associée au sélecteur.
         Cela peut être utilisé dans des cas spécifiques quand il est nécessaire de retrouver tous les enregistrements.
-        
+        &lt;b&gt;overrideStartingPoint = 1;&lt;/b&gt;
+        Par défaut quand des "starting points" sont associés à une extension, les information sont recherchés dans les pages fournies. Cette option supprime ce fonctionnement par défaut.
+
         2) Field with element browser
         
         Ce type doit être utilisé pour engendrer un sous-formulaire. Des paramètres spéciaux peuvent être ajoutés.

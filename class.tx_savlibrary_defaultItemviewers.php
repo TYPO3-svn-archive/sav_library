@@ -1148,7 +1148,7 @@ class tx_savlibrary_defaultItemviewers {
                ).
   						  ' AND '.$table.'.uid='.intval($uid).
   			        ($config['overrideenablefields'] ? '' : $this->savlibrary->extObj->cObj->enableFields($table)).
-  			        ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND '.$table.'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : '').
+  			        (($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ? ' AND '.$table.'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : '').
   						  ($config['where'] ? ' AND '.$config['where'] : '').
   						  '',
   				  /* GROUP BY */	
@@ -1183,7 +1183,6 @@ class tx_savlibrary_defaultItemviewers {
       }
     }  
 
-
 		// get the label of the allowed_table
 		$label = ($config['labelselect'] ? $config['labelselect'] : $GLOBALS['TCA'][$foreign_table]['ctrl']['label']);
 		$order = ($GLOBALS['TCA'][$foreign_table]['ctrl']['sortby'] ? $GLOBALS['TCA'][$foreign_table]['ctrl']['sortby'] : str_replace('ORDER BY','', $GLOBALS['TCA'][$foreign_table]['ctrl']['default_sortby']));
@@ -1210,7 +1209,7 @@ class tx_savlibrary_defaultItemviewers {
 						'',
 				/* WHERE    */	'1'.
  			      ($config['overrideenablefields'] ? '' : $this->savlibrary->extObj->cObj->enableFields($foreign_table)).
- 			      ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND '.$foreign_table.'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : '').
+ 			      (($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ? ' AND '.$foreign_table.'.pid IN ('.$this->savlibrary->extObj->cObj->data['pages'].')' : '').
 						($config['whereselect'] ? ' AND '.$config['whereselect'] : '').
 						'',
 				/* GROUP BY */	
