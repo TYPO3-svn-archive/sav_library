@@ -42,7 +42,7 @@ class tx_savlibrary_defaultQueriers {
    * @param $query array (query array)
 	 * @param $uid integer (uid)
  	 *
-	 * @return array (query result)
+	 * @return array (query result or false in case of error)
 	 */
 	public function showAll_SELECT_defaultQuerier(&$query, $uid=0) {
 
@@ -109,7 +109,6 @@ class tx_savlibrary_defaultQueriers {
  			/* WHERE    */	' 1' .
  			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
  			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
-					($query['link'] ? ' AND ' . $query['link'] : '') .
 					($whereId 
             ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
             : (($query['where'] && !$search) ? ' AND ' . $query['where'] : '')
@@ -124,7 +123,12 @@ class tx_savlibrary_defaultQueriers {
 					''
 			);
 
-	  $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+    // Check for errors
+	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+      return false;
+    }
+
+    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
 	  $nbitem = $row['nbitem'];
     
@@ -133,7 +137,7 @@ class tx_savlibrary_defaultQueriers {
       	
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	'*' .
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '').
+					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
 					($extFilter['fieldName'] ? ', ' . $extFilter['fieldName'] . ' as fieldname' : '') .
 					'',		
 			/* FROM     */	$tableReference .
@@ -141,11 +145,10 @@ class tx_savlibrary_defaultQueriers {
  			/* WHERE    */	' 1' .
  			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
  			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '').
-					($query['link'] ? ' AND '.$query['link'] : '').
 					($whereId 
             ? ($query['whereTags'][$whereId]['where'] ? ' AND '.$query['whereTags'][$whereId]['where'] : '')
             : (($query['where'] && !$search )? ' AND ' . $query['where'] : '')
-          ).
+          ) .
 					$this->replaceTableNames($addWhere) .
 					'',  
 			/* GROUP BY */	$query['group'] .
@@ -161,7 +164,12 @@ class tx_savlibrary_defaultQueriers {
           ),
 			/* LIMIT    */	
 					($this->savlibrary->conf['maxItems'] ? ($this->savlibrary->conf['maxItems']*($this->savlibrary->limit)) . ',' . ($this->savlibrary->conf['maxItems']) : '')
-			);
+		);
+
+    // Check for errors
+	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+      return false;
+    }
 
 		$array = array();
     $cpt = 0;
@@ -202,10 +210,9 @@ class tx_savlibrary_defaultQueriers {
 			/* SELECT   */	'*' .
 					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
 					'',		
-			/* FROM     */	$tableReference.
+			/* FROM     */	$tableReference .
 					'',
  			/* WHERE    */	' 1' .
-					($query['link'] ? ' AND ' . $query['link'] : '') .
 					' AND '.$query['tableLocal'] . '.uid=' . intval($uid) .
 					($query['addWhere'] ? ' AND ' . $this->replaceTableNames($query['addWhere']) : ''),
 			/* GROUP BY */	$query['group'] .
@@ -213,7 +220,12 @@ class tx_savlibrary_defaultQueriers {
 			/* ORDER BY */	
 					'',
 			/* LIMIT    */	''	
-			);
+		);
+
+    // Check for errors
+	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+      return false;
+    }
 
 		$array = array();
 
@@ -261,7 +273,6 @@ class tx_savlibrary_defaultQueriers {
 			/* FROM     */	$tableReference .
 					'',
  			/* WHERE    */	' 1' .
-					($query['link'] ? ' AND ' . $query['link'] : '') .
 					' AND '.$query['tableLocal'] . '.uid=' . intval($uid) .
 					'',  		
 			/* GROUP BY */	$query['group'] .
@@ -269,7 +280,12 @@ class tx_savlibrary_defaultQueriers {
 			/* ORDER BY */	
 					'',
 			/* LIMIT    */	''	
-			);
+		);
+
+    // Check for errors
+	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+      return false;
+    }
 
 		$array = array();
 		while ($row = $this->sql_fetch_assoc_with_tablename($res)) {
@@ -423,7 +439,12 @@ class tx_savlibrary_defaultQueriers {
 			/* ORDER BY */	
 					($query['order'] ? $query['order'] : ''),
 			/* LIMIT    */	'1'	
-			);
+		);
+
+    // Check for errors
+	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+      return false;
+    }
 
 		$array = array();
 		while ($row = $this->sql_fetch_assoc_with_tablename($res)) {
@@ -1015,8 +1036,8 @@ class tx_savlibrary_defaultQueriers {
 
       $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['updateForm']], $errors, 0); 
       foreach ($ta['REGIONS']['items'] as $item) {
-        if (array_key_exists($item['MARKERS'][$item['MARKERS']['field'].'_FieldName'], $newPOSTVars)) {
-          $keyField = $item['MARKERS'][$item['MARKERS']['field'].'_FieldName'];
+        if (array_key_exists($item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'], $newPOSTVars)) {
+          $keyField = $item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'];
           if($dataset[$keyField] && $dataset[$keyField]!=$configTable[$keyField]['default']){
             $x['###mailalways_field###'] = $item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'];
             $x['###mailalways_value###'] = $item['MARKERS'][$item['MARKERS']['field']];
@@ -1125,38 +1146,57 @@ class tx_savlibrary_defaultQueriers {
       // Check if a query should be executed
       if ($configTable[$keyField]['query']) {
         $fieldQuery = $configTable[$keyField]['query']; 
-        $val = current($valueField);
+        
+  			foreach($valueField as $key => $value) {
 
-        if (!$configTable[$keyField]['queryonvalue'] || ($configTable[$keyField]['queryonvalue']==$val)) {
-          $mA["###uid###"] = $this->savlibrary->uid;
-          $mA["###CURRENT_PID###"] = $GLOBALS['TSFE']->page['uid'];
-          $mA["###value###"] = $val;
-          $mA["###user###"] = $GLOBALS['TSFE']->fe_user->user['uid'];
-          if ($configTable[$keyField]['queryforeach']) {
-            // Get the table name and the field
-            if(strpos($configTable[$keyField]['queryforeach'], '.')===false) {
-              $foreachField = $this->savlibrary->tableLocal . '.' . $configTable[$keyField]['queryforeach'];
-            }
-            $foreachValues = explode(',', current($regularRow[$foreachField]));
-            foreach($foreachValues as $foreachValue) {
-              $mA['###' . $configTable[$keyField]['queryforeach'] . '###'] = $foreachValue;
+          // Check if the use of the query property is allowed
+          if (!$this->savlibrary->conf['allowQueryProperty']) {
+            $error = true;
+            $errorForm[$keyField][$key] = 'error.queryPropertyNotAllowed';
+            continue;
+          }
+        
+          if (!$configTable[$keyField]['queryonvalue'] || ($configTable[$keyField]['queryonvalue']==$value)) {
+            $mA["###uid###"] = $this->savlibrary->uid;
+            $mA["###CURRENT_PID###"] = $GLOBALS['TSFE']->page['uid'];
+            $mA["###value###"] = $val;
+            $mA["###user###"] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            if ($configTable[$keyField]['queryforeach']) {
+              // Get the table name and the field
+              if(strpos($configTable[$keyField]['queryforeach'], '.')===false) {
+                $foreachField = $this->savlibrary->tableLocal . '.' . $configTable[$keyField]['queryforeach'];
+              }
+              $foreachValues = explode(',', current($regularRow[$foreachField]));
+              foreach($foreachValues as $foreachValue) {
+                $mA['###' . $configTable[$keyField]['queryforeach'] . '###'] = $foreachValue;
+                $fieldQueryTemp = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
+                $queryStrings = explode(';', $fieldQueryTemp);
+                foreach($queryStrings as $queryString) {
+                  $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
+                  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+                    $error = true;
+                    $errorForm[$keyField][$key] = 'error.incorrectQueryInQueryProperty';
+                    break;
+                  }
+                }
+              }
+            } else {
               $fieldQueryTemp = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
               $queryStrings = explode(';', $fieldQueryTemp);
               foreach($queryStrings as $queryString) {
-                $GLOBALS['TYPO3_DB']->sql_query($queryString); 
-              }            
-            }       
-          } else {
-            $fieldQueryTemp = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
-            $queryStrings = explode(';', $fieldQueryTemp);
-            foreach($queryStrings as $queryString) {
-              $GLOBALS['TYPO3_DB']->sql_query($queryString); 
-            }  
+                $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
+                if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
+                  $error = true;
+                  $errorForm[$keyField][$key] = 'error.incorrectQueryInQueryProperty';
+                  break;
+                }
+              }
+            }
           }
-        }                      
-      }     
-		}			
-
+        }
+  		}
+    }
+    
 		// Special processing
 		foreach ($special as $no => $field) {
 		  $fieldName = key($field);
@@ -1265,6 +1305,7 @@ class tx_savlibrary_defaultQueriers {
 
 		// return errors if any
 		if($error) {
+			$this->savlibrary->errorInForm = true;
 			return $errorForm;
 		} else {
 			return false;
@@ -1287,7 +1328,17 @@ class tx_savlibrary_defaultQueriers {
     if ($mailReceiverFromQuery = $config['mailreceiverfromquery']) {
       $mA["###uid###"] = $this->savlibrary->uid;
       $mailReceiverFromQuery = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($mailReceiverFromQuery, $mA, array(), array() );
-      $res = $GLOBALS['TYPO3_DB']->sql_query($mailReceiverFromQuery);
+      
+      // Check if the query is a SELECT query and for errors
+      if (!$this->savlibrary->isSelectQuery($mailReceiverFromQuery)) {
+        $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+        return false;
+      } elseif (!($res = $GLOBALS['TYPO3_DB']->sql_query($mailReceiverFromQuery))) {
+        $this->savlibrary->addError('error.incorrectQueryInContent', $config['field']);
+        return false;
+      }
+
+        // Process the query
       $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
       foreach ($row as $k => $v) {
@@ -1628,7 +1679,8 @@ class tx_savlibrary_defaultQueriers {
     } else {
       die($this->savlibrary->getLibraryLL('fatal.incorrectTCA'));
     }
-   
+		t3lib_div::loadTCA('fe_users');
+
     // Add the columns for existing tables
     if (isset($this->savlibrary->extObj->extConfig['TCA'][$tableName])) {
       $temp = $this->savlibrary->extObj->extConfig['TCA'][$tableName];
@@ -1689,28 +1741,22 @@ class tx_savlibrary_defaultQueriers {
           }           
         }
       }
-    }     
+    }
 
+    // Add the foreign tables
+    $tableReference .= ' '. $query['tableForeign'];
+    
     // Check for duplicate table names with addTables
     $temp = explode(',',$addTables);
+    $addTablesArray = array();
     foreach ($temp as $key=>$table) {
-      if (preg_match('/ ' . $table . ' /', $tableReference)) {
-        unset($temp[$key]);
+      if($table && !in_array($table, $addTablesArray) && !preg_match('/ ' . $table . ' /', $tableReference)) {
+        $addTablesArray[] = $table;
       }
     }
-    $addTables = implode(',', $temp);
+    $addTables = implode(',', $addTablesArray);
 
-    // Check for duplicate table names with $query['tableForeign']
-    $temp = explode(',',$query['tableForeign']);
-    foreach ($temp as $key=>$table) {
-      if (preg_match('/ ' . $table . ' /', $tableReference)) {
-        unset($temp[$key]);
-      }
-    }
-    $temp = implode(',', $temp);
-    $addTables .= ($temp ? ', ' . $temp : '');
-
-    return $tableReference . $addTables;
+    return $tableReference . ($addTables ? ', ' . $addTables : '');
   }
 
 }

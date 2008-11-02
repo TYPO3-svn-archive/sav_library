@@ -65,19 +65,14 @@ class tx_kickstarter_section_formqueries extends tx_kickstarter_sectionbase {
       $lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 				// Enter tableForeign
+			$nbLines = substr_count($piConf['tableForeign'], chr(13).chr(10)) + 2;
       $subContent='<strong style="color:black">Foreign table:</strong><BR>'.
-        $this->renderStringBox($ffPrefix.'[tableForeign]',$piConf['tableForeign'], 500);
+          ($piConf['tableForeignExpand']
+            ? $this->renderTextareaBox($ffPrefix.'[tableForeign]',$piConf['tableForeign'], 500, max(5, $nbLines))
+            : $this->renderStringBox($ffPrefix.'[tableForeign]',$piConf['tableForeign'], 500)).
+          $this->renderCheckBox($ffPrefix.'[tableForeignExpand]',$piConf['tableForeignExpand']);
       $lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
-          
-				// Enter link
-			$nbLines = substr_count($piConf['link'], chr(13).chr(10)) + 2;      
-      $subContent='<strong style="color:black">Link:</strong><BR>'.
-          ($piConf['linkExpand'] 
-            ? $this->renderTextareaBox($ffPrefix.'[link]',$piConf['link'], 500, max(5, $nbLines)) 
-            : $this->renderStringBox($ffPrefix.'[link]',$piConf['link'], 500)).
-          $this->renderCheckBox($ffPrefix.'[linkExpand]',$piConf['linkExpand']);
-      $lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
-          
+
 				// Enter aliases
 			$nbLines = substr_count($piConf['aliases'], chr(13).chr(10)) + 2;      
       $subContent='<strong style="color:black">Aliases:</strong><BR>'.

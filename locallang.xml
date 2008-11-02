@@ -34,6 +34,7 @@
 			<label index="pi_flexform.sheetTitle.sAdvanced">Advanced</label>
 			<label index="pi_flexform.permanentFilter">Permanent filter</label>
 			<label index="pi_flexform.addFragment">Add a fragment(#content id) to links</label>
+			<label index="pi_flexform.allowQueryProperty">Allow the use of the "query" property</label>
 			<label index="pi_flexform.helpPage">Help page</label>
 			<label index="pi_flexform.help">Help</label>
            		
@@ -62,8 +63,11 @@
 			<label index="error.incorrectRTFTemplateFileConfig">Incorrect RTF template configuration (templateRTF=filename; is missing in the field configration).</label>
 			<label index="error.incorrectRTFTemplateFileExtension">Incorrect RTF template file extension.</label>
 			<label index="error.incorrectRTFTemplateFileName">Unknown RTF template file. Check the path.</label>
+			<label index="error.incorrectQuery">Error in the query associated with the view:</label>
 			<label index="error.incorrectQueryInsertNew">Error in creating the new record. It may occur if you try to insert a field which does not exist in the table (e.g. field with the type "Shown only in SAV Form").</label>
-			<label index="error.incorrectQueryInReqValue">Error in the query associated with the property "reqValue" in the following field: </label>
+			<label index="error.incorrectQueryInReqValue">Error in the query associated with the property "reqValue" in the field: </label>
+			<label index="error.incorrectQueryInQueryProperty">Error in the query associated with the property "query"</label>
+			<label index="error.incorrectQueryInContent">Error in the query associated with the property "content" in the field: </label>
 			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library have not the same version. Open the extension with the kickstater and save it.</label>
 			<label index="error.missingDot">Separate the field name from the table name by a dot "." in: </label>  
 			<label index="error.missingEqualSign">The sign = is missing in parameter: </label>
@@ -73,6 +77,8 @@
 			<label index="error.noFieldSelectedInSubForm">Please contact the Webmaster. No field was selected in the subform. Select at least a field with the kickstarter</label>
 			<label index="error.noFormSelectedInFlexform">Error: no form selected in the flexform of the extension: </label>   
 			<label index="error.notSavedElapsedTime">Your latest changes could not been saved because the allocated time for inputs was over.</label>
+			<label index="error.onlySelectQueryAllowed">Error: only SELECT query is allowed in the field: </label>
+			<label index="error.queryPropertyNotAllowed">Error: the use of the "query" property is not allowed in this extension.</label>
 			<label index="error.templateNeeded">A template file is needed and the defaut template was not found. Please contact the WebMaster.</label>
 			<label index="error.unauthentified">You must be authentified to save these data</label>
 			<label index="error.underMaintenance">This service is temporarily unavailable due to maintenance - please come back later.</label>
@@ -183,6 +189,7 @@
 			<label index="pi_flexform.sheetTitle.sAdvanced">Avancées</label>
 			<label index="pi_flexform.permanentFilter">Filtre permanent</label>
 			<label index="pi_flexform.addFragment">Ajouter un fragment(#content id) aux liens</label>
+			<label index="pi_flexform.allowQueryProperty">Autoriser l'utilisation de la propriété "query"</label>
 			<label index="pi_flexform.helpPage">Page d'aide</label>
 			<label index="pi_flexform.help">Aide</label>
 		
@@ -211,8 +218,11 @@
 			<label index="error.incorrectRTFTemplateFileConfig">Configuration du template RTF incorrecte (templateRTF=filename; manque dans la configuration du champ).</label>
 			<label index="error.incorrectRTFTemplateFileExtension">Extension incorrecte du template RTF.</label>
 			<label index="error.incorrectRTFTemplateFileName">Template RTF inconnu. Vérifier le chemin.</label>
+			<label index="error.incorrectQuery">Erreur dans la requête associée à la vue: </label>
 			<label index="error.incorrectQueryInsertNew">Erreur dans la création d'un nouvel enregistrement. Cela peut arriver si vous essayez d'insérer un champ qui n'existe pas (e.g. champ de type "Shown only in SAV Form").</label>
-			<label index="error.incorrectQueryInReqValue">Erreur dans la requête associée à la propriété "reqValue" dans le champ suivant : </label>
+			<label index="error.incorrectQueryInReqValue">Erreur dans la requête associée à la propriété "reqValue" dans le champ : </label>
+			<label index="error.incorrectQueryInContent">Erreur dans la requête associée à la propriété "content" dans le champ : </label>
+			<label index="error.incorrectQueryInQueryProperty">Erreur dans la requête associée la la propriété "query"</label>
 			<label index="error.incorrectVersion">Merci de contacter le webmestre. L'extension et la bibliothèque n'ont pas la même version. Ouvrir l'extension avec le kickstater et la sauver.</label>
 			<label index="error.missingDot">Séparer le champ de la table par un "." dans : </label>
 			<label index="error.missingEqualSign">Le signe = manque dans le paramètre : </label>
@@ -222,6 +232,8 @@
 			<label index="error.noFieldSelectedInSubForm">Merci de contacter le webmestre. Aucun champ sélectionné dans le sous-formulaire. Sélectionner au moins un champ avec le kickstarter</label>
 			<label index="error.noFormSelectedInFlexform">Erreur: aucun formulaire sélectionné dans le "flexform" associé à l'extension : </label>   
 			<label index="error.notSavedElapsedTime">Vos dernières modifications n'ont pas pu être sauvegardées car vous avez dépassé le temps alloué à cet effet.</label>
+			<label index="error.onlySelectQueryAllowed">Erreur : seule une requête SELECT est autorisée dans le champ : </label>
+			<label index="error.queryPropertyNotAllowed">Erreur : l'utilisation de la propriété "query" n'est pas autorisée pour cette extension.</label>
 			<label index="error.templateNeeded">Un fichier "template" est nécessaire et le fichier par n'a pas été trouvé.</label>
 			<label index="error.unauthentified">Vous devez être authentifié pour sauver ces données</label>
 			<label index="error.underMaintenance">Ce service est temporairement inacessible pour cause de maintenance - merci de revenir ultérieurement.</label>

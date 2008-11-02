@@ -1161,8 +1161,17 @@ class tx_savlibrary_defaultViewers {
                   $mA['###uid###'] = $row[$config['table'].'.uid'];
                   $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
                   $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array() );
-  			          $resLocal = $GLOBALS['TYPO3_DB']->sql_query($query);
-         			
+                  
+                  // Check if the query is a SELECT query and for errors
+                  if (!$this->savlibrary->isSelectQuery($query)) {
+                    $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+                    continue;
+                  } elseif (!($resLocal = $GLOBALS['TYPO3_DB']->sql_query($query))) {
+                    $this->savlibrary->addError('error.incorrectQueryInReqValue', $config['field']);
+                    continue;
+                  }
+
+                  // Process the query
 		              $value='';
 		              while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resLocal)) {
 		                if (array_key_exists('value',$rows)) {

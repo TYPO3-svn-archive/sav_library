@@ -164,9 +164,7 @@
         
         &lt;b&gt;Foreign table&lt;/b&gt; 
         Define here the foreign tables (tables from other extension for exemple) that are needed for your extension (MySQL syntax).
-        
-        &lt;b&gt;Link&lt;/b&gt; 
-        Use this field to set the JOIN operations between your local and foreign tables (MySQL syntax).
+        It is possible to use LEFT JOIN ou INNER JOIN.
         
         &lt;b&gt;Aliases&lt;/b&gt; 
         Define here the aliases associated with your query (MySQL syntax).
@@ -180,7 +178,7 @@
         
         Existing methods are:
           - isInputMode which returns true the form is in the input mode,
-          - isNotInpuMode which returns true the form is not in the input mode, 
+          - isNotInputMode which returns true the form is not in the input mode,
           - isGroupMember(groupName) which returns true if the user is a member of "groupName",
           - isNotGroupMember(groupName) which returns true if the user is not a member of "groupName".    
               
@@ -887,9 +885,7 @@
         
         &lt;b&gt;Foreign table&lt;/b&gt; 
         Définit les autres tables (tables relatives à d'autres extensions) qui sont nécessaires pour votre extension (syntaxe MySQL).
-        
-        &lt;b&gt;Link&lt;/b&gt; 
-        Utiliser ce champ pour définir les jointures entre la table locale et les autres tables (syntaxe MySQL).
+        Il est possible de placer des jointures de tye LEFT JOIN ou INNER JOIN.
         
         &lt;b&gt;Aliases&lt;/b&gt; 
         Sert à définir les alias associés à la requête (syntaxe MySQL).
@@ -903,7 +899,7 @@
         
         Les méthodes prédéfinies sont :
           - isInputMode retourne vrai si le formulaire est dans le mode de saisie,
-          - isNotInpuMode retourne vrai si le formulaire est dans le mode de saisie, 
+          - isNotInputMode retourne vrai si le formulaire est dans le mode de saisie,
           - isGroupMember(groupName) retourne vrai si l'utilisateur est un membre du groupe "groupName",
           - isNotGroupMember(groupName) retourne vrai si l'utilisateur n'est pas un membre du groupe "groupName".
              

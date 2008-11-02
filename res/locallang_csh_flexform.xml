@@ -45,9 +45,12 @@
         
         &lt;b&gt;No "delete" button&lt;/b&gt;
         A delete button will not be added in front of the records in "show All" views.
-        
+
+        &lt;b&gt;No "edit" button&lt;/b&gt;
+        An edit button will not be added in front of the records in "show All" views.
+
         &lt;b&gt;Add a "delete" button only for records created by the user&lt;/b&gt;
-        Clear isn't it !
+        Add a "delete" button only for records created by the user.
         
         &lt;b&gt;Input start date&lt;/b&gt;
         If set,  inputs in the Front End will not be possible before this date.
@@ -66,6 +69,11 @@
 
         &lt;b&gt;Add a fragment (# content id) to links&lt;/b&gt;
         The content id is added as a fragment to the links.
+        
+        &lt;b&gt;Allow the use of the “query” property&lt;/b&gt;
+        The "query" property makes it possible to execute queries in "input" or "update" forms.
+        Because any query may be executed, for security reason, only admin users can check this field must when this property is needed.
+
 			</label>
 			
 		</languageKey>
@@ -81,63 +89,71 @@
 
       <label index="helpGeneral.description">Aide pour l'onglet "Général"</label>
 			<label index="helpGeneral.details">
-        &lt;b&gt;Select form&lt;/b&gt;
+        &lt;b&gt;Choisir un formulaire&lt;/b&gt;
          Utiliser ce sélecteur pour choisir le nom du formulaire. Rappelons que "SAV Library" permet de construire plusieurs formulaires associés à la même extension et, aisni, d'avoir des vues différentes des tables.
 
-        &lt;b&gt;Show all if no filter&lt;/b&gt;
+        &lt;b&gt;Tout montrer si pas de filtre&lt;/b&gt;
         En sélectionnant cette entrée, tous les items sont affichés quand aucun filtre n'est appliqué comme, par exemple, l'extension "sav_filter_abc".
         
-        &lt;b&gt;If no information available&lt;/b&gt;
+        &lt;b&gt;Si aucune information disponible&lt;/b&gt;
         Utiliser ce sélecteur pour choisir ce qui doit être affiché quand aucune information n'est disponible.
         
-        &lt;b&gt;Max number of items&lt;/b&gt;
+        &lt;b&gt;Nombre max d'éléments affichés&lt;/b&gt;
         Nombre maximum d'items qui seront affichés. Si la valeur 0 est utilisée, tous les items seront affichés.
         
-        &lt;b&gt;Help page&lt;/b&gt;
+        &lt;b&gt;Page d'aide&lt;/b&gt;
         Utiliser ce sélecteur pour choisir une page de votre site qui sera utilisée comme page d'aide pour votre extension. Dans ce cas, une icône sera affichée dans la barre de titre de l'extension.			
 			</label>
 			
       <label index="helpInput.description">Aide pour l'onglet "Option de saisie"</label>
 			<label index="helpInput.details">
-        &lt;b&gt;Input on form&lt;/b&gt;
+        &lt;b&gt;Saisie autorisée&lt;/b&gt;
         En sélectionnant cette option, les entrées Front End sont autorisées.
         
-        &lt;b&gt;Allowed groups&lt;/b&gt;
+        &lt;b&gt;Groupes autorisés&lt;/b&gt;
         Si vous sélectionnez des groupes d'utilisateurs, l'utilisateur de l'extension doit appartenir à l'un de ces groupes pour être autorisé à entrer des données en Front End.
         
-        &lt;b&gt;Input Admin field&lt;/b&gt;
+        &lt;b&gt;Champ Admin&lt;/b&gt;
         Mettre dans ce champ une entrée de la forme "NomTable.NomChamp" (si vous utilisez seulement "NomChamp", la table principale définie dans la requête sera utilisée pour "NomTable),
         Ceci restreindra les entrées aux utilisateurs qui ont des droits "Admin" dans leur TS Config.
         Par exemple, si un utilisateur a "extKey_Admin=valeur1,valeur2" dans son TS Config, il sera autorisé à éditer et détruire les items pour lesquels "NomChamp" est égal à "valeur1" ou "valeur2" pour l'extension "extKey".
         Les champs ou les onglets pour lesquels "editAdminPlus = 1;" est utilisé pourront être modifé en Front End si l'utilisateur a les droits "Admin+". Par exemple, si son TS Config est "extKey_Admin=valeur+,valeur2" , l'utilisateur est "Admin+" pour les enregistrements où "nomChamp" est égal à "valeur2" et juste "Admin" pour les champs où "nomChamp" est égal à "valeur2".
         Les utilisateurs deviennent "Super Admin" pour l'extension extKey, si leur TS Config est "extKey_Admin=*"".
 
-        &lt;b&gt;No "new" button&lt;/b&gt;
+        &lt;b&gt;Pas de bouton "Nouveau"&lt;/b&gt;
         Le bouton "Nouveau" ne sera pas ajouté au formulaire. Cela signifie que la modification d'enregistrements existants est possible mais que la création de nouveaux enregistrements est impossible.
-        
-        &lt;b&gt;No "delete" button&lt;/b&gt;
+
+        &lt;b&gt;Pas de bouton "Supprimer"&lt;/b&gt;
         Un bouton "supprimer" ne sera pas ajouté devant chaque enregistrement dans les vues "Show All".
-        
-        &lt;b&gt;Add a "delete" button only for records created by the user&lt;/b&gt;
+
+        &lt;b&gt;Pas de bouton "Editer"&lt;/b&gt;
+        Un bouton "Editer" ne sera pas ajouté devant chaque enregistrement dans les vues "Show All".
+
+        &lt;b&gt;Ajouter un  bouton "Supprimer" pour les enregistrements créés par l'utilisateur &lt;/b&gt;
         Ajoute un bouton "supprimer" seulemet pour les enregistrements créés par l'utilisateur.
         
-        &lt;b&gt;Input start date&lt;/b&gt;
+        &lt;b&gt;Date début saisie&lt;/b&gt;
         Si ce champ est utilisé, les entrées en Front End ne seront pas possibles avant cette date.
         
-        &lt;b&gt;Input end date&lt;/b&gt;
+        &lt;b&gt;Date fin saisie&lt;/b&gt;
         Si ce champ est utilisé, les entrées en Front End ne seront pas possibles après cette date.
 
-        &lt;b&gt;Apply date limit&lt;/b&gt;
+        &lt;b&gt;Appliquer la date à&lt;/b&gt;
         Utiliser ce sélecteur pour choisir "Personne", "Tous", "Utilisateurs Admin plus", "Tous sauf les Super Admin". La date limite est appliquée en fonction de ce sélecteur.
 			</label>
 
       <label index="helpAdvanced.description">Aide pour l'onglet "Avancées"</label>
 			<label index="helpAdvanced.details">
-        &lt;b&gt;Permanent filter&lt;/b&gt;
+        &lt;b&gt;Filtre permanent&lt;/b&gt;
         Vous pouvez utiliser ce champ pour ajouter une clause WHERE qui sera ajoutée à la clause WHERE de la requête associée au formulaire.
 
-        &lt;b&gt;Add a fragment (# content id) to links&lt;/b&gt;
+        &lt;b&gt;Ajouter un fragment(#content id) aux liens&lt;/b&gt;
         L'id du contenu sera ajouté comme fragment à l'url des liens.
+        
+        &lt;b&gt;Autoriser l'utilisation de la propriété "query"&lt;/b&gt;
+        La propriété "query" permet d'ecécuter des requêtes dans les formulaires "input" ou "update".
+        Parce que n'importe quelle requête peut être exécutée, pour des raisons de sécurité, seuls les utilisateurs "admin" peuvent modifier ce champ.
+
 			</label>
 
 		</languageKey>

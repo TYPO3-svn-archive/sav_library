@@ -965,8 +965,18 @@ class tx_savlibrary_defaultItemviewers {
         $query = $config['content']; 
         $mA["###uid###"] = $config['uid'];
         $mA["###uidSelected###"] = key($selected);
-        $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array() );      
-  			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+        $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array());
+        
+        // Check if the query is a SELECT query and for errors
+        if (!$this->savlibrary->isSelectQuery($query)) {
+          $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+          return $this->savlibrary->arrayToHTML($htmlArray);
+        } elseif (!($res = $GLOBALS['TYPO3_DB']->sql_query($query))) {
+          $this->savlibrary->addError('error.incorrectQueryInContent', $config['field']);
+          return $this->savlibrary->arrayToHTML($htmlArray);
+        }
+        
+        // Process the query
   		  $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
   		  // check if the makeExtLink is required
   		  if ($config['func'] == 'makeExtLink') {
@@ -1295,7 +1305,17 @@ class tx_savlibrary_defaultItemviewers {
         $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array() );
 
         $config['items'] = $items;
-  			$res = $GLOBALS['TYPO3_DB']->sql_query($query);
+
+        // Check if the query is a SELECT query and for errors
+        if (!$this->savlibrary->isSelectQuery($query)) {
+          $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+          return $this->savlibrary->arrayToHTML($htmlArray);
+        } elseif (!($res = $GLOBALS['TYPO3_DB']->sql_query($query))) {
+          $this->savlibrary->addError('error.incorrectQueryInContent', $config['field']);
+          return $this->savlibrary->arrayToHTML($htmlArray);
+        }
+
+        // Process the query
   			if (!is_array($config['items'])) {
           $config['items'] = array();
         } 
