@@ -69,7 +69,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
     $this->EOL = chr(10); 
     $this->TAB = chr(9); 
     $this->SPACE = '    ';
-    $this->WRAP = $this->EOL.$this->TAB.$this->TAB;    
+    $this->WRAP = $this->EOL . $this->TAB . $this->TAB;
   }
 
 	/**
@@ -99,7 +99,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
     }
       
     // Set the pageID
-    $this->extKeyWithId = $this->extKey.'_'.$this->cObj->data['uid'];   
+    $this->extKeyWithId = $this->extKey . '_' . $this->cObj->data['uid'];
     if ($this->sessionFilter[$this->extKeyWithId]['pageID'] != $GLOBALS['TSFE']->id && $this->sessionFilterSelected == $this->extKeyWithId) {
       unset($this->sessionFilterSelected);
     }
@@ -143,11 +143,11 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
     // Include the default style sheet if none was provided
 		if (!isset($GLOBALS['TSFE']->additionalHeaderData[$this->extKey])) {
 		  if (!$this->conf['fileCSS']) {
-		    if (file_exists(t3lib_extMgm::siteRelPath($this->extKey).'res/'.$this->extKey.'.css')) {
-          $css = '<link rel="stylesheet" type="text/css" href="'.t3lib_extMgm::siteRelPath($this->extKey).'res/'.$this->extKey.'.css" />';
+		    if (file_exists(t3lib_extMgm::siteRelPath($this->extKey) . 'res/' . $this->extKey . '.css')) {
+          $css = '<link rel="stylesheet" type="text/css" href="' . t3lib_extMgm::siteRelPath($this->extKey) . 'res/' . $this->extKey . '.css" />';
         }
       } elseif (file_exists($this->conf['fileCSS'])) {
-        $css = '<link rel="stylesheet" type="text/css" href="'.$this->conf['fileCSS'].'" />';
+        $css = '<link rel="stylesheet" type="text/css" href="' . $this->conf['fileCSS'] . '" />';
 		  } else {
         $this->addError('error.incorrectCSS');
         return false;
@@ -246,7 +246,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
    * @return void
    */
   protected function SetSessionField_pidList() {
-    $this->sessionFilter[$this->extKeyWithId]['pidList'] = ($this->conf['pidList'] ? ' AND pid IN ('.$this->conf['pidList'].')' : ''); 
+    $this->sessionFilter[$this->extKeyWithId]['pidList'] = ($this->conf['pidList'] ? ' AND pid IN (' . $this->conf['pidList'] . ')' : '');
   } 
 
   /**
@@ -287,13 +287,13 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
     }
     
     if (!$this->conf['noForm']) {   
-      $htmlArray[] = '<form method="post" name="'.$name.'" enctype="multipart/form-data" action="'.$url.'" title="'.$GLOBALS['TSFE']->sL('LLL:EXT:'.$this->extKey.'/locallang.xml:pi1_plus_wiz_description').'">';
+      $htmlArray[] = '<form method="post" name="' . $name . '" enctype="multipart/form-data" action="' . $url . '" title="' . $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/locallang.xml:pi1_plus_wiz_description') . '">';
     }
-    $htmlArray[] = '  <div class="container-'.str_replace('_', '', $this->extKey).'">';
+    $htmlArray[] = '  <div class="container-' . str_replace('_', '', $this->extKey).'">';
     if ($hidden) {
-      $htmlArray[] = array_merge($htmlArray, explode($this->EOL, '    '.implode($this->EOL.'    ', explode($this->EOL, $hidden))));
+      $htmlArray[] = array_merge($htmlArray, explode($this->EOL, '    ' . implode($this->EOL . '    ', explode($this->EOL, $hidden))));
     }
-    $htmlArray = array_merge($htmlArray, explode($this->EOL, '    '.implode($this->EOL.'    ', explode($this->EOL, $content))));
+    $htmlArray = array_merge($htmlArray, explode($this->EOL, '    ' . implode($this->EOL . '    ', explode($this->EOL, $content))));
     $htmlArray[] = '  </div>';
     if (!$this->conf['noForm']) {   
       $htmlArray[] = '</form>';
@@ -311,7 +311,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 	 * @return string (string with the class added)
 	 */  
   protected function add_class($x, $class) {
-    return preg_replace('/^<a/', '<a class="'.$class.'"', $x);    
+    return preg_replace('/^<a/', '<a class="' . $class . '"', $x);
   }
 	
 	/**
@@ -323,7 +323,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 	 * @return void 
 	 */
 	protected function addError($errorLabel, $addMessage='') {
-    $this->errors[] = $this->pi_getLL($errorLabel).$addMessage;
+    $this->errors[] = $this->pi_getLL($errorLabel) . $addMessage;
   }
   
 	/**
@@ -337,9 +337,9 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 		} else {
 			$errorList = '';
 			foreach($this->errors as $error) {
-        $errorList .= '<li class="error">'.$error.'</li>';
+        $errorList .= '<li class="error">' . $error . '</li>';
       }
-			return  '<ul>'.$errorList.'</ul>';
+			return  '<ul>' . $errorList . '</ul>';
 		}
 	}	
 
@@ -352,7 +352,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 	 * @return  (none)
 	 */
   protected function addMessage($messageLabel, $addMessage='', $class='') {
-    $message['text'] = $this->pi_getLL($messageLabel).$addMessage;
+    $message['text'] = $this->pi_getLL($messageLabel) . $addMessage;
     $message['class'] = $class;
     $this->messages[] = $message;
   }
@@ -368,9 +368,9 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 		} else {
   		$messageList = '';
   		foreach($this->messages as $message) {
-        $messageList .= '<li class="'.($message['class'] ? $message['class'] : 'message').'">'.$message['text'].'</li>';
+        $messageList .= '<li class="' . ($message['class'] ? $message['class'] : 'message') . '">' . $message['text'] . '</li>';
       }
-      return '<ul>'.$messageList.'</ul>';
+      return '<ul>' . $messageList . '</ul>';
     }
   }
 
@@ -381,7 +381,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 	 */
   protected function arrayToHTML($htmlArray, $space='') {
   
-		return  implode($this->EOL.$space, $htmlArray);
+		return  implode($this->EOL . $space, $htmlArray);
   }  	
 	
 }
