@@ -165,6 +165,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
    *@return void
    */
   protected function SetSessionFields() {
+
     if ((count($this->piVars) && !$this->piVarsReloaded) || $this->forceSetSessionFields) {
       $this->SetSessionField_tablename();
       $this->SetSessionField_fieldName();
@@ -195,7 +196,6 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
     $GLOBALS['TSFE']->fe_user->setKey('ses','filterSelected',$this->sessionFilterSelected);
     $GLOBALS['TSFE']->fe_user->setKey('ses','auth',$this->sessionAuth);
     $GLOBALS['TSFE']->storeSessionData();       
-           
   }
 
   /**
@@ -289,7 +289,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
     if (!$this->conf['noForm']) {   
       $htmlArray[] = '<form method="post" name="' . $name . '" enctype="multipart/form-data" action="' . $url . '" title="' . $GLOBALS['TSFE']->sL('LLL:EXT:' . $this->extKey . '/locallang.xml:pi1_plus_wiz_description') . '">';
     }
-    $htmlArray[] = '  <div class="container-' . str_replace('_', '', $this->extKey).'">';
+    $htmlArray[] = '  <div class="container-' . str_replace('_', '', $this->extKey) . '">';
     if ($hidden) {
       $htmlArray[] = array_merge($htmlArray, explode($this->EOL, '    ' . implode($this->EOL . '    ', explode($this->EOL, $hidden))));
     }

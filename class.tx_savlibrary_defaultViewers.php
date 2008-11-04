@@ -78,7 +78,11 @@ class tx_savlibrary_defaultViewers {
     			  // Clear the field value if the cutter is set
     			  if ($v['CUTTERS']['CUT_value']) {
               $v['MARKERS'][$v['MARKERS']['field']] = '';
+            } elseif ($v['WRAPPERS']['wrapitem']) {
+              // Check if there is a wrapper
+              $v['MARKERS'][$v['MARKERS']['field']] = $this->savlibrary->extObj->cObj->dataWrap($v['MARKERS'][$v['MARKERS']['field']], $v['WRAPPERS']['wrapitem']);
             }
+
     				// get the name
             $items['MARKERS'] = array_merge($items['MARKERS'], $v['MARKERS']);
     			}
@@ -384,8 +388,8 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:'.$this->savlibrary->extObj->extKey.'/locallang_db.xml:'.$items['MARKERS'][$matches[1][$keyMatch].'_FieldName']);
-            $label .= ($items['MARKERS'][$matches[1][$keyMatch].'_Required'] ? '<span class="required">*</span>' : '');
+            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->savlibrary->extObj->extKey . '/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label .= ($items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ? '<span class="required">*</span>' : '');
             if ($label) {
               $tmpl = str_replace($matches[0][$keyMatch], $label, $tmpl);
             }
@@ -409,11 +413,11 @@ class tx_savlibrary_defaultViewers {
             $checked = ($items['MARKERS'][$matches[1][$keyMatch].'_Checked'] ? 'checked ' : '');
             if ($items['MARKERS'][$matches[1][$keyMatch].'_Check']) {
               $checkbox = ($matches[2][$keyMatch] ? '<div class="updateCol4">' : '');
-              $checkbox .= '<input class="check" type="checkbox" '.$checked.'name="'.'Check_'.$items['MARKERS'][$matches[1][$keyMatch].'_Field'].'"  value="1" />';
+              $checkbox .= '<input class="check" type="checkbox" ' . $checked.'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch].'_Field'] . '"  value="1" />';
               $checkbox .= ($matches[2][$keyMatch] ? '</div>' : '');
             } else {
               $checkbox = ($matches[2][$keyMatch] ? '<div class="updateCol4Manual">' : '');
-              $checkbox .= '<input class="checkManual" type="checkbox" '.$checked.'name="'.'Check_'.$items['MARKERS'][$matches[1][$keyMatch].'_Field'].'"  value="1" />';
+              $checkbox .= '<input class="checkManual" type="checkbox" ' . $checked.'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch].'_Field'] . '"  value="1" />';
               $checkbox .= ($matches[2][$keyMatch] ? '</div>' : '');
             }
           } else {
@@ -423,11 +427,11 @@ class tx_savlibrary_defaultViewers {
           // Check if label is associated with the field
           if ($matches[2][$keyMatch]) {
             $tmpl = str_replace($matches[0][$keyMatch],
-                     '<div class="updateCol1">'.$matches[3][$keyMatch].'</div><div class="updateCol2">###'.$matches[1][$keyMatch].'###</div><div class="updateCol3">###'.$matches[1][$keyMatch].'_Edit###</div>'.$checkbox, 
+                     '<div class="updateCol1">' . $matches[3][$keyMatch] . '</div><div class="updateCol2">###' . $matches[1][$keyMatch] . '###</div><div class="updateCol3">###' . $matches[1][$keyMatch] . '_Edit###</div>' . $checkbox,
                      $tmpl);
           } else {
             $tmpl = str_replace($matches[0][$keyMatch],
-                     ($items['MARKERS'][$matches[1][$keyMatch].'_Edit'] ? '###'.$matches[1][$keyMatch].'_Edit###' : '###'.$matches[1][$keyMatch].'###').$checkbox, 
+                     ($items['MARKERS'][$matches[1][$keyMatch] . '_Edit'] ? '###' . $matches[1][$keyMatch] . '_Edit###' : '###' . $matches[1][$keyMatch] . '###') . $checkbox,
                      $tmpl);          
           }
         }  
@@ -436,7 +440,7 @@ class tx_savlibrary_defaultViewers {
 
         foreach ($matches[1] as $keyMatch => $valueMatch) {
           $tmpl = str_replace($matches[0][$keyMatch],
-                     '<div class="updateCol1">'.$matches[2][$keyMatch].'</div><div class="updateCol2">&nbsp;</div><div class="updateCol3">###'.$matches[1][$keyMatch].'_New###</div>', 
+                     '<div class="updateCol1">' . $matches[2][$keyMatch] . '</div><div class="updateCol2">&nbsp;</div><div class="updateCol3">###' . $matches[1][$keyMatch] . '_New###</div>',
                      $tmpl);
         } 
 
@@ -523,14 +527,18 @@ class tx_savlibrary_defaultViewers {
 
   			// Make some processing to retrieve a simple item type			
   			$items['MARKERS'] = array();
+        $cut = array();
   			foreach($x['REGIONS']['items'] as $k => $v) {
 
   			  // Clear the field value if the cutter is set
   			  if ($v['CUTTERS']['CUT_value']) {
             $v['MARKERS'][$v['MARKERS']['field']] = '';
             $cut[$v['MARKERS']['field']] = 1;
+          } elseif ($v['WRAPPERS']['wrapitem']) {
+            // Check if there is a wrapper
+            $v['MARKERS'][$v['MARKERS']['field']] = $this->savlibrary->extObj->cObj->dataWrap($v['MARKERS'][$v['MARKERS']['field']], $v['WRAPPERS']['wrapitem']);
           }
-
+          
   				// get the name
           $items['MARKERS'] = array_merge($items['MARKERS'], $v['MARKERS']);
   			}
@@ -539,8 +547,8 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:'.$this->savlibrary->extObj->extKey.'/locallang_db.xml:'.$items['MARKERS'][$matches[1][$keyMatch].'_FieldName']);
-            $label .= ($items['MARKERS'][$matches[1][$keyMatch].'_Required'] ? '<span class="required">*</span>' : '');
+            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->savlibrary->extObj->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label .= ($items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ? '<span class="required">*</span>' : '');
             if ($label) {
               $tmpl = str_replace($matches[0][$keyMatch], $label, $tmpl);
             }
@@ -553,7 +561,7 @@ class tx_savlibrary_defaultViewers {
         foreach ($matches[1] as $keyMatch => $valueMatch) {
           if (!$cut[$valueMatch]) {
             $tmpl = str_replace($matches[0][$keyMatch],
-                     '<div class="printCol1">'.$matches[2][$keyMatch].'</div><div class="printCol2">###'.$matches[1][$keyMatch].'###</div>', 
+                     '<div class="printCol1">' . $matches[2][$keyMatch] . '</div><div class="printCol2">###' . $matches[1][$keyMatch] . '###</div>',
                      $tmpl);
           }
         }  
@@ -789,14 +797,14 @@ class tx_savlibrary_defaultViewers {
         'uid' => 0,
         'emptyitem' => 1,
         'items' => array(),
-  		  'elementControlName' => $this->savlibrary->formName.'[configuration][0]',
+  		  'elementControlName' => $this->savlibrary->formName . '[configuration][0]',
         'value' => $extPOSTVars['configuration'][0],
       );
 
       $res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   				  /* SELECT   */	'*',		
   				  /* FROM     */	$table,
-  	 			  /* WHERE    */	'cid='.$this->savlibrary->extObj->cObj->data['uid'].' and cruser_id='.$GLOBALS['TSFE']->fe_user->user['uid'].$this->savlibrary->extObj->cObj->enableFields($table),
+  	 			  /* WHERE    */	'cid='.$this->savlibrary->extObj->cObj->data['uid'] . ' and cruser_id=' . $GLOBALS['TSFE']->fe_user->user['uid'] . $this->savlibrary->extObj->cObj->enableFields($table),
   				  /* GROUP BY */	'',
   				  /* ORDER BY */	'name',
   				  /* LIMIT    */	''
@@ -886,14 +894,14 @@ class tx_savlibrary_defaultViewers {
       // Process the fields
     if (is_array($this->savlibrary->queriers->sqlFieldsExport)) {
       foreach ($this->savlibrary->queriers->sqlFieldsExport as $key=>$sqlField) {
-        $field = ($sqlField->table ? $sqlField->table.'.'.$sqlField->name : $sqlField->name);
+        $field = ($sqlField->table ? $sqlField->table . '.' . $sqlField->name : $sqlField->name);
 
         // skip the field if not selected and showSelectedFieldsOnly is set
         if (!$extPOSTVars['fields'][0][$field] && $showSelectedFieldsOnly) {
           continue;
         }
         $config['items'][$field][0] = $field;
-        $config['items'][$field]['addattributes'] = 'ondblclick="'.$this->savlibrary->formName.'[\''.$this->savlibrary->formName.'[where][0]\'].value+=\''.stripslashes($config['items'][$field][0]).'\'"'; 
+        $config['items'][$field]['addattributes'] = 'ondblclick="' . $this->savlibrary->formName . '[\'' . $this->savlibrary->formName . '[where][0]\'].value+=\'' . stripslashes($config['items'][$field][0]) . '\'"';
         if ($extPOSTVars) {
           $config['items'][$field][1] = $extPOSTVars['fields'][0][$field];
         }
@@ -918,7 +926,7 @@ class tx_savlibrary_defaultViewers {
       'cols' => 70,
       '_field' => 'where',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[where][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[where][0]',
       'value' => $extPOSTVars['where'][0],
     );
     $key++;
@@ -940,7 +948,7 @@ class tx_savlibrary_defaultViewers {
       'size' => 70,
       '_field' => 'order',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[order][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[order][0]',
       'value' => $extPOSTVars['order'][0],
     );
     $key++;
@@ -962,13 +970,13 @@ class tx_savlibrary_defaultViewers {
       'size' => 70,
       '_field' => 'additionalTables',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[additionalTables][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[additionalTables][0]',
       'value' => $extPOSTVars['additionalTables'][0],
     );
     $config1 = array(
       '_field' => 'additionalTablesValidated',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[additionalTablesValidated][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[additionalTablesValidated][0]',
       'value' => $extPOSTVars['additionalTablesValidated'][0],
     );
     $key++;
@@ -989,7 +997,7 @@ class tx_savlibrary_defaultViewers {
     $config = array(
       '_field' => 'exportMM',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[exportMM][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[exportMM][0]',
       'value' => $extPOSTVars['exportMM'][0],
     );
     $key++;
@@ -1011,7 +1019,7 @@ class tx_savlibrary_defaultViewers {
       'size' => 50,
       '_field' => 'groupBy',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[groupBy][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[groupBy][0]',
       'value' => $extPOSTVars['groupBy'][0],
     );
     $key++;
@@ -1032,7 +1040,7 @@ class tx_savlibrary_defaultViewers {
     $config = array(
       '_field' => 'includeAllFields',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[includeAllFields][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[includeAllFields][0]',
       'value' => $extPOSTVars['includeAllFields'][0],
     );
     $key++;
@@ -1053,7 +1061,7 @@ class tx_savlibrary_defaultViewers {
     $config = array(
       '_field' => 'exportFieldNames',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[exportFieldNames][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[exportFieldNames][0]',
       'value' => $extPOSTVars['exportFieldNames'][0],
     );
     $key++;
@@ -1076,7 +1084,7 @@ class tx_savlibrary_defaultViewers {
       'cols' => 70,
       '_field' => 'orderedFieldList',
       'uid' => 0,
-  		'elementControlName' => $this->savlibrary->formName.'[orderedFieldList][0]',
+  		'elementControlName' => $this->savlibrary->formName . '[orderedFieldList][0]',
       'value' => $extPOSTVars['orderedFieldList'][0],
     );
     $key++;
@@ -1127,7 +1135,7 @@ class tx_savlibrary_defaultViewers {
                 $arrValues[] = $key;
               }
             }
-            fwrite($fileHandle, $this->csvValues( $arrValues,';').chr(10));
+            fwrite($fileHandle, $this->csvValues( $arrValues,';') . chr(10));
           }
         }
         
@@ -1220,7 +1228,7 @@ class tx_savlibrary_defaultViewers {
               }
             }
 
-            fwrite($fileHandle, $this->csvValues( $arrValues,';').chr(10));
+            fwrite($fileHandle, $this->csvValues( $arrValues,';') . chr(10));
           }
         }       
       }
@@ -1229,10 +1237,10 @@ class tx_savlibrary_defaultViewers {
 			t3lib_div::fixPermissions($strFilepath);
 
 		  if (!in_array(FALSE,$arrError)) {
-			 	header('Content-Disposition: attachment; filename='.$fileName.'');
+			 	header('Content-Disposition: attachment; filename=' . $fileName.'');
 				header('Content-type: x-application/octet-stream');
 				header('Content-Transfer-Encoding: binary');
-				header('Content-length:'.filesize($strFilepath).'');
+				header('Content-length:' . filesize($strFilepath).'');
 				readfile($strFilepath);
       }
 
@@ -1260,9 +1268,9 @@ class tx_savlibrary_defaultViewers {
 //			list($valPart) = explode(chr(10),$value);
 //			$valPart = trim($valPart);
       $valPart = $value;
-			$out[]=str_replace($quote,$quote.$quote,$valPart);
+			$out[]=str_replace($quote, $quote . $quote, $valPart);
 		}
-		$str = $quote.implode($quote.$delim.$quote,$out).$quote;
+		$str = $quote . implode($quote . $delim . $quote, $out) . $quote;
 		
 		return $str;
 	}

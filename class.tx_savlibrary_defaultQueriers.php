@@ -57,6 +57,7 @@ class tx_savlibrary_defaultQueriers {
 
 		// Get the extKey from the caller if any
 		$extKeyCaller = $this->savlibrary->sessionFilterSelected;
+
 		if ($extKeyCaller) {
 		  $extFilter = $this->savlibrary->sessionFilter[$extKeyCaller];
 
