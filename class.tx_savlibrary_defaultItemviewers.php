@@ -83,14 +83,15 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewStringInputEditMode(&$config) {
-		
+
     $htmlArray = array();
     
 		$class = ($config['classhtmltag'] ? 'class="' . $config['classhtmltag'] . '" ' : '');
 		$style = ($config['stylehtmltag'] ? 'style="' . $config['stylehtmltag'] . '" ' : '');
+		$value = ($config['default'] && !$config['value'] ? $config['default'] : $config['value']);
 
-    $htmlArray[] = '<input type="text" ' . $class . $style . 'name="' . $config['elementControlName'] . '" value="' . stripslashes($config['value']) . '" size="' . $config['size'] . '" onchange="document.changed=1" />';
-
+    $htmlArray[] = '<input type="text" ' . $class . $style . 'name="' . $config['elementControlName'] . '" value="' . stripslashes($config['value']) . '" size="' . $config['size'] . '" onchange="document.changed=1;" onclick="this.value='.$config['default'].';"/>';
+    
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
 
@@ -368,7 +369,7 @@ class tx_savlibrary_defaultItemviewers {
     $htmlArray = array();
     
 		if (isset($config['wizards']['RTE'])) {
-		
+
 			if(!$this->RTEObj) {
         $this->RTEObj = t3lib_div::makeInstance('tx_rtehtmlarea_pi2');
         $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= $this->additionalJS_initial;       
@@ -386,7 +387,8 @@ class tx_savlibrary_defaultItemviewers {
         );
 				$PA['itemFormElName'] = $config['elementControlName'];
         $PA['itemFormElValue'] = html_entity_decode($config['value'], ENT_QUOTES);
-				$out = $this->RTEObj->drawRTE($this,'','',$row=array(), $PA, $specConf, $thisConfig, $RTEtypeVal, '', 0);
+				$out = $this->RTEObj->drawRTE($this, '', '', $row=array(), $PA, $specConf, $thisConfig, $RTEtypeVal, '', 0);
+
 				// Remove the hidden field
 				$out = preg_replace('/<input type="hidden"[^>]*>/', '', $out);
         // Add onchange				
@@ -414,20 +416,16 @@ class tx_savlibrary_defaultItemviewers {
 
         $js = array();                
         $js[] = '<script type="text/javascript">';
-        $js[] = $this->additionalJS_pre[0];
+        $js[] = (isset($this->additionalJS_pre[0]) ? $this->additionalJS_pre[0] : $this->additionalJS_pre['rtehtmlarea-loadJScode']);
 		    $js[] = '</script>';
-        $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= implode($this->savlibrary->EOL.$this->savlibrary->TAB, $js);
+        $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= implode('', $js);
 		      
 		    $this->updateRTEList .= $this->additionalJS_submit[$this->RTEcounter-1];
 		    
 		    $this->changedRTEList .= 'changedTextareaRTE(' . $this->RTEcounter . ');';
-
 			}
-
     } else {
       $htmlArray[] = '<textarea name="' . $config['elementControlName'] . '" cols="' . $config['cols'] . '" rows="' . $config['rows'] . '" onchange="document.changed=1">' . $config['value'] . '</textarea>';
-
-      return $this->savlibrary->arrayToHTML($htmlArray); 
 		}
 
     return $this->savlibrary->arrayToHTML($htmlArray);

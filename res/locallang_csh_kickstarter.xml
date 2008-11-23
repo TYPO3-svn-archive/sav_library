@@ -36,35 +36,35 @@
 			<label index="check.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check.syntax">
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Do not display the checkbox value (that is "No") if it is not checked (obviously it does not apply when in edit mode)                       
+        Do not display the checkbox value (that is "No") if it is not checked (obviously it does not apply when in edit mode)
       </label>
       
 		  <!-- checkbox - 4 boxes -->
 			<label index="check_4.description">Attributes for "checkbox - 4 boxes"</label>
 			<label index="check_4.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_4.syntax">
-        &lt;b&gt;cols = number;&lt;/b&gt;
+        &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.
         
-        &lt;b&gt;nbItems = number;&lt;/b&gt;
-        Number of items to display.  
-     
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Do not display the checkbox if it is not checked (obviously it does not apply when in edit mode).            
+        Do not display the checkbox if it is not checked (obviously it does not apply when in edit mode).
+
+        &lt;b&gt;nbItems = integer;&lt;/b&gt;
+        Number of items to display.
       </label>
       			
 		  <!-- checkbox - 10 boxes -->
 			<label index="check_10.description">Attributes for "checkbox - 10 boxes"</label>
 			<label index="check_10.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_10.syntax">
-        &lt;b&gt;cols = number;&lt;/b&gt;
+        &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.
-        
-        &lt;b&gt;nbItems = number;&lt;/b&gt;
-        Number of items to display.  
-     
+
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Do not display the checkbox if it is not checked (obviously it does not apply when in edit mode).            
+        Do not display the checkbox if it is not checked (obviously it does not apply when in edit mode).
+
+        &lt;b&gt;nbItems = integer;&lt;/b&gt;
+        Number of items to display.  
       </label>			
            
 		  <!-- date -->
@@ -72,10 +72,10 @@
 			<label index="date.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="date.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
-        Set a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
+        Sets a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
-        Do not display the default date and time.
+        Do not display the default date.
       </label>  
       
 		  <!-- datetime -->
@@ -83,7 +83,7 @@
 			<label index="datetime.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="datetime.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
-        Set a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
+        Sets a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
         Do not display the default date and time.
@@ -94,42 +94,42 @@
 			<label index="files.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="files.syntax">
         &lt;b&gt;addIcon = 1;&lt;/b&gt;
-        Add an icon in front of the hyperlink associated with the file.
+        Adds an icon in front of the hyperlink associated with the file.
 
-        &lt;b&gt;uploadFolder = path;&lt;/b&gt;
-        Set the folder path where the image is stored. It overwrites  the same attribute in the TCA.
+        &lt;b&gt;uploadFolder = string;&lt;/b&gt;
+        Sets the folder path where the file is stored. It overwrites  the same attribute in the TCA.
         
-        &lt;b&gt;addToUploadFolder = subpath;;&lt;/b&gt;
-        Add a subpath to the UploadFolder path.
+        &lt;b&gt;addToUploadFolder = string;;&lt;/b&gt;
+        Adds a subpath to the UploadFolder path.
         
         &lt;b&gt;addToUploadFolderFromField = field_name;&lt;/b&gt;
-        Add the content of the field whose name is given by "field_name" to the uploadFolder attribute. This information is separated with an underscore.
+        Adds the content of the field whose name is given by "field_name" to the uploadFolder attribute. This information is separated with an underscore.
         Example : if the field_name is "my_field" and its contents is "123", then
         AddToUploadFolderFromField = my_field; will add "_123" to the uploadFolder name.
 
         &lt;b&gt;size = integer;&lt;/b&gt;
-        Set the size attribute.  It overwrites  the same attribute in the TCA. 
+        Sets the size attribute.  It overwrites  the same attribute in the TCA.
         
         &lt;b&gt;iframe = 1;&lt;/b&gt;
-        Open the image in an iframe.
+        Opens the image in an iframe.
         
         &lt;b&gt;width = integer;&lt;/b&gt;
-        Set the width of an image or of the iframe.
+        Sets the width of an image or of the iframe.
         
         &lt;b&gt;height = integer;&lt;/b&gt;
-        Set the height of an image or of the iframe.
+        Sets the height of an image or of the iframe.
         
         &lt;b&gt;message = string;&lt;/b&gt;
         If the file is not an image, an hyperlink is created with the string.
         
         &lt;b&gt;fieldMessage = field_name;&lt;/b&gt;
-        Set the attribute "message" with the content of the field whose name is given by field_name.
+        Sets the attribute "message" with the content of the field whose name is given by field_name.
         
         &lt;b&gt;alt = string;&lt;/b&gt;
-        Provide the HTML alt attribute for an image.
+        Provides the HTML alt attribute for an image.
         
         &lt;b&gt;fieldAlt = field_name;&lt;/b&gt;
-        Set the "alt" attribute with the content of the field whose name is given by field_name.      
+        Sets the "alt" attribute with the content of the field whose name is given by field_name.
       </label>   
 
       <!-- Forms generator -->
@@ -138,7 +138,7 @@
         This section is used to provide general settings.
         
         &lt;b&gt;Generate form&lt;/b&gt;
-        Check the box to use the form generator.
+        Checks the box to use the form generator.
         
         &lt;b&gt;Version x.y.z.&lt;/b&gt;
         This field can be used to set the version of the extension. The format x.y.z should be used.
@@ -157,10 +157,10 @@
         This section is used to specify the query associated with your form.
         
         &lt;b&gt;Title&lt;/b&gt;
-        Set the name of your query.
+        Sets the name of your query.
         
         &lt;b&gt;Local table&lt;/b&gt; 
-        Set the main table that your extension will use. By default, it is the first table in your "New Database Tables" section.
+        Sets the main table that your extension will use. By default, it is the first table in your "New Database Tables" section.
         
         &lt;b&gt;Foreign table&lt;/b&gt; 
         Define here the foreign tables (tables from other extension for exemple) that are needed for your extension (MySQL syntax).
@@ -170,7 +170,7 @@
         Define here the aliases associated with your query (MySQL syntax).
         
         &lt;b&gt;Where clause&lt;/b&gt; 
-        Define the WHERE clause for query. It can be:
+        Defines the WHERE clause for query. It can be:
         . a conventional MySQL clause. The tag ###user### can be used. It will be replaced by the user uid.
         . ###group_list = list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user belongs to the group list. 
         . ###group_list != list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user does not belong to the group list. 
@@ -207,7 +207,7 @@
         This section is used to specify the settings of your form.
         
         &lt;b&gt;Title&lt;/b&gt;
-        Set the name of your form.
+        Sets the name of your form.
         
         &lt;b&gt;Show all view&lt;/b&gt;
         Use the selector to set the "Show all" view that should be used with your form (if any).
@@ -327,7 +327,7 @@
       <label index="functions.syntax">
       
         Functions are applied to the value of the field. It can be also applied to left and right contents.
-        In this case, "Left" or "Right" should be added to the function anme and theoptional attributes.
+        In this case, "Left" or "Right" should be added to the function name and the optional attributes.
       
         &lt;b&gt;func = makeDateFormat;&lt;/b&gt;
         This function generates a format for a unix time stamp date.
@@ -337,10 +337,10 @@
         &lt;b&gt;func = makeImage;&lt;/b&gt;
         This function builds an IMG tag where the field value is the name of the image file.
         Additional parameter can be used.
-        . folder = string; (string will be the folder where the file should be);
-        . width = integer; (width of the image in pixels);
+        . folder = string; (string will be the folder where the file should be).
+        . width = integer; (width of the image in pixels).
         . height = integer; (height of the image in pixels);
-        . alt = string; (string will be the "alt" attribute of the image);
+        . alt = string; (string will be the "alt" attribute of the image).
         . fieldAlt = field_name; (the "alt" attribute will be the value of the fieldname for the current record).
         
         &lt;b&gt;func = makeEmailLink;&lt;/b&gt;
@@ -367,7 +367,7 @@
         &lt;b&gt;func = makeLink;&lt;/b&gt;
         This function generates an internal link (typolink).
         Optional attributes can be added:
-        . folder = string; The string will be the folder where the file should be);
+        . folder = string; The string will be the folder where the file should be).
         . target = string; The string defines the target parameter.
         . class = string; Name of the class associated with the link.
         . message = string; Message associated with the link.
@@ -376,25 +376,25 @@
 
         &lt;b&gt;func = makeExtLink;&lt;/b&gt;
         This function generates an hyperlink associated with the value of the field. It will open the "showSingle" view associated with the selected item in another extension. The following attributes must be provided:
-        . ext = string; (string is the extension name followedby the form name. Example "myext_intranet");
-        . pageId = integer; (integer is the page id where the extension is the content element);
-        . contentId = integer; (integer is the content id of the extension);
+        . ext = string; (string is the extension name followedby the form name. Example "myext_intranet").
+        . pageId = integer; (integer is the page id where the extension is the content element).
+        . contentId = integer; (integer is the content id of the extension).
         Optional attributes can be added:
         . page = string; (string is the folder name, if the extension uses serveral folders).
         . setUid = this; The uid of the record to open, is given by the value of the field.
-        . restrictLinkTo = ###usergroup=group_name###; the link will be displayed if the user belongs to the group_name
-        . restrictLinkTo = ###usergroup!=group_name###; the link will be displayed if the user does not belong to the group_name
+        . restrictLinkTo = ###usergroup=group_name###; the link will be displayed if the user belongs to the group_name.
+        . restrictLinkTo = ###usergroup!=group_name###; the link will be displayed if the user does not belong to the group_name.
 
         &lt;b&gt;func = makeUrlLink;&lt;/b&gt;
         This function generates a link for an external url.
         Optional attributes can be added:
-        . link = string; The string will be used as the link instead of the field value;
+        . link = string; The string will be used as the link instead of the field value.
         . message = string; Message associated with the link.
 
         &lt;b&gt;func = makeXmlLabel;&lt;/b&gt;
         This function generates the label from a xml language file. It works with the following parameter:
         . xmlLabel = string; the string is the label definition. For example, assume that the value comes from a selectorbox whose label definition is in the file locallang_db.xml
-        in the extension "my_ext". Assume also that the field is "my_field". Then, to obtain the label one has to write xmlLabel = LLL:EXT:my_ext/locallang_db.xml:tx_myext.my_field.I.;        
+        in the extension "my_ext". Assume also that the field is "my_field". Then, to obtain the label one has to write xmlLabel = LLL:EXT:my_ext/locallang_db.xml:tx_myext.my_field.I.;
       </label>
       			
 		  <!-- General -->
@@ -417,8 +417,8 @@
         &lt;b&gt;addLeftIfNull = string;&lt;/b&gt;
         String will be added to the left if the field value is null.
 
-        &lt;b&gt;addNewIcon = int;&lt;/b&gt;
-        A new icon, will be displayed in front of the field during the number of days given by the int number.
+        &lt;b&gt;addNewIcon = integer;&lt;/b&gt;
+        A new icon, will be displayed in front of the field during the number of days given by the integer.
                 
         &lt;b&gt;addRighIfNotNull = string;&lt;/b&gt;
         String will be added to the right if the field value is not null.
@@ -441,53 +441,56 @@
         Cut the field if null.
         
         &lt;b&gt;cutIf=fieldName=value;&lt;/b&gt;
-        Cut the field if current value of the field is equal to the given value. The metatags ###user### or ###cruser### (same as user but should be used if a new record is created) will be replaced by the user id.
+        Cuts the field if current value of the field is equal to the given value. The tags ###user### or ###cruser### (same as user but should be used if a new record is created) will be replaced by the user id.
         
         &lt;b&gt;cutIf=fieldName!=value;&lt;/b&gt;
-        Cut the field if current value of the field is not equal to the given value.       
+        Cuts the field if current value of the field is not equal to the given value.
 
         &lt;b&gt;cutIf=###usergroup=group_name###;&lt;/b&gt;
         The field is cut if the group name is a valid group for the current user. 
                    
         &lt;b&gt;cutIf=###usergroup!=group_name###;&lt;/b&gt;
-        The field is cut if the group name is not a valid group for the current user.            
+        The field is cut if the group "group_name" is not a valid group for the current user.
   
         &lt;b&gt;cutIf=###group=group_name###;&lt;/b&gt;
-        The field is cut if the group name is a valid group for the current record. It checks the usergroup field in the local table if any.
+        The field is cut if the group "group_name" is a valid group for the current record. It checks the usergroup field in the local table if any.
                    
         &lt;b&gt;cutIf=###group!=group_name###;&lt;/b&gt;
         The field is cut if the group name is not a valid group for the current record. It checks the usergroup field in the local table if any.  
                  
         &lt;b&gt;cutLabel = 1;&lt;/b&gt;
-        Cut the label associated with the field.
+        Cuts the label associated with the field.
         
         &lt;b&gt;edit = 0;&lt;/b&gt;
-        Make the field not editable in an input form.
+        Makes the field not editable in an input form.
         &lt;b&gt;edit=1;&lt;/b&gt;
-        Make the field editable in an input form.
+        Makes the field editable in an input form.
         
         &lt;b&gt;editAdminPlus=1;&lt;/b&gt;
-        Make the field editable in an input form, if the user has the "Admin+" right. To be an "Admin" user, his TSConfig must contain a line as follows:
+        Makes the field editable in an input form, if the user has the "Admin+" right. To be an "Admin" user, his/her TSConfig must contain a line as follows:
         extKey_Admin=value where extKey is the extension key and value is one of the possible value of the "Input Admin Field" defined in the flexform associated with the extension.
-        The user becomes an "Admin+" user, if his TSConfig contains a line as follows:
+        The user becomes an "Admin+" user, if his/her TSConfig contains a line as follows:
         extKey_Admin=value+
 
+        &lt;b&gt;func = function_name;&lt;/b&gt;
+        See the help associated with functions.
+        
         &lt;b&gt;funcAddLeftIfNotNull = string;&lt;/b&gt;
-        String will be added to the left if the result of the applied function "func" is not null.
+        String will be added to the left if the result of the applied function, defined by "func=function_name;" property, is not null.
 
         &lt;b&gt;funcAddLeftIfNull = string;&lt;/b&gt;
-        String will be added to the left if the result of the applied function "func" is null.
+        String will be added to the left if the result of the applied function, defined by "func=function_name;" property, is null.
 
         &lt;b&gt;funcAddRightIfNotNull = string;&lt;/b&gt;
-        String will be added to the right if the result of the applied function "func" is not null.
+        String will be added to the right if the result of the applied function, defined by "func=function_name;" property, is not null.
 
         &lt;b&gt;funcAddRightIfNull = string;&lt;/b&gt;
-        String will be added to the right if the result of the applied function "func" is null.
+        String will be added to the right if the result of the applied function, defined by "func=function_name;" property, is null.
         
         &lt;b&gt;fusion = begin;&lt;/b&gt;
-        Start the fusion of the field, that is the following fields will be displayed on the same line.
+        Starts the fusion of the fields, that is the following fields will be displayed on the same line.
         &lt;b&gt;fusion = end;&lt;/b&gt;
-        End the fusion of the field, that is the following field will be displayed on the next line.
+        Ends the fusion of the field, that is the following field will be displayed on the next line.
         
         &lt;b&gt;label = string;&lt;/b&gt;
         The displayed label will be provided by the string.
@@ -523,8 +526,8 @@
         . mailMessageLanguageFromField=fieldname; This parameter will force the language for the message to the value of the field (for example a selector box).
         
         &lt;b&gt;mailAuto = 1;&lt;/b&gt; (mail must be set to 1)
-        The mail is sent when saving if the field is not empty and if any field in the form is changed. Mail information are the following:
-        . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
+        The mail is sent when saving if the field is not empty and if one field in the form is changed. Mail information are the following:
+        . mailSender=string; mail of the sender. The tag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
         . mailReceiverQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ... 
@@ -547,7 +550,8 @@
 
         &lt;b&gt;query = SQL statements;&lt;/b&gt;
         The query will be executed once the input form data have been saved. Therefore, it can only be used with "input" or "update" views.
-        It may be useful, for example, to update a specific table when the current data are saved. Several queries can be in the SQL statements. Each query must be separated using "\;".
+        Because any query may be executed, for security reason, this property can only be used if an admin user has checked the field “Allow the use of the “query” property” in the advanced folder of the flexform.
+        It may be useful, for example, to update a specific table when the current data are saved. Several queries can be used in the SQL statements. Each query must be separated using "\;".
         Special tags can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###CURRENT_PID### will be replaced by the current page id.
@@ -561,17 +565,17 @@
         If the field is a true MM relation, the query, as defined above, will be executed for all the record in the relation.
         The special tag ###field_name###, where "field_name" is the field where the relation is defined, can be used to identify the record. It will be replaced by the uid of the associated record.
         
-        &lt;b&gt;reqValue = SQL select statement;&lt;/b&gt;
-        SQL select statement must have an alias "value" which will be used as the value to display.
+        &lt;b&gt;reqValue = SQL SELECT statement;&lt;/b&gt;
+        SQL SELECT statement must have an alias "value" which will be used as the value to display.
         Special tags can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###uidItem### will be replaced by the uid of the current subform item.
         . ###user### will be replaced by the user id.
         . ###row[field_name]### where field_name is the name of a field in the current record, will be replaced by its current value.
         The following example returns the name of the user who has created the current record, assuming that tx_mytable is the local table:
-        reqvalue= select name as value 
-        from fe_users
-        where uid=(select cruser_id from tx_mytable where uid=###uid###);
+        reqValue= SELECT name AS value
+        FROM fe_users
+        WHERE uid=(SELECT cruser_id FROM tx_mytable WHERE uid=###uid###);
 
         &lt;b&gt;setExtendLink = table_name;&lt;/b&gt;
         The table name will be left-joined to existing tables
@@ -589,15 +593,15 @@
         . isValidLength
         . isValidInterval
  
-        &lt;b&gt;verifierParam = param;&lt;/b&gt;
-        The value "param"  can be :
+        &lt;b&gt;verifierParam = expression;&lt;/b&gt;
+        The expression can be :
         . a regular expression for the verifier "isValidPattern".
         For example /^[A-Za-z0-9_]*$/ will allow any input which contains letters, numbers or underline characters. 
         . an integer value for the verifier "isValidLength".
         . an interval [a, b] where a and b are integers for the verifier "isValidInterval".   
         
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
-        The string will be used to wrap the item. The syntax in the same as in TS.
+        The string will be used to wrap the item. The syntax in the same as in TypoScript.
 
       </label>      
 						
@@ -605,7 +609,7 @@
       <label index="input.description">Attributes for "String input"</label>
 			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="input.syntax">
-        &lt;b&gt;size = number;&lt;/b&gt;
+        &lt;b&gt;size = integer;&lt;/b&gt;
         Size of the field.
       </label>      
 			
@@ -614,18 +618,21 @@
 			<label index="link.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="link.syntax">
         &lt;b&gt;generateRTF=1;&lt;/b&gt;
-        Set the RTF generator.
+        Sets the RTF generator.
         &lt;b&gt;templateRTF=filename;&lt;/b&gt;
-        Define the template to be used by the RTF generator. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
+        Defines the template to be used by the RTF generator. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
         &lt;b&gt;saveFileRTF=filename;&lt;/b&gt;
         Name under which the generated file will be saved. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
+        &lt;b&gt;tableName.fieldName=string1->string2;&lt;/b&gt;
+        In an rtf document, if the field tag ###tableName.fieldName### exists string1 will be replaced by string2. String1 can be NL (for the ASCII character LF).
+        It may be useful when one wants to input data in a textarea and display them in one line with a given separator in the file.
       </label>   
       
       <!-- radio -->
 			<label index="radio.description">Attributes for "radio buttons"</label>
 			<label index="radio.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="radio.syntax">
-        &lt;b&gt;cols = number;;&lt;/b&gt;
+        &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.     
       </label>			
 
@@ -636,15 +643,15 @@
         1) Selectorbox, select global
         
         &lt;b&gt;aliasSelect = field_name;&lt;/b&gt;
-        Define an alias used in the SELECT query. Tags ###fieldname### can be used, fieldname must be in the relation table.
+        Defines an alias used in the SELECT query. Tags ###fieldname### can be used, fieldname must be in the relation table.
         &lt;b&gt;labelSelect = field_name;&lt;/b&gt;
-        Define the label from field_name for the selector.
+        Defines the label from field_name for the selector.
         &lt;b&gt;additionalTableSelect = comma-separated table names;&lt;/b&gt;
-        Add the table names in the select query. It can be used when tables need to be joined.
+        Adds the table names in the select query. It can be used when tables need to be joined.
         &lt;b&gt;orderSelect = string;&lt;/b&gt;
-        Define the order clause for the selector. In general : field_name [desc].
+        Defines the order clause for the selector. In general : field_name [desc].
         &lt;b&gt;whereSelect=string;&lt;/b&gt;      			
-        Define the where clause for the selector. It can be:
+        Defines the where clause for the selector. It can be:
         . a conventional MySQL clause. 
         - The tag ###user### can be used. It will be replaced by the user uid.
         - The tag ###uid### can be used. it will be replaced by the main current record.
@@ -669,11 +676,11 @@
         &lt;b&gt;separator = string;&lt;/b&gt;
         It should be used when the max number of relations is greater than 1 (not true MM-relation) to replace the default &lt; br /&gt; separator between items in showAll or showSingle views.       
         &lt;b&gt;specialFields = comma-separated list of fields;&lt;/b&gt;
-        The value of the field name will be propagated in the ###special[fieldname]### metatag when available.
+        The value of the fields will be propagated in the ###special[fieldname]### tag when available.
         &lt;b&gt;singleWindow = 1;&lt;/b&gt;
         In case of a MM relation, a double window is used to select items. When this option is used, a single selectorbox in multiple mode is used.
         &lt;b&gt;overrideEnableFields = 1;&lt;/b&gt;    
-        The method enableFields of the class tslib_cObj which filters out records with start/end times or hidden/fe_groups fields is not applied to the query associated with the selectorbox.
+        If set, the method enableFields of the class tslib_cObj which filters out records with start/end times or hidden/fe_groups fields is not applied to the query associated with the selectorbox.
         It may be used in specific cases when you needed to retreive all the records.
         &lt;b&gt;overrideStartingPoint = 1;&lt;/b&gt;
         By default, when starting points are provided, information associated with the selector is searched in these page. This property overrides the default behavior.
@@ -685,7 +692,7 @@
         A delete icon will be added in front of each item.
         &lt;b&gt;addUpDown = 1;&lt;/b&gt;
         Two buttons (up and down) will be added. They can be used to reorganize the order of the subform items.
-        &lt;b&gt;maxSubItems = number;&lt;/b&gt;
+        &lt;b&gt;maxSubItems = integer;&lt;/b&gt;
         Number of items that will be displayed in the subform. All items are displayed if set to 0. If not set, the "maxitems" value in the TCA, that is the "Max number of relations" in the Kickstarter, is used.
         &lt;b&gt;keepFieldsInSubForm = comma-separated list of fields;&lt;/b&gt;
         The values of the fields (use tableName.fieldName) from the parent form will be kept in the subform. It can be used to deal with these values in the subform.
@@ -721,22 +728,22 @@
       <label index="textarea.description">Attributes for "Textarea"</label>
 			<label index="textarea.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea.syntax">
-        &lt;b&gt;rows = integer;&lt;/b&gt;
-        Define the number of rows  of the textarea. This attribute overwrites the same attribute in the TCA.
-
         &lt;b&gt;cols = integer;&lt;/b&gt;
-        Define the number of cols of the textarea. This attribute overwrites the same attribute in the TCA.
+        Defines the number of cols of the textarea. This attribute overwrites the same attribute in the TCA.
+        
+        &lt;b&gt;rows = integer;&lt;/b&gt;
+        Defines the number of rows  of the textarea. This attribute overwrites the same attribute in the TCA.
       </label> 
       
 		  <!-- textarea_rte -->
       <label index="textarea_rte.description">Attributes for "Textarea with RTE"</label>
 			<label index="textarea_rte.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea_rte.syntax">
-        &lt;b&gt;width = integer;&lt;/b&gt;
-        Define the width of the textarea. This attribute overwrites the same attribute in the TCA.
-
         &lt;b&gt;height = integer;&lt;/b&gt;
-        Define the height of the textarea. This attribute overwrites the same attribute in the TCA.
+        Defines the height of the textarea. This attribute overwrites the same attribute in the TCA.
+        
+        &lt;b&gt;width = integer;&lt;/b&gt;
+        Defines the width of the textarea. This attribute overwrites the same attribute in the TCA.
       </label> 
 		</languageKey>
 
@@ -764,28 +771,28 @@
 			<label index="check_4.description">Attributs pour "checkbox - 4 boxes"</label>
 			<label index="check_4.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_4.syntax">
-        &lt;b&gt;cols = number;&lt;/b&gt;
+        &lt;b&gt;cols = integer;&lt;/b&gt;
         Nombre de colonnes à afficher.
         
-        &lt;b&gt;nbItems = number;&lt;/b&gt;
-        Nombre d'items à afficher.  
-        
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Permet de ne pas afficher les "Checkboxes" qui ne sont pas activées (évidemment cela ne s'applique pas lorsque l'on est en mode "edit").                       
+        Permet de ne pas afficher les "Checkboxes" qui ne sont pas activées (évidemment cela ne s'applique pas lorsque l'on est en mode "edit").
+
+        &lt;b&gt;nbItems = integer;&lt;/b&gt;
+        Nombre d'items à afficher.  
       </label>	
       
 		  <!-- checkbox - 10 boxes -->
 			<label index="check_10.description">Attributs pour "checkbox - 10 boxes"</label>
 			<label index="check_10.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_10.syntax">
-        &lt;b&gt;cols = number;&lt;/b&gt;
+        &lt;b&gt;cols = integer;&lt;/b&gt;
         Nombre de colonnes à afficher.
         
-        &lt;b&gt;nbItems = number;&lt;/b&gt;
-        Nombre d'items à afficher.  
-        
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Permet de ne pas afficher les "Checkboxes" qui ne sont pas activées (évidemment cela ne s'applique pas lorsque l'on est en mode "edit").                       
+        Permet de ne pas afficher les "Checkboxes" qui ne sont pas activées (évidemment cela ne s'applique pas lorsque l'on est en mode "edit").
+
+        &lt;b&gt;nbItems = integer;&lt;/b&gt;
+        Nombre d'items à afficher.  
       </label>	
       
 		  <!-- date -->
@@ -796,7 +803,7 @@
         Définit un format pour l'affichage d'une date. Le format est le même que celui de la fonction php strftime, e.g. format = %d/%m/%Y;
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
-        Permet de ne pas afficher, par défaut, la date et l'heure.
+        Permet de ne pas afficher la date, par défaut.
       </label>          		
            
 		  <!-- datetime -->
@@ -807,7 +814,7 @@
         Définit un format pour l'affichage d'une date. Le format est le même que celui de la fonction php strftime, e.g. format = %d/%m/%Y;
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
-        Permet de ne pas afficher, par défaut, la date et l'heure.
+        Permet de ne pas afficher la date et l'heure, par défaut.
       </label>      
 
 		  <!-- files -->
@@ -817,10 +824,10 @@
         &lt;b&gt;addIcon = 1;&lt;/b&gt;
         Ajoute une icône devant l'hyperlien associé au fichier.
 
-        &lt;b&gt;uploadFolder = path;&lt;/b&gt;
-        Définit le chemin du répertoire dans lequel l'image est enregistrée. Cet attribut remplace celui défini dans le TCA.
+        &lt;b&gt;uploadFolder = string;&lt;/b&gt;
+        Définit le chemin du répertoire dans lequel le fichier est enregistré. Cet attribut remplace celui défini dans le TCA.
         
-        &lt;b&gt;addToUploadFolder = subpath;;&lt;/b&gt;
+        &lt;b&gt;addToUploadFolder = string;&lt;/b&gt;
         Ajoute un sous-répertoire au chemin défini par "uploadFolder".
         
         &lt;b&gt;addToUploadFolderFromField = field_name;&lt;/b&gt;
@@ -1056,10 +1063,10 @@
         &lt;b&gt;func = makeImage;&lt;/b&gt;
         Cette fonction construit un tag IMG où la valeur du champ est le nom du fichier contenant l'image.
         Des paramètres additionnels peuvent être ajoutés :
-        . folder = string; (la chaîne définit le répertoire dans lequel le fichier doit se trouver;
-        . width = integer; (largeur de l'image en pixels);
-        . height = integer; (hauteur de l'image en pixels);
-        . alt = string; (la chaîne sera l'attribut "alt" de l'image);
+        . folder = string; (la chaîne définit le répertoire dans lequel le fichier doit se trouver.
+        . width = integer; (largeur de l'image en pixels).
+        . height = integer; (hauteur de l'image en pixels).
+        . alt = string; (la chaîne sera l'attribut "alt" de l'image).
         . fieldAlt = field_name; (l'attribut "alt" sera la valeur du champ "field_name" pour l'enregistrement courant).
 
         &lt;b&gt;func = makeEmailLink;&lt;/b&gt;
@@ -1095,14 +1102,14 @@
         
         &lt;b&gt;func = makeExtLink;&lt;/b&gt;
         Cette fonction engendre un lien associé à la valeur du champ. Cet hyperlien permet d'ouvrir lavue de type "Show single" associé à l'item sélectionné mais dans une autre extension. Les attributs suivants doivent être fournis :
-        . ext = string; (la chaîne doit être le nom de l'extension suivi du nom de la "form". Exemple "myext_intranet");
+        . ext = string; (la chaîne doit être le nom de l'extension suivi du nom de la "form". Exemple "myext_intranet").
         . pageId = integer; (l'entier est l'id de la page où l'extension est l'élément de contenu);
-        . contentId = integer; (l'entier est l'id de l'extension, c'est-à-dire son id en tant qu'élément de contenu);
+        . contentId = integer; (l'entier est l'id de l'extension, c'est-à-dire son id en tant qu'élément de contenu).
         Des attributs optionnels peuvent être ajoutés :
         . page = string; (La chaîne est le nom d'un "folder" si l'extension utilise plusieurs "folders").
         . setUid = this; (L'uid de l'enregistrement à ouvrir est donné par la valeur du champ).
-        . restrictLinkTo = ###usergroup=group_name###; Le lien sera affiché si l'utilisateur appartient au groupe "group_name"
-        . restrictLinkTo = ###usergroup!=group_name###; Lelien sera affiché si l'utilisateur n'appartient pas au groupe "group_name"
+        . restrictLinkTo = ###usergroup=group_name###; Le lien sera affiché si l'utilisateur appartient au groupe "group_name".
+        . restrictLinkTo = ###usergroup!=group_name###; Lelien sera affiché si l'utilisateur n'appartient pas au groupe "group_name".
 
         &lt;b&gt;func = makeUrlLink;&lt;/b&gt;
         Cette fonction engendre un lien externe
@@ -1136,7 +1143,7 @@
         &lt;b&gt;addLeftIfNull = string;&lt;/b&gt;
         La chaîne sera ajoutée à gauche si la valeur du champ est nulle.
 
-        &lt;b&gt;addNewIcon = int;&lt;/b&gt;
+        &lt;b&gt;addNewIcon = integer;&lt;/b&gt;
         Une nouvelle icône sera affichée devant le champ pendant le nombre de jours indiqué par le nombre entier. 
                 
         &lt;b&gt;addRighIfNotNull = string;&lt;/b&gt;
@@ -1192,17 +1199,20 @@
         L'utilisateur est "Admin+" si son TSConfig contient une ligne du type :
         extKey_Admin=value+  
 
+        &lt;b&gt;func = function_name;&lt;/b&gt;
+        Voir l'aide assiociée aux fonctions.
+
         &lt;b&gt;funcAddLeftIfNotNull = string;&lt;/b&gt;
-        La chaîne sera ajoutée à gauche si le résultat de la fonction "func" n'est pas nulle.
+        La chaîne sera ajoutée à gauche si le résultat de la fonction "function_name" n'est pas nulle.
 
         &lt;b&gt;funcAddLeftIfNull = string;&lt;/b&gt;
-        La chaîne sera ajoutée à gauche si le résultat de la fonction "func" est nulle.
+        La chaîne sera ajoutée à gauche si le résultat de la fonction "function_name" est nulle.
 
         &lt;b&gt;funcAddRightIfNotNull = string;&lt;/b&gt;
-        La chaîne sera ajoutée à droite si le résultat de la fonction "func" n'est pas nulle.
+        La chaîne sera ajoutée à droite si le résultat de la fonction "function_name" n'est pas nulle.
 
         &lt;b&gt;funcAddRightIfNull = string;&lt;/b&gt;
-        La chaîne sera ajoutée à droite si le résultat de la fonction "func" est nulle.
+        La chaîne sera ajoutée à droite si le résultat de la fonction "function_name" est nulle.
 
         &lt;b&gt;fusion = begin;&lt;/b&gt;
         Commence la fusion pour le champ,c'est-à-dire que les champs suivants seront affichés sur la même ligne.
@@ -1281,7 +1291,7 @@
         Si le champ est une véritable relation MM, la requête, comme définie au dessus, sera exécutée pour tous les enregistrements en relation.
         Le tag spécial ###field_name###, où "field_name" est le champ dans lequel est définie la relation, peut être utilisé pour identifier l'enregistrement. Il sera remplacé par l'uid de l'enregistrement associé.
 
-        &lt;b&gt;reqValue = SQL select statement;&lt;/b&gt;
+        &lt;b&gt;reqValue = SQL SELECT statement;&lt;/b&gt;
         La requête SELECT doit avoir un alias "value" qui sera utilisé comme valeur à afficher.
         Des tags spéciaux peuvent être utilisés dans la requête : 
         . ###uid### sera remplacé par l'uid de l'enregistrement courant.
@@ -1289,9 +1299,9 @@
         . ###user### sera remplacé par l'id de l'utilisateur.
         . ###row[field_name]###, où "field_name" est le nom d'un champ de l'enregistrement courant is the name of a field in the current record, seraremplacé par sa valeur.
         L'exemple suivant retourne le nom de l'utilisateur qui a créé l'enregistrement courant, avec comme hypothèse que tx_mytable est la table locale :
-        reqvalue= select name as value 
-        from fe_users
-        where uid=(select cruser_id from tx_mytable where uid=###uid###);
+        reqValue= SELECT name AS value
+        FROM fe_users
+        WHERE uid=(SELECT cruser_id FROM tx_mytable WHERE uid=###uid###);
 
         &lt;b&gt;setExtendLink = table_name;&lt;/b&gt;
         La table dont le nom est "table_name" sera liée dans une jointure de type LEFT JOIN aux tables existantes.
@@ -1309,15 +1319,15 @@
         . isValidLength
         . isValidInterval
  
-        &lt;b&gt;verifierParam = param;&lt;/b&gt;
-        La valeur de "param" peut être :
+        &lt;b&gt;verifierParam = expression;&lt;/b&gt;
+        L'expression peut être :
         . une expression régulière pour le vérificateur "isValidPattern".
         Par exemple /^[A-Za-z0-9_]*$/ autorisera une saisie qui contient des lettres, des nombres et des "underscores". 
         . un entier pour le vérificateur "isValidLength".
         . un intervalle [a, b] où a et b sont des entiers pour le vérificateur "isValidInterval".    
         
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
-        La chaîne sera utilisée pour "wrapper" l'élément. La syntaxe est celle du TS.
+        La chaîne sera utilisée pour "wrapper" l'élément. La syntaxe est celle du TypoScript.
            
       </label>      
 			
@@ -1325,7 +1335,7 @@
       <label index="input.description">Attributs pour "String input"</label>
 			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="input.syntax">
-        &lt;b&gt;size = number;&lt;/b&gt;
+        &lt;b&gt;size = integer;&lt;/b&gt;
         Définit la taille du champ.
       </label>      
 			
@@ -1339,13 +1349,17 @@
         Définit le template à utiliser par le générateur RTF. Les métatags ###tableName.fieldName### ou ###fieldName### (pour les alias) peuvent être utilisés.
         &lt;b&gt;saveFileRTF=filename;&lt;/b&gt;
         Nom sous lequel le fichier engendré sera sauvegardé. Les métatags ###tableName.fieldName### ou ###fieldName### (pour les alias) peuvent être utilisés.
+        &lt;b&gt;tableName.fieldName=string1->string2;&lt;/b&gt;
+        Dans un document rtf, sil le métagtag ###tableName.fieldName### existe la chaîne string1 sera remplacéewpar la chaîne string2. La chaîne string1 peur être NL (caractère LF du code ASCII).
+        Cette propriété peuyut être utile lorsque l'on souhaite saisir les dans un "textarea" mais les afficher sur une ligne avec un séparateur dans le fichier.
+
       </label>   
       
       <!-- radio -->
 			<label index="radio.description">Attributs pour "radio buttons"</label>
 			<label index="radio.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="radio.syntax">
-        &lt;b&gt;cols = number;;&lt;/b&gt;
+        &lt;b&gt;cols = integer;&lt;/b&gt;
         Nombre de colonnes à afficher. 
       </label>			
 
@@ -1406,7 +1420,7 @@
         Une icône de suppression sera ajoutée devant chaque item.
         &lt;b&gt;addUpDown = 1;&lt;/b&gt;
         Deux boutons (haut et bas) seront ajoutés. Ils peuvent être utilisés pour réorganiser les items du sous-formulaire.
-        &lt;b&gt;maxSubItems = number;&lt;/b&gt;
+        &lt;b&gt;maxSubItems = integer;&lt;/b&gt;
         Nombre d'items qui seront affichés dans le sous-formulaire. Tous les items sont affichés si la valeur est 0. Si ce attribut n'est pas utilisé, la valeur "maxitems" le TCA, c'est-à-dire "Max number of relations" dans le Kickstarter, sera prise en compte.
         &lt;b&gt;keepFieldsInSubForm = comma-separated list of fields;&lt;/b&gt;
         Les valeurs des champs (utiliser tableName.fieldName) dans le formulaire parent seront conservés dans le sous-formulaire. Cela peut être utilisé pour traiter ces valeurs dans le sous-formulaire.
@@ -1442,22 +1456,22 @@
       <label index="textarea.description">Attributs pour "Textarea"</label>
 			<label index="textarea.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea.syntax">
-        &lt;b&gt;rows = integer;&lt;/b&gt;
-        Définit le nombre de lignes du "textarea". Cet attribut remplace celui défini dans le TCA.
-
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Définit le nombre de colonnes du "textarea". Cet attribut remplace celui défini dans le TCA.
+        
+        &lt;b&gt;rows = integer;&lt;/b&gt;
+        Définit le nombre de lignes du "textarea". Cet attribut remplace celui défini dans le TCA.
       </label> 
       
 		  <!-- textarea_rte -->
       <label index="textarea_rte.description">Attributs pour "Textarea with RTE"</label>
 			<label index="textarea_rte.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
       <label index="textarea_rte.syntax">
-        &lt;b&gt;width = integer;&lt;/b&gt;
-        Définit la largeur du "textarea". Cet attribut remplace celui défini dans le TCA.
-        
         &lt;b&gt;height = integer;&lt;/b&gt;
         Définit la hauteur du "textarea". Cet attribut remplace celui défini dans le TCA.
+
+        &lt;b&gt;width = integer;&lt;/b&gt;
+        Définit la largeur du "textarea". Cet attribut remplace celui défini dans le TCA.
       </label> 	
 		</languageKey>
 	</data>

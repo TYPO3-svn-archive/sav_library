@@ -9,6 +9,7 @@ CREATE TABLE tx_savlibrary_export_configuration (
 	cruser_id int(11) DEFAULT '0' NOT NULL,
 	deleted tinyint(4) DEFAULT '0' NOT NULL,
 	hidden tinyint(4) DEFAULT '0' NOT NULL,
+	fe_group int(11) DEFAULT '0' NOT NULL,
 	name tinytext NOT NULL,
 	cid int(11) DEFAULT '0' NOT NULL,
 	configuration text NOT NULL,

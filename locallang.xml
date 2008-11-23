@@ -68,6 +68,7 @@
 			<label index="error.incorrectQueryInReqValue">Error in the query associated with the property "reqValue" in the field: </label>
 			<label index="error.incorrectQueryInQueryProperty">Error in the query associated with the property "query"</label>
 			<label index="error.incorrectQueryInContent">Error in the query associated with the property "content" in the field: </label>
+			<label index="error.incorrectQueryForeignTable">The "foreign table" field in the query must start either by inner join, left join, right join or by a comma.</label>
 			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library have not the same version. Open the extension with the kickstater and save it.</label>
 			<label index="error.missingDot">Separate the field name from the table name by a dot "." in: </label>  
 			<label index="error.missingEqualSign">The sign = is missing in parameter: </label>
@@ -141,12 +142,13 @@
 			<label index="itemviewer.yesMult">X </label>
 			<label index="itemviewer.noMult">- </label>
 			<label index="itemviewer.configuration">Configuration</label>
+			<label index="itemviewer.configurationGroup">Group</label>
 			<label index="itemviewer.whereClause">Where clause</label>
 			<label index="itemviewer.orderClause">Order clause</label>
 			<label index="itemviewer.error">Error</label>
 			<label index="itemviewer.warning">Warning</label>
 			<label index="itemviewer.additionalTables">Additional tables</label>
-			<label index="itemviewer.additionalFields">Additional Fields</label>
+			<label index="itemviewer.additionalFields">Additional fields</label>
 			<label index="itemviewer.exportMM">Export MM records</label>
 			<label index="itemviewer.groupBy">Group By Clause</label>
 			<label index="itemviewer.includeAllFields">Include all fields</label>
@@ -223,6 +225,7 @@
 			<label index="error.incorrectQueryInReqValue">Erreur dans la requête associée à la propriété "reqValue" dans le champ : </label>
 			<label index="error.incorrectQueryInContent">Erreur dans la requête associée à la propriété "content" dans le champ : </label>
 			<label index="error.incorrectQueryInQueryProperty">Erreur dans la requête associée la la propriété "query"</label>
+			<label index="error.incorrectQueryForeignTable">Le champ "foreign table" dans la requête doit commencer par inner join, left join, right join ou par une virgule.</label>
 			<label index="error.incorrectVersion">Merci de contacter le webmestre. L'extension et la bibliothèque n'ont pas la même version. Ouvrir l'extension avec le kickstater et la sauver.</label>
 			<label index="error.missingDot">Séparer le champ de la table par un "." dans : </label>
 			<label index="error.missingEqualSign">Le signe = manque dans le paramètre : </label>
@@ -296,6 +299,7 @@
 			<label index="itemviewer.yesMult">X </label>
 			<label index="itemviewer.noMult">- </label>	
 			<label index="itemviewer.configuration">Configuration</label>
+			<label index="itemviewer.configurationGroup">Groupe</label>
 			<label index="itemviewer.whereClause">Clause Where</label>
 			<label index="itemviewer.orderClause">Clause Order</label>
 			<label index="itemviewer.error">Erreur</label>

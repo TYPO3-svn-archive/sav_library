@@ -64,18 +64,8 @@ class tx_savlibrary_defaultQueriers {
       $search = $extFilter['search'];
       $searchOrder = $extFilter['searchOrder'];
 			$addWhere = ' AND '.($extFilter['addWhere'] ? $extFilter['addWhere'] : 0);
+      $addTables = $extFilter['tableName'];
 
-			// Get the additionnal table
-			if ($extFilter['tableName']) {
-        $tables = explode(',', $extFilter['tableName']);
-        $addTables='';
-        foreach($tables as $table) {
-          if(trim($table)!=trim($query['tableLocal']) && 
-            trim($table)!=trim($query['tableForeign'])) {
-            $addTables .= ',' . $table;
-          }
-        }
-      }		
 		} else {
         // Add a where clause depending on the configuration
 			 $addWhere = ' AND '.(isset($this->savlibrary->conf['noFilterShowAll']) ? $this->savlibrary->conf['noFilterShowAll'] : 1);
@@ -134,7 +124,7 @@ class tx_savlibrary_defaultQueriers {
 	  $nbitem = $row['nbitem'];
     
 		// Exec the query
-		$order = (($GLOBALS['TCA'][$query['tableLocal']]['ctrl']['sortby'] && !$search) ? $query['tableLocal'] . '.' . $GLOBALS['TCA'][$query['tableLocal']]['ctrl']['sortby'] : $searchOrder);
+		$order = (($GLOBALS['TCA'][$query['tableLocal']]['ctrl']['sortby'] && !($search && $searchOrder)) ? $query['tableLocal'] . '.' . $GLOBALS['TCA'][$query['tableLocal']]['ctrl']['sortby'] : $searchOrder);
       	
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	'*' .
@@ -147,7 +137,7 @@ class tx_savlibrary_defaultQueriers {
  			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
  			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '').
 					($whereId 
-            ? ($query['whereTags'][$whereId]['where'] ? ' AND '.$query['whereTags'][$whereId]['where'] : '')
+            ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
             : (($query['where'] && !$search )? ' AND ' . $query['where'] : '')
           ) .
 					$this->replaceTableNames($addWhere) .
@@ -159,7 +149,7 @@ class tx_savlibrary_defaultQueriers {
             $whereId
             ? ($query['whereTags'][$whereId]['order'] ? $query['whereTags'][$whereId]['order'] : '')
             : (
-              ($query['order'] && !$search) 
+              ($query['order'] && !($search && $searchOrder))
               ? $query['order'] 
               : $order)
           ),
@@ -468,19 +458,19 @@ class tx_savlibrary_defaultQueriers {
 	 */
 	public function export_SELECT_defaultQuerier(&$query, $uid=0) {
 	
-    $addTables = $query['tableForeign'];
+    $addTables = $query['addTables'];
     
     $tableReference = $this->buidTableReference($query, $addTables);
     
     $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = true;
 
     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			/* SELECT   */	($query['fields'] ? $query['fields'] : '*').
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '').
+			/* SELECT   */	($query['fields'] ? $query['fields'] : '*') .
+					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
 					'',		
-			/* FROM     */	$tableReference.
+			/* FROM     */	$tableReference .
 					'',
- 			/* WHERE    */	' 1'.
+ 			/* WHERE    */	' 1' .
  			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
  			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
  			    ($query['where'] ? ' AND ' . $this->processWhereClause($query['where']) : '') .
@@ -493,7 +483,7 @@ class tx_savlibrary_defaultQueriers {
 			    ''
 			);
 
-		$error = $GLOBALS['TYPO3_DB']->sql_error();
+		$error = $GLOBALS['TYPO3_DB']->sql_error($res);
 		if ($error)	{
 			return array(
 				'caller' => 't3lib_DB::' . $func,
@@ -1433,7 +1423,7 @@ class tx_savlibrary_defaultQueriers {
  	 *
 	 * @return string (result)
 	 */  
-  public function processFieldTags($x, &$row, $rtf=false) {  
+  public function processFieldTags($x, &$row, &$config = array()) {
   
     $x = preg_replace('/(###[^\r\n#]*)[\r\n]*([^#]*###)/m','$1$2' ,$x);
     preg_match_all('/###(([^\.#]+)\.?([^#]*))###/', $x, $matches);
@@ -1444,17 +1434,35 @@ class tx_savlibrary_defaultQueriers {
       $tag = $matches[1][$key];
       // Clean the tag 
       $tag = preg_replace('/\\\\[^ ]+ /','' ,$tag);
-               
+      
+      // If the tag is in the configuration, get the replacement string. Oyherwise, replace NL by NL+\\par
+      if ($config[$tag]) {
+        $temp = explode('->', $config[$tag]);
+        switch(trim($temp[0])) {
+          case 'NL':
+            $search = chr(10);
+            break;
+          default:
+            $search = $temp[0];
+        }
+        $replace = $temp[1];
+      } else {
+        $search = chr(10);
+        $replace = chr(10) . '\\par ';
+      }
+
       if ($matches[3][$key]) {
+
         $value = html_entity_decode(stripslashes($row[$this->replaceTableNames(trim($tag))]), ENT_QUOTES);
-        if ($rtf) {
-          $value = str_replace(chr(10), chr(10) . '\\par ', $value);
+        if ($config['generatertf']) {
+          $value = str_replace($search, $replace, $value);
         }
         $mA[$matches[0][$key]] = $value;
       } else {
+        // It's an alias
         $value = html_entity_decode(stripslashes($row[trim($tag)]), ENT_QUOTES);
-        if ($rtf) {
-          $value = str_replace(chr(10), chr(10) . '\\par ', $value);
+        if ($config['generatertf']) {
+          $value = str_replace($search, $replace, $value);
         }
         $mA[$matches[0][$key]] = $value;
       }
@@ -1744,14 +1752,21 @@ class tx_savlibrary_defaultQueriers {
       }
     }
 
-    // Add the foreign tables
-    $tableReference .= ' '. $query['tableForeign'];
-    
+    // Add the foreign table
+      // Check that the 'tableForeign' start either by LEFT JOIN, INNER JOIN or RIGHT JOIN or a comma
+    if ($query['tableForeign']) {
+      if (!preg_match('/^[\s]*(?i)(,|inner join|left join|right join)[\s]*/', $query['tableForeign'])) {
+        $this->savlibrary->addError('error.incorrectQueryForeignTable');
+      } else {
+        $tableReference .= ' '. $query['tableForeign'];
+      }
+    }
+
     // Check for duplicate table names with addTables
     $temp = explode(',',$addTables);
     $addTablesArray = array();
-    foreach ($temp as $key=>$table) {
-      if($table && !in_array($table, $addTablesArray) && !preg_match('/ ' . $table . ' /', $tableReference)) {
+    foreach ($temp as $key => $table) {
+      if($table && !in_array($table, $addTablesArray) && !preg_match('/ ' . $table . ' /', ' ' . $tableReference)) {
         $addTablesArray[] = $table;
       }
     }

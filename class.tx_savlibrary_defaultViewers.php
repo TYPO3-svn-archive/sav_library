@@ -698,6 +698,8 @@ class tx_savlibrary_defaultViewers {
                           );
         
   			$fields['configuration'] = serialize($extPOSTVars);
+  			$fields['fe_group'] = $extPOSTVars['configurationGroup'][0];
+  			
         $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
   				/* TABLE   */	$table,		
   				/* WHERE   */	$table.'.uid='.intval($extPOSTVars['configuration'][0]),  		
@@ -748,8 +750,8 @@ class tx_savlibrary_defaultViewers {
       }
       $query['fields'] = ($extPOSTVars['includeAllFields'][0] ? '*' : $query['fields']);
 
-      $query['tableForeign']  = $extPOSTVars['additionalTables'][0];
-      $query['aliases'] = trim($extPOSTVars['additionalFields'][0] ? $query['aliases'].','.$extPOSTVars['additionalFields'][0] : $query['aliases']);
+      $query['addTables']  = $extPOSTVars['additionalTables'][0];
+      $query['aliases'] = trim($extPOSTVars['additionalFields'][0] ? ($query['aliases'] ? $query['aliases'] . ',' . $extPOSTVars['additionalFields'][0] : $extPOSTVars['additionalFields'][0]) : $query['aliases']);
       $query['where'] = $this->savlibrary->queriers->processWhereClause($extPOSTVars['where'][0]);  
       $query['order'] = ($extPOSTVars['order'][0] ? $extPOSTVars['order'][0] : $query['order']);
       $query['group'] = ($extPOSTVars['exportMM'][0] ? ($extPOSTVars['groupBy'][0] ? $extPOSTVars['groupBy'][0] : '' ) : $query['group']);
@@ -802,13 +804,20 @@ class tx_savlibrary_defaultViewers {
       );
 
       $res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-  				  /* SELECT   */	'*',		
+  				  /* SELECT   */	'*',
   				  /* FROM     */	$table,
-  	 			  /* WHERE    */	'cid='.$this->savlibrary->extObj->cObj->data['uid'] . ' and cruser_id=' . $GLOBALS['TSFE']->fe_user->user['uid'] . $this->savlibrary->extObj->cObj->enableFields($table),
+  	 			  /* WHERE    */	'cid=' . intval($this->savlibrary->extObj->cObj->data['uid']) .
+                            ' AND ' . $table . '.deleted=0 AND ' . $table . '.hidden=0' .
+                            ' AND (' .
+                              '(cruser_id=' . intval($GLOBALS['TSFE']->fe_user->user['uid']) .
+                                ' AND (' . $table . '.fe_group=\'\' OR ' . $table . '.fe_group IS NULL OR ' . $table . '.fe_group=0))' .
+                              ' OR ' . $table . '.fe_group IN (' . $GLOBALS['TSFE']->fe_user->user['usergroup'] . '))' .
+                            '',
   				  /* GROUP BY */	'',
   				  /* ORDER BY */	'name',
   				  /* LIMIT    */	''
   		  );
+
   		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res1))) {
   		    $item = array();
   		    $item['label'] = $row['name'];
@@ -858,7 +867,40 @@ class tx_savlibrary_defaultViewers {
       $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
       $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
       $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
-      
+
+      // Add the group of the fe_user
+      $config = array(
+        '_field' => 'configurationGroup',
+        'uid' => 0,
+        'emptyitem' => 1,
+        'items' => array(),
+  		  'elementControlName' => $this->savlibrary->formName.'[configurationGroup][0]',
+        'value' => $extPOSTVars['configurationGroup'][0],
+      );
+
+      foreach($GLOBALS['TSFE']->fe_user->groupData['title'] as $keyGroup => $valueGroup) {
+  		  $item = array();
+  		  $item['label'] = $valueGroup;
+  		  $item['uid'] = $keyGroup;
+  		  if($extPOSTVars['configurationGroup'][0] == $keyGroup) {
+          $item['selected'] = 1;
+        }
+  		  $config['items'][] = $item;
+      }
+
+      $key++;
+      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.configurationGroup');
+      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewDbRelationSingleSelectorEditMode($config);
+      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
+      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
+      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
+      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
+      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
   
       // Display the checkboxes
       $config = array(
@@ -987,6 +1029,29 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
     $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.additionalTables');
     $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config).$this->savlibrary->itemviewers->viewCheckboxEditMode($config1);
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
+    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
+    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+
+    // Display the textinput for additional fields
+    $config = array(
+      'size' => 70,
+      '_field' => 'additionalFields',
+      'uid' => 0,
+  		'elementControlName' => $this->savlibrary->formName . '[additionalFields][0]',
+      'value' => $extPOSTVars['additionalFields'][0],
+    );
+
+    $key++;
+    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
+    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.additionalFields');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1125,20 +1190,26 @@ class tx_savlibrary_defaultViewers {
 		  t3lib_div::unlink_tempfile($strFilepath);
 		  
 		  if ($fileHandle = fopen($strFilepath,'ab')) {
-	  
+
 		    // Export the field names
         if ($extPOSTVars['exportFieldNames'][0]) {	    
   		    $arrValues = array();
   	 	    if ($extPOSTVars['fields'][0]) {
-    		    foreach($extPOSTVars['fields'][0] as $key => $field) {
-              if ($field) {
-                $arrValues[] = $key;
+
+            $orderedFieldList = explode(';', preg_replace('/[\n\r]/', '', $extPOSTVars['orderedFieldList'][0]));
+            
+            $fields = array_keys($extPOSTVars['fields'][0]);
+            $fieldList = array_merge($orderedFieldList, array_diff($fields, $orderedFieldList));
+
+    		    foreach($fieldList as $key => $field) {
+              if ($extPOSTVars['fields'][0][$field]) {
+                $arrValues[] = $field;
               }
             }
             fwrite($fileHandle, $this->csvValues( $arrValues,';') . chr(10));
           }
         }
-        
+
 		    // Export the fields        
         $cpt = 0;
     		while ($row = $this->savlibrary->queriers->sql_fetch_assoc_with_tablename($res, $cpt++)) {		  
@@ -1151,7 +1222,9 @@ class tx_savlibrary_defaultViewers {
             $fieldList = array_merge($orderedFieldList, array_diff($fields, $orderedFieldList));
 
             foreach ($fieldList as $key => $field) {
+
               if ($extPOSTVars['fields'][0][$field]) {
+
                 if (array_key_exists($field, $aliasFields)) {
 
                   $config = $this->savlibrary->getConfig($aliasFields[$field]);                 
@@ -1225,6 +1298,8 @@ class tx_savlibrary_defaultViewers {
                   $value = $config['value'];                
                 }              
                 $arrValues[] = $value;
+              } elseif (preg_match('/ (as|AS) ' . $field .'/', $extPOSTVars['additionalFields'][0])) {
+                $arrValues[] = stripslashes($row[$field]);
               }
             }
 
