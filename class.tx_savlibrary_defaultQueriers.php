@@ -586,30 +586,86 @@ class tx_savlibrary_defaultQueriers {
      		);
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         $sorting = $row['sorting'];
-      
-        // Find the record to change
+        
+        // Get the minimum
       	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
       		/* SELECT  */  '*',
-      		/* TABLE   */	$MM_table,		
-      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.sorting' . $comp . $sorting,
+      		/* TABLE   */	$MM_table,
+      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid),
           /* GROUP   */ '',
-          /* ORDER BY */	'sorting ' . $direction
+          /* ORDER BY */	'sorting asc'
      		);
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+        $uidForeignMin = $row['uid_foreign'];
+        $sortingMin = $row['sorting'];
+
+        // Get the maximum
+      	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+      		/* SELECT  */  '*',
+      		/* TABLE   */	$MM_table,
+      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid),
+          /* GROUP   */ '',
+          /* ORDER BY */	'sorting desc'
+     		);
+        $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+        $uidForeignMax = $row['uid_foreign'];
+        $sortingMax = $row['sorting'];
+
+        // Find the record to change
+        if ($sorting == $sortingMin && $this->savlibrary->formAction == 'upBtn') {
+          $newSorting = $sortingMax + 1;
+
+          // update the first record
+        	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+        		/* TABLE   */	$MM_table,
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
+        		/* FIELDS  */	array('sorting' => $newSorting)
+       		);
+       		
+       		// reorder all the records
+       		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting - 1 ' . ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
+          $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdate);
+          
+        } elseif ($sorting == $sortingMax && $this->savlibrary->formAction == 'downBtn') {
+          $newSorting = $sortingMin - 1;
+
+          // update the first record
+        	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+        		/* TABLE   */	$MM_table,
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
+        		/* FIELDS  */	array('sorting' => $newSorting)
+       		);
+
+       		// reorder all the records
+       		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting + 1 ' . ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
+          $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdate);
+
+        } else {
+        	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+        		/* SELECT  */  '*',
+        		/* TABLE   */	$MM_table,
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.sorting' . $comp . $sorting,
+            /* GROUP   */ '',
+            /* ORDER BY */	'sorting ' . $direction
+       		);
+          $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+          $newSorting = $row['sorting'];
+          $uidForeign = $row['uid_foreign'];
    
-        // update the first record
-      	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-      		/* TABLE   */	$MM_table,		
-      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
-      		/* FIELDS  */	array('sorting' => $row['sorting'])
-     		);
+          // update the first record
+        	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+        		/* TABLE   */	$MM_table,
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
+        		/* FIELDS  */	array('sorting' => $newSorting)
+       		);
                
-        // update the second record
-      	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
-      		/* TABLE   */	$MM_table,		
-      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($row['uid_foreign']),
-      		/* FIELDS  */	array('sorting' => $sorting)
-     		);
+          // update the second record
+        	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+        		/* TABLE   */	$MM_table,
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidForeign),
+        		/* FIELDS  */	array('sorting' => $sorting)
+       		);
+        }
 
      		return 0;
         break;

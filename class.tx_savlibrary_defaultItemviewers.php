@@ -90,7 +90,7 @@ class tx_savlibrary_defaultItemviewers {
 		$style = ($config['stylehtmltag'] ? 'style="' . $config['stylehtmltag'] . '" ' : '');
 		$value = ($config['default'] && !$config['value'] ? $config['default'] : $config['value']);
 
-    $htmlArray[] = '<input type="text" ' . $class . $style . 'name="' . $config['elementControlName'] . '" value="' . stripslashes($config['value']) . '" size="' . $config['size'] . '" onchange="document.changed=1;" onclick="this.value='.$config['default'].';"/>';
+    $htmlArray[] = '<input type="text" ' . $class . $style . 'name="' . $config['elementControlName'] . '" value="' . stripslashes($config['value']) . '" size="' . $config['size'] . '" onchange="document.changed=1;" ondblclick="this.value='.$config['default'].';"/>';
     
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
@@ -1500,13 +1500,14 @@ class tx_savlibrary_defaultItemviewers {
           }
 
           if ($config['addupdown']) {
-            if ($cpt ==0) {
-              $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->downButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
-            } elseif ($cpt == $nbitem -1) {
-              $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->upButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);            
-            } else {
-              $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->downButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']) . $this->savlibrary->upButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
-            }
+//            if ($cpt ==0) {
+//              $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->downButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
+//            } elseif ($cpt == $nbitem -1) {
+//              $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->upButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
+//            } else {
+//              $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->downButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']) . $this->savlibrary->upButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
+//            }
+            $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->downButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']) . $this->savlibrary->upButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
             $cpt++;
           }
           if ($config['adddelete']){
