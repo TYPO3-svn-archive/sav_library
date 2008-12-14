@@ -311,7 +311,7 @@
 			<label index="itemviewer.includeAllFields">Inclure tous les champs</label>
 			<label index="itemviewer.exportFieldNames">Exporter le nom des champs</label>
 			<label index="itemviewer.orderedFieldList">Ordre des champs</label>
-			
+
       <!-- General labels --> 
 			<label index="general.clickHere">Cliquer ici</label>
 			<label index="general.noAvailableInformation">Aucune information disponible</label>

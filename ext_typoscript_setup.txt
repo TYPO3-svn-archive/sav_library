@@ -644,7 +644,47 @@ plugin.sav_library {
       width:inherit;  
       margin-bottom:1px;
       padding:0px;     
-    }    
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap {
+      padding:5px;
+    }
+   .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.activeLinkWrap {
+      background-color:inherit;
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.inactiveLinkWrap {
+      background-color:inherit;
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.disabledLinkWrap {
+      background-color:inherit;
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.activeLinkWrap A {
+      background-color:inherit;
+      color:#EA6900;
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.inactiveLinkWrap A {
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap IMG {
+      float:none;
+      padding-left:2px;
+      margin:0px;
+      vertical-align:middle;
+    }
+    .sav-library DIV.showSingle DIV.subFormAlt DIV.arrows DIV.browseLinksWrap IMG {
+      float:none;
+      padding-left:2px;
+      margin:0px;
+      vertical-align:middle;
+    }
+     
                      
       /**
       * inputForm Item 
@@ -840,6 +880,45 @@ plugin.sav_library {
       margin-bottom:1px;
       padding:0px;     
     }    
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap {
+      padding:5px;
+    }
+   .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.activeLinkWrap {
+      background-color:inherit;
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.inactiveLinkWrap {
+      background-color:inherit;
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.disabledLinkWrap {
+      background-color:inherit;
+      color:#EA6900;
+      vertical-align:top;
+      padding-left:2px;
+    }
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.activeLinkWrap A {
+      background-color:inherit;
+      color:#EA6900;
+    }
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap SPAN.inactiveLinkWrap A {
+    }
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap IMG {
+      float:none;
+      padding-left:2px;
+      margin:0px;
+      vertical-align:middle;
+    }
+    .sav-library DIV.inputForm DIV.subFormAlt DIV.arrows DIV.browseLinksWrap IMG {
+      float:none;
+      padding-left:2px;
+      margin:0px;
+      vertical-align:middle;
+    }
 
     
     /* Media print */ 

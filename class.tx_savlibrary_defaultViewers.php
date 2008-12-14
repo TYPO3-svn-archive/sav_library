@@ -242,9 +242,9 @@ class tx_savlibrary_defaultViewers {
     // Modify variables for the call
     $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
     $this->savlibrary->extObj->piVars['limit'] = $this->savlibrary->limit;
-    $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&'.$this->savlibrary->formName.'[formAction]=browse';
+    $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' . $this->savlibrary->formName . '[formAction]=browse';
 		$ta['MARKERS']['browse'] = $this->savlibrary->extObj->pi_list_browseresults(0, '', $wrapArr, 'limit', false);
-		
+
 		// Replace Next and Previous messages by arrows
     $ta['MARKERS']['browse'] = str_replace('Last >>', $this->savlibrary->iconImage('forwardLastButton', 'forwardLast.png', 'button.forwardLast'), $ta['MARKERS']['browse']);
     $ta['MARKERS']['browse'] = str_replace('<< First', $this->savlibrary->iconImage('backwardFirstButton', 'backwardFirst.png', 'button.backwardFirst'), $ta['MARKERS']['browse']);	
@@ -749,7 +749,6 @@ class tx_savlibrary_defaultViewers {
         $query['fields'] = $query['tableLocal'].'.uid,'.implode(',', $fields);    
       }
       $query['fields'] = ($extPOSTVars['includeAllFields'][0] ? '*' : $query['fields']);
-
       $query['addTables']  = $extPOSTVars['additionalTables'][0];
       $query['aliases'] = trim($extPOSTVars['additionalFields'][0] ? ($query['aliases'] ? $query['aliases'] . ',' . $extPOSTVars['additionalFields'][0] : $extPOSTVars['additionalFields'][0]) : $query['aliases']);
       $query['where'] = $this->savlibrary->queriers->processWhereClause($extPOSTVars['where'][0]);  
@@ -758,7 +757,6 @@ class tx_savlibrary_defaultViewers {
       $exportOK = $exportOK && !$extPOSTVars['includeAllFields'][0] && (($extPOSTVars['additionalTablesValidated'][0] && $extPOSTVars['additionalTables'][0]) || !$extPOSTVars['additionalTables'][0]) ;
       $extPOSTVars['additionalTablesValidated'][0] = ($extPOSTVars['additionalTablesValidated'][0] && $extPOSTVars['additionalTables'][0]);
     }
-
     $res = $this->savlibrary->queriers->$func($query, $this->savlibrary->uid);
 
     // Display the form      
@@ -767,32 +765,7 @@ class tx_savlibrary_defaultViewers {
 
     // set the key counter
     $key = -1;
-      
-    // Display the error if any
-    if (isset($res['ERROR'])) {
-      $config = array(
-        '_field' => 'error',
-        'uid' => 0,
-        'value' => 'ERROR : <br />'.$res['ERROR'].'<br /><br />QUERY : <br />'.$res['lastBuiltQuery'],
-      );
 
-      $key++; 
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.error');;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewTextArea($config);
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
- 
-    } else {    
-      $nbRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
-          
       // Display the selector with the saved configuration
       $config = array(
         '_field' => 'configuration',
@@ -828,8 +801,8 @@ class tx_savlibrary_defaultViewers {
   		    $config['items'][] = $item;
       };
 
-      $key++;    
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+      $key++;
+      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
@@ -849,8 +822,8 @@ class tx_savlibrary_defaultViewers {
         'value' => $extPOSTVars['configurationName'][0],
       );
 
-      $key++;    
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+      $key++;
+      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 1;
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
@@ -901,6 +874,31 @@ class tx_savlibrary_defaultViewers {
       $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
       $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
       $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+      
+    // Display the error if any
+    if (isset($res['ERROR'])) {
+      $config = array(
+        '_field' => 'error',
+        'uid' => 0,
+        'value' => '<b>ERROR : </b><br />'.$res['ERROR'].'<br /><br /><b>QUERY : </b><br />'.$res['lastBuiltQuery'],
+      );
+
+      $key++; 
+      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
+      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
+      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.error');;
+      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewTextArea($config);
+      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
+      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
+      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
+      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="error"';
+      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+ 
+    } else {    
+      $nbRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
   
       // Display the checkboxes
       $config = array(
@@ -950,7 +948,8 @@ class tx_savlibrary_defaultViewers {
       }
     }
 
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
+    $key++;
+    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 1;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
@@ -1231,24 +1230,27 @@ class tx_savlibrary_defaultViewers {
            			  $config['type'] = ($config['type'] ? $config['type'] : 'input');
        				
            				// Process the query
-                  $query = $config['reqvalue']; 
+                  $queryReqValue = $config['reqvalue'];
                   $table = $config['table'];
-                  if (preg_match_all('/###row\[([^\]]+)\]###/', $query, $matches)) {
+                  if (preg_match_all('/###row\[([^\]]+)\]###/', $queryReqValue, $matches)) {
                     foreach ($matches[0] as $k => $match) {
                       $mA[$matches[0][$k]] = $this->savlibrary->getValue($table, $matches[1][$k], $row);
                     }
                   }
 
-                  $mA['###uid###'] = $row[$config['table'].'.uid'];
+                  $mA['###uid###'] = $row[$config['table'] . '.uid'];
+                  $mA['###uidParent###'] = $row[$query['tableLocal'] . '.uid'];
                   $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                  $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array() );
-                  
+                  $queryReqValue = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($queryReqValue, $mA, array(), array() );
+
                   // Check if the query is a SELECT query and for errors
-                  if (!$this->savlibrary->isSelectQuery($query)) {
+                  if (!$this->savlibrary->isSelectQuery($queryReqValue)) {
                     $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+                    $arrError['reqValue'] = false;
                     continue;
-                  } elseif (!($resLocal = $GLOBALS['TYPO3_DB']->sql_query($query))) {
+                  } elseif (!($resLocal = $GLOBALS['TYPO3_DB']->sql_query($queryReqValue))) {
                     $this->savlibrary->addError('error.incorrectQueryInReqValue', $config['field']);
+                    $arrError['reqValue'] = false;
                     continue;
                   }
 

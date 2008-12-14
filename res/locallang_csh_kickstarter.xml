@@ -699,8 +699,12 @@
         If * is used instead of the comma-separated list of fields, all fields are kept.     
         &lt;b&gt;cutNewButtonIfNotSaved = 1;&lt;/b&gt;
         The new button of the subform will be cut if the form in which the subform takes place is not saved.
-         &lt;b&gt;labelOnTitle = 1;&lt;/b&gt;
-        The label will be displayed in the title of the subform in input mode.       
+        &lt;b&gt;labelOnTitle = 1;&lt;/b&gt;
+        The label will be displayed in the title of the subform in input mode.
+        &lt;b&gt;subFormTemplate = string;&lt;/b&gt;
+        Name of the template (e.g. subFormAlt). By default the template "subForm" is used.
+        &lt;b&gt;noFirstLast = 1;&lt;/b&gt;
+        First and last buttons in the browser associated with the "subFormAlt" template will not be shown.
      </label>
 
 		  <!-- select -->
@@ -1429,6 +1433,11 @@
         Le boutton nouveau du sous-formulaire ne sera pas affiché si le formulaire dans lequel le sous-formulaire est inséré n'a pas été sauvegardé.
         &lt;b&gt;labelOnTitle = 1;&lt;/b&gt;
         Le label sera affiché dans la barre titre d'un sous-formulaire dans le mode saisie.
+        &lt;b&gt;subFormTemplate = string;&lt;/b&gt;
+        Nom du template (e.g. subFormAlt). par défault le template "subForm" est utilisé.
+        &lt;b&gt;noFirstLast = 1;&lt;/b&gt;
+        Les boutons d'accès au premier au dernier item, associés au template "subFormAlt", seront cachés.
+
      </label>
 
 		  <!-- select -->
