@@ -199,18 +199,19 @@ class tx_savlibrary_defaultQueriers {
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	'*' .
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
-					'',		
+				$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
+				'',
 			/* FROM     */	$tableReference .
-					'',
+				'',
  			/* WHERE    */	' 1' .
-					' AND '.$query['tableLocal'] . '.uid=' . intval($uid) .
-					($query['addWhere'] ? ' AND ' . $this->replaceTableNames($query['addWhere']) : ''),
+				' AND '.$query['tableLocal'] . '.uid=' . intval($uid) .
+				($query['addWhere'] ? ' AND ' . $this->replaceTableNames($query['addWhere']) : ''),
 			/* GROUP BY */	$query['group'] .
-					'',
+				'',
 			/* ORDER BY */	
-					'',
-			/* LIMIT    */	''	
+				'',
+			/* LIMIT    */
+        ''
 		);
 
     // Check for errors
@@ -384,8 +385,16 @@ class tx_savlibrary_defaultQueriers {
       $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
       // Merge with new one
-      $arrayToMerge = ($error ? array('Temp_' . $this->savlibrary->formShortName => $extPOSTVars) : array($this->savlibrary->formShortName => $extPOSTVars));
-      $submitted_data = ($row['_submitted_data_'] ? array_merge(unserialize($row['_submitted_data_']), $arrayToMerge) : $arrayToMerge);
+      $arrayToMerge = (
+        $error ?
+        array('Temp_' . $this->savlibrary->formShortName => $extPOSTVars) :
+        array($this->savlibrary->formShortName => $extPOSTVars)
+      );
+      $submitted_data = (
+        $row['_submitted_data_'] ?
+        array_merge(unserialize($row['_submitted_data_']), $arrayToMerge) :
+        $arrayToMerge
+      );
       if ($error) {
         unset($submitted_data[$this->savlibrary->formShortName]);
       } else {
@@ -396,7 +405,10 @@ class tx_savlibrary_defaultQueriers {
       $extNewPOSTVars = t3lib_div::_POST('New_' . $this->savlibrary->formName);
 
       if ($extNewPOSTVars) {
-        $submitted_data = array_merge($submitted_data, array('New_' . $this->savlibrary->formShortName => $extNewPOSTVars));
+        $submitted_data = array_merge(
+          $submitted_data,
+          array('New_' . $this->savlibrary->formShortName => $extNewPOSTVars)
+        );
       }  
       
       // update
@@ -417,19 +429,20 @@ class tx_savlibrary_defaultQueriers {
 		$tableReference = $this->buidTableReference($query, $addTables);
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			/* SELECT   */	'*'.
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
-					'',		
+			/* SELECT   */	'*' .
+				$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
+				'',
 			/* FROM     */	$tableReference .
-					'',
+				'',
  			/* WHERE    */	' 1' .
-					' AND '.$query['tableLocal'] . '.uid=' . intval($uid).
-					'',  		
+				' AND ' . $query['tableLocal'] . '.uid=' . intval($uid) .
+				'',
 			/* GROUP BY */	
-					'',
+				'',
 			/* ORDER BY */	
-					($query['order'] ? $query['order'] : ''),
-			/* LIMIT    */	'1'	
+				($query['order'] ? $query['order'] : ''),
+			/* LIMIT    */
+        '1'
 		);
 
     // Check for errors
@@ -466,21 +479,21 @@ class tx_savlibrary_defaultQueriers {
 
     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	($query['fields'] ? $query['fields'] : '*') .
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
-					'',		
+				$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
+				'',
 			/* FROM     */	$tableReference .
-					'',
+				'',
  			/* WHERE    */	' 1' .
- 			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
- 			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
- 			    ($query['where'] ? ' AND ' . $this->processWhereClause($query['where']) : '') .
-					'',  
+ 			  $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
+ 			  ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
+ 			  ($query['where'] ? ' AND ' . $this->processWhereClause($query['where']) : '') .
+				'',
 			/* GROUP BY */	$query['group'] .
-          '',
+        '',
 			/* ORDER BY */	$query['order'] .
-          '',
+        '',
 			/* LIMIT    */	$query['limit'] .
-			    ''
+			  ''
 			);
 
 		$error = $GLOBALS['TYPO3_DB']->sql_error($res);
@@ -522,9 +535,9 @@ class tx_savlibrary_defaultQueriers {
 	 * @return array (query result)
 	 */
 	public function UPDATE_defaultQuerier(&$query, $uid=0) {
-		
+
  		if (! $GLOBALS['TSFE']->fe_user->user['uid']) {
-			die ("You must be authentified to save these data.");
+			return array('fatal' => 'notAuthentified');
 		}
 		
 		// get the page values
@@ -582,7 +595,8 @@ class tx_savlibrary_defaultQueriers {
       	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
       		/* SELECT  */  'sorting',
       		/* TABLE   */	$MM_table,		
-      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem)
+      		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+            ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem)
      		);
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         $sorting = $row['sorting'];
@@ -618,12 +632,14 @@ class tx_savlibrary_defaultQueriers {
           // update the first record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
-        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+              ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
         		/* FIELDS  */	array('sorting' => $newSorting)
        		);
        		
        		// reorder all the records
-       		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting - 1 ' . ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
+       		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting - 1 ' .
+            ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
           $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdate);
           
         } elseif ($sorting == $sortingMax && $this->savlibrary->formAction == 'downBtn') {
@@ -632,19 +648,22 @@ class tx_savlibrary_defaultQueriers {
           // update the first record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
-        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+              ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
         		/* FIELDS  */	array('sorting' => $newSorting)
        		);
 
        		// reorder all the records
-       		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting + 1 ' . ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
+       		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting + 1 ' .
+            ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
           $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdate);
 
         } else {
         	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         		/* SELECT  */  '*',
         		/* TABLE   */	$MM_table,
-        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.sorting' . $comp . $sorting,
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+              ' AND ' . $MM_table . '.sorting' . $comp . $sorting,
             /* GROUP   */ '',
             /* ORDER BY */	'sorting ' . $direction
        		);
@@ -655,14 +674,16 @@ class tx_savlibrary_defaultQueriers {
           // update the first record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
-        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+              ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem),
         		/* FIELDS  */	array('sorting' => $newSorting)
        		);
                
           // update the second record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
-        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidForeign),
+        		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+              ' AND ' . $MM_table . '.uid_foreign=' . intval($uidForeign),
         		/* FIELDS  */	array('sorting' => $sorting)
        		);
         }
@@ -685,7 +706,8 @@ class tx_savlibrary_defaultQueriers {
         if (!$configTable[$getVars['field']]['norelation']) {
   				$res = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
             /* TABLE   */	$MM_table,		
-            /* WHERE   */	$MM_table . '.uid_local=' . intval($uid) . ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem)
+            /* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
+              ' AND ' . $MM_table . '.uid_foreign=' . intval($uidItem)
           );   
         }
         return 0;             
@@ -859,7 +881,9 @@ class tx_savlibrary_defaultQueriers {
   						$line = '';
 
   						foreach($value as $day) {
-  							$line .= current($day['beginAm']) . '-' . current($day['endAm']) . '|' . current($day['beginPm']) . '-' . current($day['endPm']) . ';';
+  							$line .= current($day['beginAm']) . '-' .
+                  current($day['endAm']) . '|' . current($day['beginPm']) . '-' .
+                  current($day['endPm']) . ';';
   							$k = key($day['beginAm']);
   						}
   						$line = substr($line,0,-1);
@@ -1271,7 +1295,11 @@ class tx_savlibrary_defaultQueriers {
                   /* TABLE   */	$MM_table,		
                   /* WHERE   */	$MM_table . '.uid_local=' . intval($uid)
                 );
-  						  $new_uid_special = ($config['mm_field'] == 'cruser_id' ? $GLOBALS['TSFE']->fe_user->user['uid'] : $uid);
+  						  $new_uid_special = (
+                  $config['mm_field'] == 'cruser_id' ?
+                  $GLOBALS['TSFE']->fe_user->user['uid'] :
+                  $uid
+                );
               } elseif (!$this->savlibrary->uid) {
                 // Insert the fields
                 $fields['pid'] = $GLOBALS['TSFE']->id;
@@ -1292,9 +1320,17 @@ class tx_savlibrary_defaultQueriers {
       					);
                 $new_uid = $GLOBALS['TYPO3_DB']->sql_insert_id($res);
                 $this->savlibrary->uid = $new_uid;          
-      			    $new_uid_special = ($config['mm_field'] == 'cruser_id' ? $GLOBALS['TSFE']->fe_user->user['uid'] : $new_uid);
+      			    $new_uid_special = (
+                  $config['mm_field'] == 'cruser_id' ?
+                  $GLOBALS['TSFE']->fe_user->user['uid'] :
+                  $new_uid
+                );
       			  } elseif ($new_uid && $new_uid!=$this->savlibrary->uid) {
-      			    $new_uid_special = ($config['mm_field'] == 'cruser_id' ? $GLOBALS['TSFE']->fe_user->user['uid'] : $new_uid);
+      			    $new_uid_special = (
+                  $config['mm_field'] == 'cruser_id' ?
+                  $GLOBALS['TSFE']->fe_user->user['uid'] :
+                  $new_uid
+                );
               } else {
                 $new_uid_special = $new_uid; // Case where a MM table is associated with a record created a regular
               }
@@ -1315,13 +1351,18 @@ class tx_savlibrary_defaultQueriers {
               foreach ($values as $pos => $value) {            
                 if ($value) {
   						    unset($vars);
-  						    $vars = array('uid_local' => $new_uid_special, 'uid_foreign' => $value,'sorting' => (int) $initPos+$pos+1);
+  						    $vars = array(
+                    'uid_local' => $new_uid_special,
+                    'uid_foreign' => $value,
+                    'sorting' => (int) $initPos+$pos+1
+                  );
   						    
   						    // Because no primary key is used, check if the record exists
     						  $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   						      /* SELECT */  '*', 
   							    /* FROM   */	$MM_table,		
-  							    /* WHERE  */	'uid_local=' . intval($new_uid_special).' AND uid_foreign='.intval($value)
+  							    /* WHERE  */	'uid_local=' . intval($new_uid_special) .
+                      ' AND uid_foreign=' . intval($value)
     						  );
                   $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res); 
 
@@ -1370,7 +1411,12 @@ class tx_savlibrary_defaultQueriers {
 	 */  
   public function sendEmail($config, &$mA) {
 
-    $mailSender = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($config['mailsender'], array('###user_email###' => $GLOBALS['TSFE']->fe_user->user['email']), array(), array() );
+    $mailSender = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
+      $config['mailsender'],
+      array('###user_email###' => $GLOBALS['TSFE']->fe_user->user['email']),
+      array(),
+      array()
+    );
 
     if ($mailReceiverFromQuery = $config['mailreceiverfromquery']) {
       $mA["###uid###"] = $this->savlibrary->uid;
@@ -1435,7 +1481,6 @@ class tx_savlibrary_defaultQueriers {
       }      
     }
     
-       
     // Reset language          
     if ($config['mailmessagelanguage']) {
       $this->savlibrary->extObj->LLkey = $LLkey;
@@ -1444,7 +1489,11 @@ class tx_savlibrary_defaultQueriers {
     }     
     
     // Add markers       
-    $mA['###linkToPage###'] = str_replace('<a href="', '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL') ,$this->savlibrary->extObj->pi_linkToPage('', $GLOBALS['TSFE']->id));
+    $mA['###linkToPage###'] = str_replace(
+      '<a href="',
+      '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL'),
+      $this->savlibrary->extObj->pi_linkToPage('', $GLOBALS['TSFE']->id)
+    );
    
     $mailMessage = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(nl2br($mailMessage), $mA, array(), array() );
     $mailSubject = mb_encode_mimeheader($this->savlibrary->extObj->cObj->substituteMarkerArrayCached($mailSubject, $mA, array(), array() ), 'iso-8859-1', 'Q');
@@ -1462,10 +1511,22 @@ class tx_savlibrary_defaultQueriers {
 //debug($mailMessage);
 
     if (!ini_get('safe_mode')) {
-			//If safe mode is on, the fifth parameter to mail is not allowed, so the fix wont work on unix with safe_mode=On
-      return @mail($mailReceiver, $mailSubject, $mailMessage, ($config['mailsender'] ? $headers : ''),($config['mailsender'] ? '-f'.$mailSender : ''));
+			// If safe mode is on, the fifth parameter to mail is not allowed,
+      // so the fix wont work on unix with safe_mode=On
+      return @mail(
+        $mailReceiver,
+        $mailSubject,
+        $mailMessage,
+        ($config['mailsender'] ? $headers : ''),
+        ($config['mailsender'] ? '-f'.$mailSender : '')
+      );
     } else {
-      return @mail($mailReceiver, $mailSubject, $mailMessage, ($config['mailsender'] ? $headers : ''));
+      return @mail(
+        $mailReceiver,
+        $mailSubject,
+        $mailMessage,
+        ($config['mailsender'] ? $headers : '')
+      );
     }
   }
 
@@ -1481,7 +1542,7 @@ class tx_savlibrary_defaultQueriers {
 	 */  
   public function processFieldTags($x, &$row, &$config = array()) {
   
-    $x = preg_replace('/(###[^\r\n#]*)[\r\n]*([^#]*###)/m','$1$2' ,$x);
+    $x = preg_replace('/(###[^\r\n#]*)[\r\n]*([^#]*###)/m', '$1$2' ,$x);
     preg_match_all('/###(([^\.#]+)\.?([^#]*))###/', $x, $matches);
 
     $mA = array();
@@ -1491,7 +1552,8 @@ class tx_savlibrary_defaultQueriers {
       // Clean the tag 
       $tag = preg_replace('/\\\\[^ ]+ /','' ,$tag);
       
-      // If the tag is in the configuration, get the replacement string. Oyherwise, replace NL by NL+\\par
+      // If the tag is in the configuration, get the replacement string.
+      // Otherwise, replace NL by NL+\\par
       if ($config[$tag]) {
         $temp = explode('->', $config[$tag]);
         switch(trim($temp[0])) {
@@ -1509,7 +1571,10 @@ class tx_savlibrary_defaultQueriers {
 
       if ($matches[3][$key]) {
 
-        $value = html_entity_decode(stripslashes($row[$this->replaceTableNames(trim($tag))]), ENT_QUOTES);
+        $value = html_entity_decode(
+          stripslashes($row[$this->replaceTableNames(trim($tag))]),
+          ENT_QUOTES
+        );
         if ($config['generatertf']) {
           $value = str_replace($search, $replace, $value);
         }
@@ -1524,7 +1589,12 @@ class tx_savlibrary_defaultQueriers {
       }
     } 
 
-    return $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($x, $mA, array(), array() );   
+    return $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
+      $x,
+      $mA,
+      array(),
+      array()
+    );
   }
 
 	/**
@@ -1542,7 +1612,11 @@ class tx_savlibrary_defaultQueriers {
       foreach($matches[1] as $key=>$match) {
         if ($matches[2][$key]) {
           if ($this->aliasTable[$match.$matches[2][$key]]) {
-            $x = str_replace($matches[0][$key], $this->aliasTable[$match . $matches[2][$key]] . '.', $x);
+            $x = str_replace(
+              $matches[0][$key],
+              $this->aliasTable[$match . $matches[2][$key]] . '.',
+              $x
+            );
           }        
         }
       }
@@ -1608,7 +1682,8 @@ class tx_savlibrary_defaultQueriers {
         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				    /* SELECT   */	'uid,title',	
 				    /* FROM     */	'fe_groups',
-	 			    /* WHERE    */	'1' . $this->savlibrary->extObj->cObj->enableFields('fe_groups')
+	 			    /* WHERE    */	'1' .
+              $this->savlibrary->extObj->cObj->enableFields('fe_groups')
 		    );
         while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
           if (in_array($rows['title'], $groups)) {
@@ -1622,9 +1697,17 @@ class tx_savlibrary_defaultQueriers {
     
         // Replace the tag
         if ($matches[1][$key]=='!') {
-          $where = preg_replace('/###group_list[ ]*!=([^#]*)###/','(1' . $clause . ')', $where);
+          $where = preg_replace(
+            '/###group_list[ ]*!=([^#]*)###/',
+            '(1' . $clause . ')',
+            $where
+          );
         } else {
-          $where = preg_replace('/###group_list[ ]*=([^#]*)###/','(0' . $clause . ')', $where);
+          $where = preg_replace(
+            '/###group_list[ ]*=([^#]*)###/',
+            '(0' . $clause . ')',
+            $where
+          );
         }
       }
     }
@@ -1649,7 +1732,10 @@ class tx_savlibrary_defaultQueriers {
             }
           }
         } else {
-          $this->savlibrary->addError('error.unknownFunctionInWhere', $matchFunc[1]);
+          $this->savlibrary->addError(
+            'error.unknownFunctionInWhere',
+            $matchFunc[1]
+          );
         }       
 
         $where = preg_replace('/###[^:]+:[^#]+###/', $replace, $where);
@@ -1704,8 +1790,11 @@ class tx_savlibrary_defaultQueriers {
     $tableArray[$tableName][] = 1;  
     if ($nbTable) {
       $alias = end($aliasTable);
-      $aliasTable[$tableName.$nbTable] = ($alias ? $alias + 1 : 'A');
-      return array('def' => $tableName . ' AS ' . $aliasTable[$tableName.$nbTable], 'table' => $aliasTable[$tableName . $nbTable]);
+      $aliasTable[$tableName . $nbTable] = ($alias ? $alias + 1 : 'A');
+      return array(
+        'def' => $tableName . ' AS ' . $aliasTable[$tableName . $nbTable],
+        'table' => $aliasTable[$tableName . $nbTable]
+      );
     }
     return array('def' => $tableName, 'table' => $tableName);
   }
@@ -1767,11 +1856,13 @@ class tx_savlibrary_defaultQueriers {
           $alias1 = $this->buidAliasTable($config['MM'], $tableArray, $this->aliasTable);          
           $alias2 = $this->buidAliasTable($config['allowed'], $tableArray, $this->aliasTable);          
 
-          $tableReference .= ' LEFT JOIN ' . $alias1['def'] . ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
+          $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
+            ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
         } else {
           $alias1 = $this->buidAliasTable($config['allowed'], $tableArray, $this->aliasTable);          
 
-          $tableReference .= ' LEFT JOIN ' . $alias1['def'] . ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
+          $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
+          ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
         }
       }
       if ($config['type'] == 'select') {
@@ -1780,11 +1871,13 @@ class tx_savlibrary_defaultQueriers {
           $alias1 = $this->buidAliasTable($config['MM'], $tableArray, $this->aliasTable);          
           $alias2 = $this->buidAliasTable($config['foreign_table'], $tableArray, $this->aliasTable);                    
 
-          $tableReference .= ' LEFT JOIN ' . $alias1['def'] . ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
+          $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
+            ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
         } elseif ($config['foreign_table']) {
           $alias1 = $this->buidAliasTable($config['foreign_table'], $tableArray, $this->aliasTable);          
 
-          $tableReference .= ' LEFT JOIN ' . $alias1['def'] . ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
+          $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
+            ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
           
           // Check if a link is defined
           $view = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
@@ -1802,7 +1895,8 @@ class tx_savlibrary_defaultQueriers {
           $extendLink = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$page]['fields'][$tableName . '.' . $field]['config']['setextendlink'];
           if ($extendLink) {
             $alias2 = $this->buidAliasTable($extendLink, $tableArray, $this->aliasTable);                    
-            $tableReference .= ' LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.' . $extendLink . '=' . $alias2['table'] . '.uid)';
+            $tableReference .= ' LEFT JOIN ' . $alias2['def'] .
+              ' ON (' . $alias1['table'] . '.' . $extendLink . '=' . $alias2['table'] . '.uid)';
           }           
         }
       }
@@ -1814,7 +1908,7 @@ class tx_savlibrary_defaultQueriers {
       if (!preg_match('/^[\s]*(?i)(,|inner join|left join|right join)[\s]*/', $query['tableForeign'])) {
         $this->savlibrary->addError('error.incorrectQueryForeignTable');
       } else {
-        $tableReference .= ' '. $query['tableForeign'];
+        $tableReference .= ' ' . $query['tableForeign'];
       }
     }
 

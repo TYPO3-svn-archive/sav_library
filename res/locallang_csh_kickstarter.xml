@@ -171,7 +171,11 @@
         
         &lt;b&gt;Where clause&lt;/b&gt; 
         Defines the WHERE clause for query. It can be:
-        . a conventional MySQL clause. The tag ###user### can be used. It will be replaced by the user uid.
+        . a conventional MySQL clause.
+        - The tag ###user### can be used. It will be replaced by the user uid.
+        - The tag ###uid### can be used. It will be replaced by the current uid record.
+        - The tag ###CURRENT_PID### can be used. It will be replaced by the current page uid.
+        - The tag ###STORAGE_PID### can be used. It will be replaced by the storage page uid.
         . ###group_list = list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user belongs to the group list. 
         . ###group_list != list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user does not belong to the group list. 
         . ###func:WHERE_Clause####. func must be a valid method defined in the tx_savlibrary class. If the method returns true then the WHERE clause is added otherwise it is omitted. The method may have one parameter.
@@ -182,7 +186,7 @@
           - isGroupMember(groupName) which returns true if the user is a member of "groupName",
           - isNotGroupMember(groupName) which returns true if the user is not a member of "groupName".    
               
-        Other methods can be added using sav_library_extends).The WHERE_Clause can be any previous cases.
+        Other methods can be added using sav_library_extends.The WHERE_Clause can be any previous cases.
         
         &lt;b&gt;Group clause&lt;/b&gt; 
         GROUP clause for the query. Very useful when MM tables are used (MySQL syntax).
@@ -306,6 +310,9 @@
         This wizard can be used to automatically ugrade the version of your extension. If you set z, one unit will be added to the z part.
         It you set y, one unit will be added to the y part, while the z part is reset to 0.
         If you set x, one unit, will be added to the x part, while the y and z parts will be reset.
+
+        &lt;b&gt;Generate xml configuration&lt;/b&gt;
+        If set, the configuration of the extension is saved ina xml file instead of a php array.
         
         &lt;b&gt;Debug Query&lt;/b&gt;
         Set to display error messages on queries, if any.
@@ -554,8 +561,9 @@
         It may be useful, for example, to update a specific table when the current data are saved. Several queries can be used in the SQL statements. Each query must be separated using "\;".
         Special tags can be used in the statement :
         . ###uid### will be replaced by the current record uid.
-        . ###CURRENT_PID### will be replaced by the current page id.
-        . ###user### will be replaced by the user id.
+        . ###CURRENT_PID### will be replaced by the current page uid.
+        . ###STORAGE_PID### will be replaced by the storage page uid.
+        . ###user### will be replaced by the user uid.
         . ###value### will be replaced by the current value for the field.
 
         &lt;b&gt;queryOnValue = string;&lt;/b&gt;
@@ -651,13 +659,16 @@
         &lt;b&gt;orderSelect = string;&lt;/b&gt;
         Defines the order clause for the selector. In general : field_name [desc].
         &lt;b&gt;whereSelect=string;&lt;/b&gt;      			
-        Defines the where clause for the selector. It can be:
+        Defines the WHERE clause for the selector. It can be:
         . a conventional MySQL clause. 
         - The tag ###user### can be used. It will be replaced by the user uid.
         - The tag ###uid### can be used. it will be replaced by the main current record.
-        - The tag ###STORAGE_PID### can be used. It will be replaced by the storage page id.
+        - The tag ###CURRENT_PID### can be used. It will be replaced by the current page uid.
+        - The tag ###STORAGE_PID### can be used. It will be replaced by the storage page uid.
         . ###group_list = list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user belongs to the group list. 
         . ###group_list != list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user does not belong to the group list. 
+        &lt;b&gt;groupBySelect=string;&lt;/b&gt;
+        Defines the GROUP BY clause for the selector.
         &lt;b&gt;content=SQL select statement;&lt;/b&gt;
         SQL select statement must have an alias "uid" and an alias "label" which will be used as the value to display.
         Special tags can be used in the statement :
@@ -903,7 +914,11 @@
         
         &lt;b&gt;Where clause&lt;/b&gt; 
         Définit la clause WHERE pour la requête. Cela peut être :
-        . une clause WHERE en MySQL. Le métatag ###user### peut être utilisé. Il sera remplacé par l'uid de l'utilisateur.
+        . une clause WHERE en MySQL.
+        - Le tag ###user### peut être utilisé. Il sera remplacé par l'uid de l'utilisateur.
+        - Le tag ###uid### peut être utilisé. Il sera remplacé par l'uid de l'enregistrement courant.
+        - The tag ###CURRENT_PID### peut être utilisé. Il sera remplacé par l'uid de la page.
+        - The tag ###STORAGE_PID### peut être utilisé. Il sera remplacé par l'uid de la page de stockage.
         . ###group_list = list_of_comma_separed_fe_groups###. Pour une utilisation avec un sélecteur sur la table fe_users. Cela vérifie si l'utilisateur appartient à une des groupes de la liste. 
         . ###group_list != list_of_comma_separed_fe_groups###. Pour une utilisation avec un sélecteur sur la table fe_users. Cela vérifie si l'utilisateur n'appartient à aucun groupe de la liste. 
         . ###func:WHERE_Clause####. func doit être une méthode valide définie dans la classe tx_savlibrary. Si la méthode fonctionne retourne "vrai", la clause WHERE est ajoutée sinon elle est omise. La méthode peut avoir un paramètre.
@@ -1036,7 +1051,10 @@
         Cet section permet de mettre automatiquement à jour la version de votre extension. En sélectionnant z, une unité sera ajoutée à la partie z.
         En sélectionnant y, une unité sera ajoutée à la partie y et la partie z sera remise à 0.
         En sélectionnant x, une unité sera ajoutée à la partie x et les parties y et z seront remises à 0.
-        
+
+        &lt;b&gt;Generate xml configuration&lt;/b&gt;
+        Si cette option est validée, laconfiguration de l'extensioin est sauvegardée dans un fichier xml à la place d'être sous la forme d'un "array" php.
+
         &lt;b&gt;Debug Query&lt;/b&gt;
         Valider pour afficher, le cas échéant, les messages d'erreur relatifs aux requêtes. 
         
@@ -1285,6 +1303,7 @@
         Des tags spéciaux peuvent être utilisés dans la requête : 
         . ###uid### sera remplacé par l'uid de l'enregistrement courant.
         . ###CURRENT_PID### sera remplacé par l'uid de la page courante.
+        . ###STORAGE_PID### sera remplacé par l'uid de la page de stockage.
         . ###user### sera remplacé par l'id de l'utilisateur.
         . ###value### sera remplacé par la valeur courante du champ.
 
@@ -1384,11 +1403,14 @@
         &lt;b&gt;whereSelect=string;&lt;/b&gt;
         Définit la clause WHERE pour le sélecteur. Cela peut être :      			
         . une clause conventionnelle MySQL. 
-        - Le tag ###user### peut être utilisé. Il sera remplacé par l'id de l'utilisateur.
+        - Le tag ###user### peut être utilisé. Il sera remplacé par l'uid de l'utilisateur.
         - Le tag ###uid### peut être utilisé. Il sera remplacé par l'uid de l'enregistrement courant.
-        - Le tag ###STORAGE_PID### peut être utilisé. Il sera remplacé par l'id de la "storage page".
-        . ###group_list = list_of_comma_separed_fe_groups###. A utiliser avec un sélecteur sur la table fe_users. Cela vérifie si l'utilisateur appartient à un des groupes de la liste. 
+        - The tag ###CURRENT_PID### peut être utilisé. Il sera remplacé par l'uid de la page.
+        - The tag ###STORAGE_PID### peut être utilisé. Il sera remplacé par l'uid de la page de stockage.
+        . ###group_list = list_of_comma_separed_fe_groups###. A utiliser avec un sélecteur sur la table fe_users. Cela vérifie si l'utilisateur appartient à un des groupes de la liste.
         . ###group_list != list_of_comma_separed_fe_groups###. A utiliser avec un sélecteur sur la table fe_users. Cela vérifie si l'utilisateur n'appartient à aucun groupe de la liste. 
+        &lt;b&gt;groupBySelect=string;&lt;/b&gt;
+        Définit la clause GROUP BY pour le sélecteur.
         &lt;b&gt;content=SQL select statement;&lt;/b&gt;
         La requête SQM doit avoir un alias "uid" et un "alias "label" qui seront utilisés pour la valeur à afficher.
         Des tags spéciaux peuvent être utilisés dans cette instruction :

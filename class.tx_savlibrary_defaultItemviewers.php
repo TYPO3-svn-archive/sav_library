@@ -42,7 +42,7 @@ class tx_savlibrary_defaultItemviewers {
 	public $RTEinit = 0;
 	public $docLarge = 1;
 	public $RTEcounter = 0;
-	public $additionalJS_initial = '';		  // Initial JavaScript to be printed before the form (should be in head, but cannot due to IE6 timing bug)
+	public $additionalJS_initial = '';		// Initial JavaScript to be printed before the form (should be in head, but cannot due to IE6 timing bug)
 	public $additionalJS_pre = array();	  // Additional JavaScript to be printed before the form
 	public $additionalJS_post = array();	  // Additional JavaScript to be printed after the form
 	public $additionalJS_submit = array();	// Additional JavaScript to be executed on submit
@@ -58,7 +58,8 @@ class tx_savlibrary_defaultItemviewers {
   /**
  * End variables for the RTE API
  */
-  
+
+
 	/**
 	 * String Input viewer
 	 *
@@ -70,7 +71,11 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
     
-    $htmlArray[] = $config['value'] ? nl2br(stripslashes($config['value'])) : '';
+    $htmlArray[] = (
+      $config['value'] ?
+      nl2br(stripslashes($config['value'])) :
+      ''
+    );
     
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
@@ -86,11 +91,30 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
     
-		$class = ($config['classhtmltag'] ? 'class="' . $config['classhtmltag'] . '" ' : '');
-		$style = ($config['stylehtmltag'] ? 'style="' . $config['stylehtmltag'] . '" ' : '');
-		$value = ($config['default'] && !$config['value'] ? $config['default'] : $config['value']);
+		if ($config['default']) {
+      $ondblclick = 'this.value=\'' .
+        (
+          !$config['value'] ?
+          stripslashes($config['default']) :
+          stripslashes($config['value'])
+        ) .
+        '\';';
+    } else {
+		  $ondblclick = '';
+    }
 
-    $htmlArray[] = '<input type="text" ' . $class . $style . 'name="' . $config['elementControlName'] . '" value="' . stripslashes($config['value']) . '" size="' . $config['size'] . '" onchange="document.changed=1;" ondblclick="this.value='.$config['default'].';"/>';
+    // Add the Input text element
+    $htmlArray[] = utils::htmlInputTextElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('value', stripslashes($config['value'])),
+        utils::htmlAddAttribute('size', $config['size']),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+        utils::htmlAddAttributeIfNotNull('ondblclick', $ondblclick),
+      )
+     );
     
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
@@ -123,12 +147,19 @@ class tx_savlibrary_defaultItemviewers {
   public function viewStringPasswordEditMode(&$config) {
 		
     $htmlArray = array();
+
+    // Add the input password element
+    $htmlArray[] = utils::htmlInputPasswordElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('value', stripslashes($config['value'])),
+        utils::htmlAddAttribute('size', $config['size']),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      )
+    );
     
-		$class = ($config['classhtmltag'] ? 'class="' . $config['classhtmltag'] . '" ' : '');
-		$style = ($config['stylehtmltag'] ? 'style="' . $config['stylehtmltag'] . '" ' : '');
-
-    $htmlArray[] = '<input type="password" ' . $class . $style . 'name="' . $config['elementControlName'] . '" value="' . stripslashes($config['value']) . '" size="' . $config['size'] . '" onchange="document.changed=1" />';
-
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
 
@@ -189,23 +220,54 @@ class tx_savlibrary_defaultItemviewers {
       foreach ($config['items'] as $key => $value) {
         $checked = ($val&0x01 ? 'checked' : '');
         $val = $val >> 1;
-		    $htmlArray[] = '<span class="checkbox">';
-        $htmlArray[] = ($checked ? 
-                        $this->savlibrary->getLibraryLL('itemviewer.yesMult') . stripslashes($this->savlibrary->getLL_db($value[0])) :
-                        ($config['donotdisplayifnotchecked'] ? '' : $this->savlibrary->getLibraryLL('itemviewer.noMult') . stripslashes($this->savlibrary->getLL_db($value[0]))));
-        $htmlArray[] = '</span>'; 
+
+        $messageIfChecked = $this->savlibrary->getLibraryLL(
+          'itemviewer.yesMult') .
+          stripslashes($this->savlibrary->getLL_db($value[0])
+        );
+        $messageIfNotChecked = (
+          $config['donotdisplayifnotchecked'] ?
+          '' :
+          $this->savlibrary->getLibraryLL('itemviewer.noMult') .
+            stripslashes($this->savlibrary->getLL_db($value[0]))
+        );
+            
+        $htmlArray[] = utils::htmlSpanElement(
+          array(
+            utils::htmlAddAttribute('class', 'checkbox'),
+          ),
+          ($checked ? $messageIfChecked : $messageIfNotChecked)
+        );
+        
         $cpt++;  
         $cptItem++;
         if ($cptItem == $config['nbitems']){
           break;
         }
         if ($cpt == $cols){
-          $htmlArray[] = '<br class="checkbox" />';
+          // Add the br element
+          $htmlArray[] = utils::htmlBrElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkbox'),
+            )
+          );
+          
+          // Resets the counter
           $cpt = 0;
         }    
       }
     } else {
-      $htmlArray[] = ($config['value'] ? $this->savlibrary->getLibraryLL('itemviewer.yes') : ($config['donotdisplayifnotchecked'] ? '' : $this->savlibrary->getLibraryLL('itemviewer.no')) );
+      $messageIfChecked = $this->savlibrary->getLibraryLL('itemviewer.yes');
+      $messageIfNotChecked = (
+        $config['donotdisplayifnotchecked'] ?
+        '' :
+        $this->savlibrary->getLibraryLL('itemviewer.no')
+      );
+      $htmlArray[] = (
+        $config['value'] ?
+        $messageIfChecked :
+        $messageIfNotChecked
+      );
     }
     
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -229,45 +291,129 @@ class tx_savlibrary_defaultItemviewers {
       $cptItem = 0;
       $val = $config['value'];
       foreach ($config['items'] as $key => $value) {
-        $checked = (($val&0x01 || $value[1]==1 )? ' checked="checked"' : '');
+        $checked = (($val&0x01 || $value[1]==1 )? 'checked' : '');
         $val = $val >> 1;
-		    $htmlArray[] = '<input type="hidden" name="' . $config['elementControlName'] . '[' . $key . ']" value="0" />';
-        $htmlArray[] = '<input type="checkbox" name="' . $config['elementControlName'] . '[' . $key . ']"  value="1"' . $checked . ' onchange="document.changed=1" />';
-        $htmlArray[] = '<span class="checkbox" ' . $value['addattributes'] . '>' . stripslashes($this->savlibrary->getLL_db($value[0])) . '</span>';
+        
+        // Add the hidden input element
+        $htmlArray[] = utils::htmlInputHiddenElement(
+          array(
+            utils::htmlAddAttribute(
+              'name',
+              $config['elementControlName'] . '[' . $key . ']'
+            ),
+            utils::htmlAddAttribute('value', '0'),
+          )
+        );
+        
+        // Add the checkbox input element
+        $htmlArray[] = utils::htmlInputCheckBoxElement(
+          array(
+            utils::htmlAddAttribute(
+              'name',
+              $config['elementControlName'] . '[' . $key . ']'
+            ),
+            utils::htmlAddAttribute('value', '1'),
+            utils::htmlAddAttributeIfNotNull('checked', $checked),
+            utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+          )
+        );
+
+        // Add the span element
+        $htmlArray[] = utils::htmlSpanElement(
+          array(
+            utils::htmlAddAttribute('class', 'checkbox'),
+            $value['addattributes'],
+          ),
+          stripslashes($this->savlibrary->getLL_db($value[0]))
+        );
+          
         $cpt++;  
         $cptItem++;
         if ($cptItem == $config['nbitems']){
           break;
         }
         if ($cpt == $cols){
-          $htmlArray[] = '<br class="checkbox" />';
+        
+          // Add the br element
+          $htmlArray[] = utils::htmlBrElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkbox'),
+            )
+          );
+          
+          // Resets the counter
           $cpt = 0;
         }    
       }
     } else {
       // Only one checkbox	
       if ($config['value'] == 1) {
-        $checked = ' checked="checked"';
+        $checked = 'checked';
       } else {
         if ($config['uid']) {
           $checked='';
         } else {
-          $checked = ($config['default'] ? ' checked="checked"' : '');
+          $checked = ($config['default'] ? 'checked' : '');
         }
       }      	
       // Check if it is associated with a mail		
       if ($config['mail']) {     
-        $htmlArray[] = $this->savlibrary->mailButton($this->savlibrary->formName, $config['_field'], ($config['value'] ? '' : $config['valueforcheckmail']), $this->savlibrary->rowItem) . '<div class="separator">&nbsp;</div>';
+        $htmlArray[] = $this->savlibrary->mailButton(
+          $this->savlibrary->formName,
+          $config['_field'],
+          (
+            $config['value'] ?
+            '' :
+            $config['valueforcheckmail']
+          ),
+          $this->savlibrary->rowItem
+          ) . '<div class="separator">&nbsp;</div>';
         if ($config['value']) {
-  		    $htmlArray[] = '<input type="hidden" name="' . $config['elementControlName'] . '" value="0" />';
-          $htmlArray[] = '<input type="checkbox" name="' . $config['elementControlName'] . '"  value="1"' . $checked . ' onchange="document.changed=1" />';
+        
+          // Add the hidden input element
+          $htmlArray[] = utils::htmlInputHiddenElement(
+            array(
+              utils::htmlAddAttribute('name', $config['elementControlName']),
+              utils::htmlAddAttribute('value', '0'),
+            )
+          );
+
+          // Add the checkbox input element
+          $htmlArray[] = utils::htmlInputCheckBoxElement(
+            array(
+              utils::htmlAddAttribute('name', $config['elementControlName']),
+              utils::htmlAddAttribute('value', '1'),
+              utils::htmlAddAttributeIfNotNull('checked', $checked),
+              utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+            )
+          );
         } else {
-          $htmlArray[] = '<input type="hidden" name="' . $config['elementControlName'] . '" value="0" />';
+          // Add the hidden input element
+          $htmlArray[] = utils::htmlInputHiddenElement(
+            array(
+              utils::htmlAddAttribute('name', $config['elementControlName']),
+              utils::htmlAddAttribute('value', '0'),
+            )
+          );
         }
       } else {
+        // Add the hidden input element
+        $htmlArray[] = utils::htmlInputHiddenElement(
+          array(
+            utils::htmlAddAttribute('name', $config['elementControlName']),
+            utils::htmlAddAttribute('value', '0'),
+          )
+        );
 
-  		  $htmlArray[] = '<input type="hidden" name="' . $config['elementControlName'] . '" value="0" />';
-        $htmlArray[] = '<input type="checkbox" name="' . $config['elementControlName'] . '"  value="1"' . $checked . ' onchange="document.changed=1" />';
+        // Add the checkbox input element
+        $htmlArray[] = utils::htmlInputCheckBoxElement(
+          array(
+            utils::htmlAddAttribute('name', $config['elementControlName']),
+            utils::htmlAddAttribute('value', '1'),
+            utils::htmlAddAttributeIfNotNull('checked', $checked),
+            utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+          )
+        );
       }
     }
     
@@ -293,7 +439,7 @@ class tx_savlibrary_defaultItemviewers {
     if (is_array($config['items'])) {
       $val = $config['value'];
       foreach ($config['items'] as $key => $value) {
-        if ($val==$value[1]) {
+        if ($val == $value[1]) {
           $htmlArray[] = stripslashes($this->savlibrary->getLL_db($value[0]));
         }
       }
@@ -319,12 +465,37 @@ class tx_savlibrary_defaultItemviewers {
       $cpt = 0;
       $val = $config['value'];
       foreach ($config['items'] as $key => $value) {
-        $checked = ($val==$value[1] ? 'checked="checked"' : '');
-		    $htmlArray[] = '<input type="radio" name="' . $config['elementControlName'] . '" ' . $checked . ' value="' . $value[1] . '" onchange="document.changed=1" />';
-        $htmlArray[] = '<span class="left">' . stripslashes($this->savlibrary->getLL_db($value[0])) . '</span>';
+        $checked = ($val == $value[1] ? 'checked' : '');
+
+        // Add the radio input element
+        $htmlArray[] = utils::htmlInputRadioElement(
+          array(
+            utils::htmlAddAttribute('name', $config['elementControlName']),
+            utils::htmlAddAttribute('value', $value[1]),
+            utils::htmlAddAttributeIfNotNull('checked', $checked),
+            utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+          )
+        );
+
+        // Add the span element
+        $htmlArray[] = utils::htmlSpanElement(
+          array(
+            utils::htmlAddAttribute('class', 'left'),
+            $value['addattributes'],
+          ),
+          stripslashes($this->savlibrary->getLL_db($value[0]))
+        );
+        
         $cpt++;  
         if ($cpt == $cols) {
-          $htmlArray[] = '<br class="radio" />';
+          // Add the BR element
+          $htmlArray[] = utils::htmlBrElement(
+            array(
+              utils::htmlAddAttribute('class', 'radio'),
+            )
+          );
+          
+          // Resets the counter
           $cpt = 0;
         }    
       }
@@ -387,22 +558,45 @@ class tx_savlibrary_defaultItemviewers {
         );
 				$PA['itemFormElName'] = $config['elementControlName'];
         $PA['itemFormElValue'] = html_entity_decode($config['value'], ENT_QUOTES);
-				$out = $this->RTEObj->drawRTE($this, '', '', $row=array(), $PA, $specConf, $thisConfig, $RTEtypeVal, '', 0);
+				$out = $this->RTEObj->drawRTE(
+          $this,
+          '',
+          '',
+          $row=array(),
+          $PA,
+          $specConf,
+          $thisConfig,
+          $RTEtypeVal,
+          '',
+          0
+        );
 
 				// Remove the hidden field
 				$out = preg_replace('/<input type="hidden"[^>]*>/', '', $out);
         // Add onchange				
-				$out = preg_replace('/<textarea ([^>]*)>/', '<textarea \\1' . ' cols="' . $config['cols'] . '" rows="' . $config['rows'] . '" onchange="document.changed=1;">'	, $out);
+				$out = preg_replace('/<textarea ([^>]*)>/',
+          '<textarea \\1' . ' cols="' . $config['cols'] . '" rows="' .
+          $config['rows'] . '" onchange="document.changed=1;">'	,
+          $out
+        );
 				
         // Replace height and width
         if ($config['height']) {
-          $out = preg_replace('/height:[^p]*/', 'height:' . $config['height'], $out);
+          $out = preg_replace(
+            '/height:[^p]*/',
+            'height:' . $config['height'],
+            $out
+          );
         }
         // Add 45px to the first div
         $out = preg_replace('/height:([^p]*)/', 'height:$1+45', $out, 1);
         
         if ($config['width']) {
-          $out = preg_replace('/width:[^p]*/', 'width:' . $config['width'], $out);
+          $out = preg_replace(
+            '/width:[^p]*/',
+            'width:' . $config['width'],
+            $out
+          );
         }
         
         $htmlArray[] = $out;
@@ -416,7 +610,11 @@ class tx_savlibrary_defaultItemviewers {
 
         $js = array();                
         $js[] = '<script type="text/javascript">';
-        $js[] = (isset($this->additionalJS_pre[0]) ? $this->additionalJS_pre[0] : $this->additionalJS_pre['rtehtmlarea-loadJScode']);
+        $js[] = (
+          isset($this->additionalJS_pre[0]) ?
+          $this->additionalJS_pre[0] :
+          $this->additionalJS_pre['rtehtmlarea-loadJScode']
+        );
 		    $js[] = '</script>';
         $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= implode('', $js);
 		      
@@ -425,7 +623,17 @@ class tx_savlibrary_defaultItemviewers {
 		    $this->changedRTEList .= 'changedTextareaRTE(' . $this->RTEcounter . ');';
 			}
     } else {
-      $htmlArray[] = '<textarea name="' . $config['elementControlName'] . '" cols="' . $config['cols'] . '" rows="' . $config['rows'] . '" onchange="document.changed=1">' . $config['value'] . '</textarea>';
+      // Add the textarea element
+      $htmlArray[] = utils::htmlTextareaElement(
+        array(
+          utils::htmlAddAttribute('name', $config['elementControlName']),
+          utils::htmlAddAttribute('cols', $config['cols']),
+          utils::htmlAddAttribute('rows', $config['rows']),
+          utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+        ),
+        $config['value']
+      );
+
 		}
 
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -450,12 +658,20 @@ class tx_savlibrary_defaultItemviewers {
       if ($config['savefilertf']) {    
         $path_parts = pathinfo($config['savefilertf']);
         $config['folder'] = $path_parts['dirname'];
-        $htmlArray[] = $this->savlibrary->makeLink($config['value'], 0, $config);
+        $htmlArray[] = $this->savlibrary->makeLink(
+          $config['value'],
+          0,
+          $config
+        );
       } else  {
         $this->savlibrary->addError('error.incorrectRTFSaveFileName');
       }            
     } else {
-      $htmlArray[] = $this->savlibrary->makeUrlLink($this->viewStringInput($config), '', $config);
+      $htmlArray[] = $this->savlibrary->makeUrlLink(
+        $this->viewStringInput($config),
+        '',
+        $config
+      );
     }
           
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -475,7 +691,11 @@ class tx_savlibrary_defaultItemviewers {
     
     // generate the button
     if ($config['generatertf']) {
-      $htmlArray[] = $this->savlibrary->generateRTFButton($this->savlibrary->formName, $config['_field'], $this->savlibrary->rowItem);
+      $htmlArray[] = $this->savlibrary->generateRTFButton(
+        $this->savlibrary->formName,
+        $config['_field'],
+        $this->savlibrary->rowItem
+      );
       // update the field
       if ($config['uid']) {
         $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
@@ -487,12 +707,38 @@ class tx_savlibrary_defaultItemviewers {
       if ($config['value']) {
         $path_parts = pathinfo($config['savefilertf']);
         $config['folder'] = $path_parts['dirname'];
-        $htmlArray[] = '<div class="separator">&nbsp;</div>' . $this->savlibrary->hiddenField($config['elementControlName'], $config['value']) . '<div class="separator">&nbsp;</div>' . $this->savlibrary->makeLink($config['value'], 0, $config);
+        $htmlArray[] = '<div class="separator">&nbsp;</div>' .
+//          $this->savlibrary->hiddenField(
+//            $config['elementControlName'],
+//            $config['value']
+//          ) .
+          utils::htmlInputHiddenElement(
+            array(
+              utils::htmlAddAttribute('name', $config['elementControlName']),
+              utils::htmlAddAttribute('value', $config['value']),
+            )
+          ) .
+          '<div class="separator">&nbsp;</div>' .
+          $this->savlibrary->makeLink($config['value'], 0, $config);
       } else {
-        $htmlArray[] = '<div class="separator">&nbsp;</div>' . $this->savlibrary->hiddenField($config['elementControlName'], $config['value']);
+        $htmlArray[] = '<div class="separator">&nbsp;</div>' .
+//          $this->savlibrary->hiddenField(
+//            $config['elementControlName'],
+//            $config['value']
+//          );
+          utils::htmlInputHiddenElement(
+            array(
+              utils::htmlAddAttribute('name', $config['elementControlName']),
+              utils::htmlAddAttribute('value', $config['value']),
+            )
+          );
       }
     } else {
-      $config['size'] = ($config['size']<=20 ? $config['size']= 40 : $config['size']);
+      $config['size'] = (
+        $config['size']<=20 ?
+        $config['size']= 40 :
+        $config['size']
+      );
       $htmlArray[] = $this->viewStringInputEditMode($config);
     } 
       
@@ -517,7 +763,11 @@ class tx_savlibrary_defaultItemviewers {
 		if(!$config['value']) {
       $htmlArray[] = '';
     } else {
-	    $htmlArray[] = $this->savlibrary->makeDateFormat($config['value'], '', $config); 
+	    $htmlArray[] = $this->savlibrary->makeDateFormat(
+        $config['value'],
+        '',
+        $config
+      );
 	  } 
 	  
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -533,7 +783,15 @@ class tx_savlibrary_defaultItemviewers {
   public function viewDateTimeEditMode(&$config){
 //debug($config,'viewDateTimeEdit');
 		
-		$out = tx_savdateselectlib::getInputButton ($config['elementControlName'], ($config['value'] ? $config['value'] : ($config['nodefault'] ? '' : time())), $config);
+		$out = tx_savdateselectlib::getInputButton(
+      $config['elementControlName'],
+      (
+        $config['value'] ?
+        $config['value'] :
+        ($config['nodefault'] ? '' : time())
+      ),
+      $config
+    );
 
 		$htmlArray = explode(chr(10), $out);
 		
@@ -558,7 +816,11 @@ class tx_savlibrary_defaultItemviewers {
 		if(!$config['value']) {
       $htmlArray[] = '';
     } else {
-	    $htmlArray[] = $this->savlibrary->makeDateFormat($config['value'], '', $config); 
+	    $htmlArray[] = $this->savlibrary->makeDateFormat(
+        $config['value'],
+        '',
+        $config
+      );
 	  } 
 	  
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -574,7 +836,15 @@ class tx_savlibrary_defaultItemviewers {
   public function viewDateEditMode(&$config){
 //debug($config,'viewDateEdit');
   
-    $out = tx_savdateselectlib::getInputButton ($config['elementControlName'], ($config['value'] ? $config['value'] : ($config['nodefault'] ? '' : strtotime(date('m/d/Y')))), $config);
+    $out = tx_savdateselectlib::getInputButton(
+      $config['elementControlName'],
+      (
+        $config['value'] ?
+        $config['value'] :
+        ($config['nodefault'] ? '' : strtotime(date('m/d/Y')))
+      ),
+      $config
+    );
     
 		$htmlArray = explode(chr(10), $out);
 
@@ -596,17 +866,27 @@ class tx_savlibrary_defaultItemviewers {
   
     $htmlArray = array();
     
-    $folder = $config['uploadfolder'] . ($config['addtouploadfolder'] ? '/' . $config['addtouploadfolder'] : '');
+    $folder = $config['uploadfolder'] .
+      ($config['addtouploadfolder'] ? '/' . $config['addtouploadfolder'] : '');
 
-		  if ($config['iframe']) {
+		if ($config['iframe']) {
 		    // it's an image to be opened in an iframe
 		    $width = $config['width'] ? $config['width'] : '100%';
 		    $height = $config['height'] ? $config['height'] : '800';
 		    $message = $config['message'] ? $config['message'] : '';
-        $htmlArray[] = '<iframe src="' . $folder . '/' . $config['value'] . '" width="' . $width . '" height="' . $height . '">';
-        $htmlArray[] = $message;
-        $htmlArray[] = '</iframe>';
-      }	elseif ($config['allowed']) {
+
+        // Add the iframe element
+        $htmlArray[] = utils::htmlIframeElement(
+          array(
+            utils::htmlAddAttribute('src', $folder . '/' . $config['value']),
+            utils::htmlAddAttribute('width', $width),
+            utils::htmlAddAttribute('height', $height),
+          ),
+          $message
+        );
+
+        
+    }	elseif ($config['allowed']) {
       
         //
         if ($config['func'] == 'makeItemLink') {
@@ -624,16 +904,32 @@ class tx_savlibrary_defaultItemviewers {
           $out = $this->savlibrary->makeImage($file,'',$params);
                  
           if ($config['func']=='makeNewWindowLink') {
-            $out = $this->savlibrary->makeNewWindowLink ($out, $uid='', array('windowurl' => $folder . '/' . $file));
+            $out = $this->savlibrary->makeNewWindowLink (
+              $out,
+              $uid='',
+              array('windowurl' => $folder . '/' . $file)
+            );
           } elseif ($config['func']=='makeItemLink') {
-            $out = preg_replace('/(<a[^>]*>)[^<]*(<\/a>)/', '$1' . $out . '$2', $config['value']);
+            $out = preg_replace(
+              '/(<a[^>]*>)[^<]*(<\/a>)/',
+              '$1' . $out . '$2',
+              $config['value']
+            );
           }
           $htmlArray[] = $out;          
         } else {
           $params['width'] = $config['width'];
           $params['height'] = $config['height'];
-          $out = $this->savlibrary->makeImage(t3lib_extMgm::siteRelPath('sav_library').'res/images/unknown.gif','',$params);
-          $out = preg_replace('/(<a[^>]*>)[^<]*(<\/a>)/', '$1' . $out . '$2', $config['value']);
+          $out = $this->savlibrary->makeImage(
+            t3lib_extMgm::siteRelPath('sav_library').'res/images/unknown.gif',
+            '',
+            $params
+          );
+          $out = preg_replace(
+            '/(<a[^>]*>)[^<]*(<\/a>)/',
+            '$1' . $out . '$2',
+            $config['value']
+          );
           $htmlArray[] = $out;
         }
       } else {
@@ -644,10 +940,22 @@ class tx_savlibrary_defaultItemviewers {
         $params['target'] = $config['target'];
         if ($config['addicon']) {
           $pathInfo = pathinfo($config['_value']);
-          if (file_exists(t3lib_extMgm::extPath('sav_library') . 'res/fileicons/' . $pathInfo['extension'] . '.gif')) {
-            $htmlArray[] = '<img src="' . t3lib_extMgm::siteRelPath('sav_library') . 'res/fileicons/' . $pathInfo['extension'] . '.gif" alt="Icon ' . $pathInfo['extension'] . '" />&nbsp;&nbsp;';
-          } elseif (file_exists('typo3/gfx/fileicons/' . $pathInfo['extension'].'.gif')) {
-            $htmlArray[] = '<img src="typo3/gfx/fileicons/' . $pathInfo['extension'] . '.gif" alt="Icon ' . $pathInfo['extension'] . '" />&nbsp;&nbsp;';
+          $fileName = $pathInfo['extension'] . '.gif';
+          if (file_exists(t3lib_extMgm::extPath('sav_library') . 'res/fileicons/' . $fileName)) {
+            $htmlArray[] = utils::htmlImgElement(
+              array(
+                utils::htmlAddAttribute('src',
+                  t3lib_extMgm::siteRelPath('sav_library') . 'res/fileicons/' . $fileName),
+                utils::htmlAddAttribute('alt', 'Icon ' . $pathInfo['extension']),
+              )
+            ) . '&nbsp;&nbsp;';
+          } elseif (file_exists('typo3/gfx/fileicons/' . $fileName)) {
+            $htmlArray[] = utils::htmlImgElement(
+              array(
+                utils::htmlAddAttribute('src', 'typo3/gfx/fileicons/' . $fileName),
+                utils::htmlAddAttribute('alt', 'Icon ' . $pathInfo['extension']),
+              )
+            ) . '&nbsp;&nbsp;';
           }
         }
       $htmlArray[] = $this->savlibrary->makeLink($config['value'],'',$params);        
@@ -668,14 +976,44 @@ class tx_savlibrary_defaultItemviewers {
   
     $htmlArray = array();
     
-    $addtouploadfolder = ($config['addtouploadfolder'] ? $config['addtouploadfolder'] : '');
+    $addtouploadfolder = (
+      $config['addtouploadfolder'] ?
+      $config['addtouploadfolder'] :
+      ''
+    );
 		
     if ($config['size'] < 10) {
       $config['size'] = '';
     }
-		$htmlArray[] = '<input type="text" name="' . $config['field'] . '" value="' . $config['value'] . '"  size="' . $config['size'] . '" />';
-    $htmlArray[] = '<input type="file" name="' . $config['elementControlName'] . '"  value="" size="' . $config['size'] . '" onchange="document.changed=1" />';
-    $htmlArray[] = '<input type="hidden" name="' . $this->savlibrary->formName . '[addtouploadfolder]' . (isset($this->savlibrary->rowItem) ? '[' . $this->savlibrary->rowItem . ']' : '[' . $config['uid'] . ']') . '" value="' . $addtouploadfolder . '" />';
+
+    $htmlArray[] = utils::htmlInputTextElement(
+      array(
+        utils::htmlAddAttribute('name', $config['field']),
+        utils::htmlAddAttribute('value', $config['value']),
+        utils::htmlAddAttribute('size', $config['size']),
+      )
+    );
+
+    $htmlArray[] = utils::htmlInputFileElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttribute('value', ''),
+        utils::htmlAddAttribute('size', $config['size']),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      )
+    );
+
+    $htmlArray[] = utils::htmlInputHiddenElement(
+      array(
+        utils::htmlAddAttribute('name',
+          $this->savlibrary->formName . '[addtouploadfolder]' . (
+            isset($this->savlibrary->rowItem) ?
+            '[' . $this->savlibrary->rowItem . ']' :
+            '[' . $config['uid'] . ']')
+          ),
+        utils::htmlAddAttribute('value', $addtouploadfolder),
+      )
+    );
 
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
@@ -695,7 +1033,11 @@ class tx_savlibrary_defaultItemviewers {
   
     $htmlArray = array();
       
-		$viewItem = ($config['edit'] ? 'viewStringInputEditMode' : 'viewStringInput');
+		$viewItem = (
+      $config['edit'] ?
+      'viewStringInputEditMode' :
+      'viewStringInput'
+    );
   
     if(!$config['value'] && !$config['edit']) {
       $out = '';
@@ -715,35 +1057,61 @@ class tx_savlibrary_defaultItemviewers {
 					'endPm' => $pm[1], 
 			   );
 		  }
-		  $ta[TYPE] = 'schedule';
+		  $ta['TYPE'] = 'schedule';
 		  foreach (($config['edit'] ? range(0, 4) : $schedule )  as $key => $value) {
-			 unset ($node);	
-			 $node[TYPE] = 'sub_item';
+        unset ($node);
+        $node['TYPE'] = 'sub_item';
 
-			 $node[MARKERS]['separator'] = ($config['edit'] ? '<span class="left">-</span>' : '-');
+        $node['MARKERS']['separator'] = (
+          $config['edit'] ?
+          '<span class="left">-</span>' :
+          '-'
+        );
 			 
-			 $node[MARKERS]['day'] = $this->savlibrary->getLibraryLL('itemviewer.days.'.$key);;
-			 $localConfig['uid'] = $config['uid'];
+        $node['MARKERS']['day'] = $this->savlibrary->getLibraryLL(
+          'itemviewer.days.' . $key
+        );
+        $localConfig['uid'] = $config['uid'];
 
-       $localConfig['elementControlName'] = preg_replace('/\[([^\[]+)\](.*)$/', '[' . $config['_field'] . '][' . $config['uid'] . '][' . $key . '][beginAm][' . $config['uid'] . ']', $config['elementControlName']);
-			 $localConfig['value'] = $schedule[$key]['beginAm'];
-			 $node[MARKERS]['beginAm'] = $this->$viewItem($localConfig);
+        $localConfig['elementControlName'] = preg_replace(
+          '/\[([^\[]+)\](.*)$/',
+          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+            $key . '][beginAm][' . $config['uid'] . ']',
+          $config['elementControlName']
+        );
+        $localConfig['value'] = $schedule[$key]['beginAm'];
+        $node['MARKERS']['beginAm'] = $this->$viewItem($localConfig);
 			 
-       $localConfig['elementControlName'] = preg_replace('/\[([^\[]+)\](.*)$/', '[' . $config['_field'] . '][' . $config['uid'] . '][' . $key . '][endAm][' . $config['uid'] . ']', $config['elementControlName']);
-			 $localConfig['value'] = $schedule[$key]['endAm'];
-			 $node[MARKERS]['endAm'] = $this->$viewItem($localConfig);
+        $localConfig['elementControlName'] = preg_replace(
+          '/\[([^\[]+)\](.*)$/',
+          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+            $key . '][endAm][' . $config['uid'] . ']',
+          $config['elementControlName']
+        );
+        $localConfig['value'] = $schedule[$key]['endAm'];
+        $node['MARKERS']['endAm'] = $this->$viewItem($localConfig);
 
-       $localConfig['elementControlName'] = preg_replace('/\[([^\[]+)\](.*)$/', '[' . $config['_field'] . '][' . $config['uid'] . '][' . $key . '][beginPm][' . $config['uid'] . ']', $config['elementControlName']);
-			 $localConfig['value'] = $schedule[$key]['beginPm'];
-			 $node[MARKERS]['beginPm'] = $this->$viewItem($localConfig);
+        $localConfig['elementControlName'] = preg_replace(
+          '/\[([^\[]+)\](.*)$/',
+          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+            $key . '][beginPm][' . $config['uid'] . ']',
+          $config['elementControlName']
+        );
+        $localConfig['value'] = $schedule[$key]['beginPm'];
+        $node['MARKERS']['beginPm'] = $this->$viewItem($localConfig);
 
-       $localConfig['elementControlName'] = preg_replace('/\[([^\[]+)\](.*)$/', '[' . $config['_field'] . '][' . $config['uid'] . '][' . $key . '][endPm][' . $config['uid'] . ']', $config['elementControlName']);
-			 $localConfig['value'] = $schedule[$key]['endPm'];
-			 $node[MARKERS]['endPm'] = $this->$viewItem($localConfig);
+        $localConfig['elementControlName'] = preg_replace(
+          '/\[([^\[]+)\](.*)$/',
+          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+            $key . '][endPm][' . $config['uid'] . ']',
+          $config['elementControlName']
+        );
+        $localConfig['value'] = $schedule[$key]['endPm'];
+        $node['MARKERS']['endPm'] = $this->$viewItem($localConfig);
 
-			 $items[] = $node;
+        $items[] = $node;
 		  }
-		  $ta[REGIONS]['sub_items'] = $items;
+		  $ta['REGIONS']['sub_items'] = $items;
 
 		  $htmlArray[] = $this->savlibrary->replaceTemplate($ta);		  
     }
@@ -790,7 +1158,11 @@ class tx_savlibrary_defaultItemviewers {
     }
        
 		if (isset($config['func'])) {
-			$htmlArray[] =  $this->savlibrary->$config['func']($this->savlibrary->getLL_db($config['items'][$key][0]), $config['uid'], $config).'<br>';
+			$htmlArray[] =  $this->savlibrary->$config['func'](
+        $this->savlibrary->getLL_db($config['items'][$key][0]),
+        $config['uid'],
+        $config
+      ) . '<br />';
     } else {
       $htmlArray[] = $this->savlibrary->getLL_db($config['items'][$key][0]);
     }
@@ -810,15 +1182,50 @@ class tx_savlibrary_defaultItemviewers {
   
     $htmlArray = array();
     
-		$htmlArray[] = '<select name="' . $config['elementControlName'] . '" size="' . $config['size'] . '" onchange="document.changed=1">';
+    // Initializes the option element array
+    $htmlOptionArray = array();
+		$htmlOptionArray[] = '';
+    
+    // Add the empty item option if any
 		if ($config['emptyitem']) {
-      $htmlArray[] = '<option value="0"></option>';
+			// Add the Option element
+			$htmlOptionArray[] = utils::htmlOptionElement(
+        array(
+          utils::htmlAddAttribute('value', '0'),
+        ),
+        ''
+      );
     }
+    
     foreach ($config['items'] as $item) {
-			$sel = ((string)$item[1] == (string)$config['value'])? ' selected="selected"' : '';
-			$htmlArray[] = '<option ' . $sel . ' value="' . $item[1] . '">' . stripslashes($this->savlibrary->getLL_db($item[0])) . '</option>';
+			$selected = (
+        ((string)$item[1] == (string)$config['value']) ?
+        'selected' :
+        ''
+      );
+
+			// Add the Option element
+			$htmlOptionArray[] = utils::htmlOptionElement(
+        array(
+          utils::htmlAddAttributeIfNotNull('selected', $selected),
+          utils::htmlAddAttribute('value', $item[1]),
+        ),
+        stripslashes($this->savlibrary->getLL_db($item[0]))
+      );
 		}
-		 $htmlArray[] = '</select>';
+		$htmlOptionArray[] = '';
+
+    // Add the select element
+		$htmlArray[] = utils::htmlSelectElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('size', $config['size']),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      ),
+      $this->savlibrary->arrayToHTML($htmlOptionArray)
+    );
 		 
     return $this->savlibrary->arrayToHTML($htmlArray);  
   } 
@@ -860,16 +1267,24 @@ class tx_savlibrary_defaultItemviewers {
 
     // check if a function is called
   	if ($config['func']) {
-   		$htmlArray[] = $this->savlibrary->$config['func'](stripslashes($config['items'][$keyFound]['label']), ($config['setuid']=='this'? $config['_value'] : $config['uid']), $config);
+   		$htmlArray[] = $this->savlibrary->$config['func'](
+        stripslashes($config['items'][$keyFound]['label']),
+        ($config['setuid']=='this'? $config['_value'] : $config['uid']),
+        $config
+      );
     } else {
       // get the field from the label field of the allowed table.
       if (isset($config['codeArray'])) {
   			$code = ((int) ($config['items'][$keyFound]['code']/100))*100;
   			
   			if(!($config['items'][$keyFound]['code']%100)) {
-  				$htmlArray[] = ($config['nobold'] ? '' : '<b>') . $config['items'][$keyFound]['label'].($config['nobold'] ? '' : '</b>');
+  				$htmlArray[] = ($config['nobold'] ? '' : '<b>') .
+            $config['items'][$keyFound]['label'] .
+            ($config['nobold'] ? '' : '</b>');
         } else {
-  				$htmlArray[] = ($config['nobold'] ? '' : '<b>') . $config['items'][$config['codeArray'][$code]]['label'] . ($config['nobold'] ? '' : '</b>');
+  				$htmlArray[] = ($config['nobold'] ? '' : '<b>') .
+            $config['items'][$config['codeArray'][$code]]['label'] .
+            ($config['nobold'] ? '' : '</b>');
   				$htmlArray[] = $config['items'][$keyFound]['label'];
   			}
       } else {
@@ -888,23 +1303,53 @@ class tx_savlibrary_defaultItemviewers {
 	 */	    
   public function viewDbRelationSingleSelectorEditMode(&$config) {
 //debug($config,'viewDbRelationSingleSelectorEditMode');
-  
+
     $htmlArray = array();
     
-		$class = ($config['classhtmltag'] ? 'class="' . $config['classhtmltag'] . '" ' : '');
-		$style = ($config['stylehtmltag'] ? 'style="' . $config['stylehtmltag'] . '" ' : '');
+    // Initializes the option element array
+    $htmlOptionArray = array();
+		$htmlOptionArray[] = '';
 
-		$htmlArray[] = '<select ' . $class . $style . 'name="' . $config['elementControlName'] . '" size="' . $config['size'] . '" onchange="document.changed=1">';
+    // Add the empty item option if any
 		if ($config['emptyitem']) {
-      $htmlArray[] = '<option value="0"></option>';
+			// Add the Option element
+			$htmlOptionArray[] = utils::htmlOptionElement(
+        array(
+          utils::htmlAddAttribute('value', '0'),
+        ),
+        ''
+      );
     }
+    
+    // Add the option elements
     foreach ($config['items'] as $key => $item) {
-			$sel = ($item['selected']) ? ' selected="selected"' : '';
-			$style = ($item['style'] ? 'style="' . $item['style'].'"' : '');
-			$htmlArray[] = '<option ' . $sel . ' ' . $style . ' value="' . $item['uid'] . '">' . stripslashes($item['label']) . '</option>';
+			$selected = ($item['selected']) ? 'selected' : '';
+			
+			// Add the Option element
+			$htmlOptionArray[] = utils::htmlOptionElement(
+        array(
+          utils::htmlAddAttributeIfNotNull('style', $item['style']),
+          utils::htmlAddAttributeIfNotNull('selected', $selected),
+          utils::htmlAddAttribute('value', $item['uid']),
+        ),
+        stripslashes($item['label'])
+      );
+      
 		}
-		$htmlArray[] = '</select>';
+		$htmlOptionArray[] = '';
 		
+    // Add the select element
+		$htmlArray[] = utils::htmlSelectElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('size', $config['size']),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      ),
+      $this->savlibrary->arrayToHTML($htmlOptionArray)
+    );
+
     return $this->savlibrary->arrayToHTML($htmlArray);  
   } 
 
@@ -937,19 +1382,35 @@ class tx_savlibrary_defaultItemviewers {
   				if (isset($config['codeArray'])) {
   				  $code = ((int) ($item['code']/100))*100;
   				  if(!($item['code'] % 100)) {
-  					  $htmlArray[] = ($config['nobold'] ? '' : '<b>') . $item['label'].($config['nobold'] ? '' : '</b><br />');
+  					  $htmlArray[] = ($config['nobold'] ? '' : '<b>') .
+                $item['label'] .
+                ($config['nobold'] ? '' : '</b><br />');
             } else {
-  				    $htmlArray[] = ($config['nobold'] ? '' : '<b>') . $config['items'][$config['codeArray'][$code]]['label'] . ($config['nobold'] ? ' ' : '</b> ');
+  				    $htmlArray[] = ($config['nobold'] ? '' : '<b>') .
+                 $config['items'][$config['codeArray'][$code]]['label'] .
+                 ($config['nobold'] ? ' ' : '</b> ');
   					  $htmlArray[] = $item['label'] . '<br />';
   				  }
           } else {
             // check if a function is called
             if ($config['func']) {
-              $temp = $this->savlibrary->$config['func'](stripslashes($item['label']), ($config['setuid']=='this'? $config['_value'] : $config['uid']), $config);
+              $temp = $this->savlibrary->$config['func'](
+                stripslashes($item['label']),
+                (
+                  $config['setuid']=='this'?
+                  $config['_value'] :
+                  $config['uid']
+                ),
+                $config
+              );
             } else { 
               $temp = $item['label'];
             }        
-  					$htmlArray[] = ($htmlArray ? ($config['separator'] ? $config['separator'] . ' ' :'<br />') : '') . $temp;
+  					$htmlArray[] = (
+              $htmlArray ?
+              ($config['separator'] ? $config['separator'] . ' ' :'<br />') :
+              ''
+            ) . $temp;
   				}
   			}
   		}
@@ -961,14 +1422,25 @@ class tx_savlibrary_defaultItemviewers {
         $query = $config['content']; 
         $mA["###uid###"] = $config['uid'];
         $mA["###uidSelected###"] = key($selected);
-        $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array());
+        $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
+          $query,
+          $mA,
+          array(),
+          array()
+        );
         
         // Check if the query is a SELECT query and for errors
         if (!$this->savlibrary->isSelectQuery($query)) {
-          $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+          $this->savlibrary->addError(
+            'error.onlySelectQueryAllowed',
+            $config['field']
+          );
           return $this->savlibrary->arrayToHTML($htmlArray);
         } elseif (!($res = $GLOBALS['TYPO3_DB']->sql_query($query))) {
-          $this->savlibrary->addError('error.incorrectQueryInContent', $config['field']);
+          $this->savlibrary->addError(
+            'error.incorrectQueryInContent',
+            $config['field']
+          );
           return $this->savlibrary->arrayToHTML($htmlArray);
         }
         
@@ -978,7 +1450,11 @@ class tx_savlibrary_defaultItemviewers {
   		  if ($config['func'] == 'makeExtLink') {
   		    $params['ext'] = $config['ext'];
   		    $params['id'] = $config['id'];
-   		    return $this->savlibrary->makeExtLink(stripslashes($row['label']), $row['uid'], $params);
+   		    return $this->savlibrary->makeExtLink(
+            stripslashes($row['label']),
+            $row['uid'],
+            $params
+          );
         } else {
   		    return $row['label'];
         }
@@ -996,9 +1472,11 @@ class tx_savlibrary_defaultItemviewers {
         if (isset($config['codeArray'])) {
           $code = ((int) ($config['items'][$keyFound]['code']/100))*100;
           if(!($config['codeArray'][$code])) {
-  				  $htmlArray[] = '<b>' . $config['items'][$keyFound]['label'] . '</b>';
+  				  $htmlArray[] = '<b>' .
+              $config['items'][$keyFound]['label'] . '</b>';
           } else {
-  				  $htmlArray[] = '<b>' . $config['items'][$config['codeArray'][$code]]['label'] . '</b> ';
+  				  $htmlArray[] = '<b>' .
+              $config['items'][$config['codeArray'][$code]]['label'] . '</b> ';
   				  $htmlArray[] = $config['items'][$keyFound]['label'];
           }
         } else {
@@ -1021,16 +1499,46 @@ class tx_savlibrary_defaultItemviewers {
 //debug($config,'viewDbRelationSingleSelectorMultipleEditMode');
   
     $htmlArray = array();
-    
-		$htmlArray[] = '<select multiple name="' . $config['elementControlName'] . '[]" size="' . $config['size'] . '" onchange="document.changed=1">';
+
+    // Initializes the option element array
+    $htmlOptionArray = array();
+		$htmlOptionArray[] = '';
+
 		if ($config['emptyitem']) {
-      $htmlArray[] = '<option value="0"></option>';
+			// Add the Option element
+			$htmlOptionArray[] = utils::htmlOptionElement(
+        array(
+          utils::htmlAddAttribute('value', '0'),
+        ),
+        ''
+      );
     }
 		foreach($config['items'] as $key => $item) {
-			$sel = ($item['selected']) ? ' selected="selected"' : '';
-			$htmlArray[] = '<option ' . $sel . ' value="' . $item['uid'] . '">' . stripslashes($item['label']) . '</option>';
+			$selected = ($item['selected']) ? 'selected' : '';
+
+			// Add the Option element
+			$htmlOptionArray[] = utils::htmlOptionElement(
+        array(
+          utils::htmlAddAttributeIfNotNull('style', $item['style']),
+          utils::htmlAddAttributeIfNotNull('selected', $selected),
+          utils::htmlAddAttribute('value', $item['uid']),
+        ),
+        stripslashes($item['label'])
+      );
+
 		}
-		$htmlArray[] = '</select>';
+		$htmlOptionArray[] = '';
+
+    // Add the select element
+		$htmlArray[] = utils::htmlSelectElement(
+      array(
+        utils::htmlAddAttribute('multiple', 'multiple'),
+        utils::htmlAddAttribute('name', $config['elementControlName'] .'[]'),
+        utils::htmlAddAttribute('size', $config['size']),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      ),
+      $this->savlibrary->arrayToHTML($htmlOptionArray)
+    );
 
 		return $this->savlibrary->arrayToHTML($htmlArray);
 	}
@@ -1066,32 +1574,103 @@ class tx_savlibrary_defaultItemviewers {
   
     $htmlArray = array();
     
+    // Initializes the option element array
+    $htmlOptionArray = array();
+		$htmlOptionArray[] = '';
 
-		$elementControlName = $this->savlibrary->formName.'['.$config['_field'] . ']' . (isset($this->savlibrary->rowItem) ? '[' . $this->savlibrary->rowItem . ']' : '[' . ($config['mm_uid_local'] ?  $config['mm_uid_local'] : $config['uid']) . ']');
+		$elementControlName = $this->savlibrary->formName.'['.$config['_field'] . ']' .
+      (
+        isset($this->savlibrary->rowItem) ?
+        '[' . $this->savlibrary->rowItem . ']' :
+        '[' . (
+          $config['mm_uid_local'] ?
+          $config['mm_uid_local'] :
+          $config['uid']
+          ) . ']'
+      );
 
-		$class = ($config['classhtmltag'] ? 'class="' . $config['classhtmltag'] . '" ' : 'class="multiple" ');
-		$style = ($config['stylehtmltag'] ? 'style="' . $config['stylehtmltag'] . '" ' : '');
+		$class = (
+      $config['classhtmltag'] ?
+      $config['classhtmltag'] :
+      'multiple'
+    );
 
-    $fieldName = $config['field'] . (isset($this->savlibrary->rowItem) ? '[' . $this->savlibrary->rowItem . ']' : '');
+
+    $fieldName = $config['field'] . (
+      isset($this->savlibrary->rowItem) ?
+      '[' . $this->savlibrary->rowItem . ']' :
+      ''
+    );
     $sort = ($config['orderselect'] ? 1 : 0);
-		$htmlArray[] = '<select ' . $class . $style . 'multiple name="' . $elementControlName . '[]" ondblclick="move(\'' . $this->savlibrary->formName . '\', \'' . $elementControlName . '[]\', \'' . $fieldName . '\',' . $sort . ');" size="' . $config['maxitems'] . '" onchange="document.changed=1">';
+    
 		foreach($config['items'] as $key => $item) {
 			if($item['selected']) {
-			 $htmlArray[] = '<option value="' . $item['uid'] . '">' . stripslashes($item['label']) . '</option>';
+  			// Add the Option element
+  			$htmlOptionArray[] = utils::htmlOptionElement(
+          array(
+            utils::htmlAddAttribute('value', $item['uid']),
+          ),
+          stripslashes($item['label'])
+        );
       }
 		}
-		$htmlArray[] = '</select>';
+		$htmlOptionArray[] = '';
 
-		$htmlArray[] = '&nbsp;&nbsp;<select ' . $class . $style . 'multiple name="' . $fieldName . '" ondblclick="move(\'' . $this->savlibrary->formName . '\', \'' . $fieldName . '\', \'' . $elementControlName . '[]\',' . $sort . ');" size="' . $config['maxitems'] . '" onchange="document.changed=1">';
+    // Add the select element
+		$htmlArray[] = utils::htmlSelectElement(
+      array(
+        utils::htmlAddAttribute('multiple', 'multiple'),
+        utils::htmlAddAttribute('class', $class),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('name', $elementControlName .'[]'),
+        utils::htmlAddAttribute('size', $config['maxitems']),
+        utils::htmlAddAttribute('ondblclick',
+          'move(\'' . $this->savlibrary->formName . '\', \'' .
+          $elementControlName . '[]\', \'' . $fieldName . '\',' . $sort . ');'
+        ),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      ),
+      $this->savlibrary->arrayToHTML($htmlOptionArray)
+    );
+
+		$htmlArray[] = '&nbsp;&nbsp;';
+    // Initializes the option element array
+    $htmlOptionArray = array();
+		$htmlOptionArray[] = '';
+		
 		foreach($config['items'] as $key => $item) {
 			if(!$item['selected']) {
-			 $htmlArray[] = '<option value="' . $item['uid'] . '">' . stripslashes($item['label']) . '</option>';
+  			// Add the Option element
+  			$htmlOptionArray[] = utils::htmlOptionElement(
+          array(
+            utils::htmlAddAttribute('value', $item['uid']),
+          ),
+          stripslashes($item['label'])
+        );
       }
 		}
-		$htmlArray[] = '</select>';
-		
+		$htmlOptionArray[] = '';
+
+    // Add the select element
+		$htmlArray[] = utils::htmlSelectElement(
+      array(
+        utils::htmlAddAttribute('multiple', 'multiple'),
+        utils::htmlAddAttribute('class', $class),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('name', $fieldName),
+        utils::htmlAddAttribute('size', $config['maxitems']),
+        utils::htmlAddAttribute('ondblclick',
+          'move(\'' . $this->savlibrary->formName . '\', \'' .
+          $fieldName . '\', \'' . $elementControlName . '[]\',' . $sort . ');'
+        ),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      ),
+      $this->savlibrary->arrayToHTML($htmlOptionArray)
+    );
+
 		// Add it to the select list for Javascript
-    $this->savlibrary->selectList .= 'selectAll(\'' . $this->savlibrary->formName . '\', \'' . $elementControlName . '[]\');';
+    $this->savlibrary->selectList .= 'selectAll(\'' .
+      $this->savlibrary->formName . '\', \'' . $elementControlName . '[]\');';
 
 		return $this->savlibrary->arrayToHTML($htmlArray);
 	}
@@ -1142,30 +1721,59 @@ class tx_savlibrary_defaultItemviewers {
         // The record exits, just read it.
 
   		  $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-  				  /* SELECT   */	'*' . ($config['mm_field'] ? ',' . $table . '.' . $MM_field . ' as mm_uid_local' : '') .
-  						  '',		
+  				  /* SELECT   */	'*' .
+                (
+                  $config['mm_field'] ?
+                  ',' . $table . '.' . $MM_field . ' as mm_uid_local' :
+                  ''
+                ) .
+  						  '',
   				  /* FROM     */	$table . ',' . $foreign_table .
-               ($MM_table ? ',' . $MM_table : '') .
+                (
+                  $MM_table ?
+                  ',' . $MM_table :
+                  ''
+                ) .
   						  '',
   	 			  /* WHERE    */	'1' .
-                ($MM_table ? ' AND ' . $MM_table . '.uid_local=' . $table . '.' . $MM_field .
-  						              ' AND ' . $MM_table . '.uid_foreign=' . $foreign_table . '.uid'
-	 					            : ' AND ' . $table . '.' . $config['field'] . '=' . $foreign_table . '.uid'
-               ).
+                (
+                  $MM_table ?
+                  ' AND ' . $MM_table . '.uid_local=' . $table . '.' . $MM_field .
+  						    ' AND ' . $MM_table . '.uid_foreign=' . $foreign_table . '.uid' :
+                  ' AND ' . $table . '.' . $config['field'] . '=' . $foreign_table . '.uid'
+                ).
   						  ' AND ' . $table . '.uid=' . intval($uid) .
-  			        ($config['overrideenablefields'] ? '' : $this->savlibrary->extObj->cObj->enableFields($table)) .
-  			        (($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ? ' AND ' . $table . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
-  						  ($config['where'] ? ' AND ' . $config['where'] : '') .
+  			        (
+                  $config['overrideenablefields'] ?
+                  '' :
+                  $this->savlibrary->extObj->cObj->enableFields($table)
+                ) .
+  			        (
+                  ($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ?
+                  ' AND ' . $table . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' :
+                  ''
+                ) .
+  						  (
+                  $config['where'] ?
+                  ' AND ' . $config['where'] :
+                  ''
+                ) .
   						  '',
   				  /* GROUP BY */	
   						  '',
-  				  /* ORDER BY */	($MM_table ? $MM_table . '.sorting' : '') .
+  				  /* ORDER BY */
+                (
+                  $MM_table ?
+                  $MM_table . '.sorting' :
+                  ''
+                ) .
   						  '',
   				  /* LIMIT    */	''
   		  );
 
   		  // get all selected fields
   		  while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
+
           $config['mm_uid_local'] = $rows['mm_uid_local'];
           if (!$config['MM'] && $config['maxitems']>1) {
             $temp = explode(',', $rows[$config['field']]);
@@ -1190,9 +1798,25 @@ class tx_savlibrary_defaultItemviewers {
     }  
 
 		// get the label of the allowed_table
-		$label = ($config['labelselect'] ? $config['labelselect'] : $GLOBALS['TCA'][$foreign_table]['ctrl']['label']);
-		$order = ($GLOBALS['TCA'][$foreign_table]['ctrl']['sortby'] ? $GLOBALS['TCA'][$foreign_table]['ctrl']['sortby'] : str_replace('ORDER BY','', $GLOBALS['TCA'][$foreign_table]['ctrl']['default_sortby']));
-
+		$label = (
+      $config['labelselect'] ?
+      $config['labelselect'] :
+      $GLOBALS['TCA'][$foreign_table]['ctrl']['label']
+    );
+    $defaultOrder = (
+      $GLOBALS['TCA'][$foreign_table]['ctrl']['default_sortby'] ?
+      str_replace(
+        'ORDER BY',
+        '',
+        $foreign_table . '.' .$GLOBALS['TCA'][$foreign_table]['ctrl']['default_sortby']
+      ) :
+      ''
+    );
+		$order = (
+      $GLOBALS['TCA'][$foreign_table]['ctrl']['sortby'] ?
+      $foreign_table . '.' .$GLOBALS['TCA'][$foreign_table]['ctrl']['sortby'] :
+      $defaultOrder
+    );
     
     // Process the foreign_table_where
     if ($config['foreign_table_where']) {
@@ -1209,20 +1833,38 @@ class tx_savlibrary_defaultItemviewers {
     $config['whereselect'] = $this->savlibrary->queriers->processWhereClause($config['whereselect']); 
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				/* SELECT   */	'*' . ($config['aliasselect'] ? ',' . $config['aliasselect'] : '') .
-						'',		
-				/* FROM     */	$foreign_table . ($config['additionaltableselect'] ? ',' . $config['additionaltableselect'] : '') .
-						'',
-				/* WHERE    */	'1' .
- 			      ($config['overrideenablefields'] ? '' : $this->savlibrary->extObj->cObj->enableFields($foreign_table)) .
- 			      (($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ? ' AND ' . $foreign_table . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '').
-						($config['whereselect'] ? ' AND ' . $config['whereselect'] : '') .
-						'',
-				/* GROUP BY */	
-						'',
-				/* ORDER BY */	
-				    ($config['orderselect']? $config['orderselect']: $order) .
-						'',
+		  /* SELECT   */	'*' . ($config['aliasselect'] ? ',' . $config['aliasselect'] : '') .
+				'',
+			/* FROM     */	$foreign_table .
+        (
+          $config['additionaltableselect'] ?
+          ',' . $config['additionaltableselect'] :
+          ''
+        ) .
+				'',
+			/* WHERE    */	'1' .
+ 			  (
+          $config['overrideenablefields'] ?
+          '' :
+          $this->savlibrary->extObj->cObj->enableFields($foreign_table)
+        ) .
+ 			  (
+          ($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ?
+          ' AND ' . $foreign_table . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' :
+          ''
+        ).
+				(
+          $config['whereselect'] ?
+          ' AND ' . $config['whereselect'] :
+          ''
+        ) .
+				'',
+			/* GROUP BY */
+        ($config['groupbyselect'] ? $config['groupbyselect'] : '') .
+				'',
+			/* ORDER BY */
+				($config['orderselect'] ? $config['orderselect'] : $order) .
+        '',
 				/* LIMIT    */	''
 		);
 
@@ -1253,19 +1895,35 @@ class tx_savlibrary_defaultItemviewers {
         // process the tags in the label
         if (preg_match_all('/###([^#]+)###/', $rows[$label], $matches)) {
           foreach($matches[1] as $keyMatch=>$valueMatch) {
-            $replaceValue = ($GLOBALS['TCA'][$foreign_table]['columns'][$valueMatch]['config']['type']=='select' ? $this->savlibrary->getLL_db($GLOBALS['TCA'][$foreign_table]['columns'][$valueMatch]['config']['items'][$rows[$valueMatch]][0]) : $rows[$valueMatch]);         
+            $replaceValue = (
+              $GLOBALS['TCA'][$foreign_table]['columns'][$valueMatch]['config']['type']=='select' ?
+              $this->savlibrary->getLL_db(
+                $GLOBALS['TCA'][$foreign_table]['columns'][$valueMatch]['config']['items'][$rows[$valueMatch]][0]
+              ) :
+              $rows[$valueMatch]
+            );
             $rows[$label] = str_replace($matches[0][$keyMatch], $replaceValue, $rows[$label]);
           }
         }    
         
 			  $config['items'][$cpt] = array(
-			              'uid' => $rows['uid'],
-                    'label'=> htmlentities($GLOBALS['TCA'][$foreign_table]['columns'][$label]['config']['type']=='select' ? $this->savlibrary->getLL_db($GLOBALS['TCA'][$foreign_table]['columns'][$label]['config']['items'][$rows[$label]][0]) : $rows[$label]),
-                    'selected' => $selected[$rows['uid']],
-                    'code' => $rows[$config['code']],
-                    'style' => (($config['optionCond'] && $rows[$config['optionCond']]) ? $config['optionStyle'] : ''),
-                    'special' => (is_array($special) ? $special : ''),
-                    );
+			    'uid' => $rows['uid'],
+          'label'=> htmlentities(
+            $GLOBALS['TCA'][$foreign_table]['columns'][$label]['config']['type']=='select' ?
+            $this->savlibrary->getLL_db(
+              $GLOBALS['TCA'][$foreign_table]['columns'][$label]['config']['items'][$rows[$label]][0]
+            ) :
+            $rows[$label]
+          ),
+          'selected' => $selected[$rows['uid']],
+          'code' => $rows[$config['code']],
+          'style' => (
+            ($config['optionCond'] && $rows[$config['optionCond']]) ?
+            $config['optionStyle'] :
+            ''
+          ),
+          'special' => (is_array($special) ? $special : ''),
+        );
         if($config['code']) {
           $config['codeArray'][$rows[$config['code']]] = $cpt;
         }
@@ -1283,10 +1941,18 @@ class tx_savlibrary_defaultItemviewers {
 		  // when a where is added in the field parameter to select only one field
 		  if (count($config['items']) == 1){
 		    $config['size'] = 1;
-		    $viewItem = ($config['edit'] ? 'viewDbRelationSingleSelectorMultipleEditMode' : 'viewDbRelationSingleSelectorMultiple');
+		    $viewItem = (
+          $config['edit'] ?
+          'viewDbRelationSingleSelectorMultipleEditMode' :
+          'viewDbRelationSingleSelectorMultiple'
+        );
         return $this->$viewItem($config);
 		  } else {
-		    $viewItem = ($config['edit'] ? 'viewDbRelationDoubleWindowSelectorEditMode' : 'viewDbRelationDoubleWindowSelector');
+		    $viewItem = (
+          $config['edit'] ?
+          'viewDbRelationDoubleWindowSelectorEditMode' :
+          'viewDbRelationDoubleWindowSelector'
+        );
         return $this->$viewItem($config);
       }				
 		} else {
@@ -1298,16 +1964,27 @@ class tx_savlibrary_defaultItemviewers {
         $mA["###uidSelected###"] = key($selected);
         $mA['###cruser###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-        $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($query, $mA, array(), array() );
+        $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
+          $query,
+          $mA,
+          array(),
+          array()
+        );
 
         $config['items'] = $items;
 
         // Check if the query is a SELECT query and for errors
         if (!$this->savlibrary->isSelectQuery($query)) {
-          $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+          $this->savlibrary->addError(
+            'error.onlySelectQueryAllowed',
+            $config['field']
+          );
           return $this->savlibrary->arrayToHTML($htmlArray);
         } elseif (!($res = $GLOBALS['TYPO3_DB']->sql_query($query))) {
-          $this->savlibrary->addError('error.incorrectQueryInContent', $config['field']);
+          $this->savlibrary->addError(
+            'error.incorrectQueryInContent',
+            $config['field']
+          );
           return $this->savlibrary->arrayToHTML($htmlArray);
         }
 
@@ -1317,21 +1994,33 @@ class tx_savlibrary_defaultItemviewers {
         } 
 		    while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {     
 			    $config['items'][] =  array(
-			                'uid' => $rows['uid'],
-                      'label'=> htmlentities(stripslashes($rows['label'])),
-                      'selected' => ($config['selected'] ? 1 : $selected[$rows['uid']])
-                      );
+			      'uid' => $rows['uid'],
+            'label'=> htmlentities(stripslashes($rows['label'])),
+            'selected' => ($config['selected'] ? 1 : $selected[$rows['uid']])
+          );
 		    }
       } 
 
       if ($config['foreign_table'] && $config['maxitems']>1) {
         if ($config['singlewindow']) {
-		      $viewItem = ($config['edit'] ? 'viewDbRelationSingleSelectorMultipleEditMode' : 'viewDbRelationSingleSelectorMultiple');        
+		      $viewItem = (
+            $config['edit'] ?
+            'viewDbRelationSingleSelectorMultipleEditMode' :
+            'viewDbRelationSingleSelectorMultiple'
+          );
         } else {
-  		    $viewItem = ($config['edit'] ? 'viewDbRelationDoubleWindowSelectorEditMode' : 'viewDbRelationDoubleWindowSelector');
+  		    $viewItem = (
+            $config['edit'] ?
+            'viewDbRelationDoubleWindowSelectorEditMode' :
+            'viewDbRelationDoubleWindowSelector'
+          );
         }
       } else {    
-		    $viewItem = ($config['edit'] ? 'viewDbRelationSingleSelectorEditMode' : 'viewDbRelationSingleSelector');
+		    $viewItem = (
+          $config['edit'] ?
+          'viewDbRelationSingleSelectorEditMode' :
+          'viewDbRelationSingleSelector'
+        );
 		  }
 
 		  $htmlArray[] = $this->$viewItem($config);
@@ -1381,34 +2070,86 @@ class tx_savlibrary_defaultItemviewers {
       // Get the number of items satisfying the query with no limit field
       $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			 	/* SELECT   */   'count(*) as nbitem',		
-				/* FROM     */   $allowed_table . ($config['norelation'] ? '' : ',' . $config['MM']),
+				/* FROM     */   $allowed_table .
+          (
+            $config['norelation'] ?
+            '' :
+            ',' . $config['MM']
+          ),
 	 			/* WHERE    */   '1'.
- 			                   $this->savlibrary->extObj->cObj->enableFields($allowed_table).
-	 			                 ($config['norelation'] ? '' : ' AND ' . $allowed_table . '.uid=' . $config['MM'] . '.uid_foreign'.
-	 			                 ' AND ' . $config['MM'] . '.uid_local=' . intval($uid)).
-	 			                 ($config['errors']['_subFormId'] ? ' AND ' . $allowed_table . '.uid=' . $config['errors']['_subFormId'] : '') .
-                         ($config['where'] ? ' AND ' . $this->savlibrary->queriers->processWhereClause($config['where']) : '') ,
+ 			    $this->savlibrary->extObj->cObj->enableFields($allowed_table).
+	 			  (
+            $config['norelation'] ?
+            '' :
+            ' AND ' . $allowed_table . '.uid=' . $config['MM'] . '.uid_foreign'.
+	 			    ' AND ' . $config['MM'] . '.uid_local=' . intval($uid)
+          ).
+	 			  (
+            $config['errors']['_subFormId'] ?
+            ' AND ' . $allowed_table . '.uid=' . $config['errors']['_subFormId'] :
+            ''
+          ) .
+          (
+            $config['where'] ?
+            ' AND ' . $this->savlibrary->queriers->processWhereClause($config['where']) :
+            ''
+          ) ,
 				/* GROUP BY */	 '',
 				/* ORDER BY */	 '',
 				/* LIMIT    */	 ''
 		  );
   	  $nbitem = $rows[0]['nbitem'];
 
-		  $order = ($GLOBALS['TCA'][$allowed_table]['ctrl']['sortby'] ? $GLOBALS['TCA'][$allowed_table]['ctrl']['sortby'] : str_replace('ORDER BY','', $GLOBALS['TCA'][$allowed_table]['ctrl']['default_sortby']));
-      $maxSubItems = (isset($config['maxsubitems']) ? $config['maxsubitems'] : $config['maxitems']);
+		  $order = (
+        $GLOBALS['TCA'][$allowed_table]['ctrl']['sortby'] ?
+        $GLOBALS['TCA'][$allowed_table]['ctrl']['sortby'] :
+        str_replace(
+          'ORDER BY',
+          '',
+          $GLOBALS['TCA'][$allowed_table]['ctrl']['default_sortby']
+        )
+      );
+      $maxSubItems = (
+        isset($config['maxsubitems']) ?
+        $config['maxsubitems'] :
+        $config['maxitems']
+      );
    
       $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			 	/* SELECT   */   $allowed_table . '.*',
-				/* FROM     */   $allowed_table . ($config['norelation'] ? '' : ','.$config['MM']),
+				/* FROM     */   $allowed_table .
+          ($config['norelation'] ? '' : ','.$config['MM']),
 	 			/* WHERE    */   '1'.
- 			                   $this->savlibrary->extObj->cObj->enableFields($allowed_table) .
-	 			                 ($config['norelation'] ? '' : ' AND ' . $allowed_table . '.uid=' . $config['MM'] . '.uid_foreign' .
-	 			                 ' AND ' . $config['MM'] . '.uid_local=' . intval($uid)).
-	 			                 ($config['errors']['_subFormId'] ? ' AND ' . $allowed_table . '.uid=' . $config['errors']['_subFormId'] : '').
-                         ($config['where'] ? ' AND ' . $this->savlibrary->queriers->processWhereClause($config['where']) : '') ,
+ 			    $this->savlibrary->extObj->cObj->enableFields($allowed_table) .
+	 			  (
+            $config['norelation'] ?
+            '' :
+            ' AND ' . $allowed_table . '.uid=' . $config['MM'] . '.uid_foreign' .
+            ' AND ' . $config['MM'] . '.uid_local=' . intval($uid)
+          ).
+	 			  (
+            $config['errors']['_subFormId'] ?
+            ' AND ' . $allowed_table . '.uid=' . $config['errors']['_subFormId'] :
+            ''
+          ).
+          (
+            $config['where'] ?
+            ' AND ' . $this->savlibrary->queriers->processWhereClause($config['where']) :
+            ''
+          ) ,
 				/* GROUP BY */	 '',
-				/* ORDER BY */	 ($config['addupdown'] ? 'sorting' : ($config['order'] ? $config['order'] : $order)),
-				/* LIMIT    */	 ($maxSubItems ? ($maxSubItems*($this->savlibrary->limitSub[$config['_field']])) . ',' . ($maxSubItems) : '')
+				/* ORDER BY */
+          (
+            $config['addupdown'] ?
+            'sorting' :
+            ($config['order'] ? $config['order'] : $order)
+          ),
+				/* LIMIT    */
+          (
+            $maxSubItems ?
+            ($maxSubItems*($this->savlibrary->limitSub[$config['_field']])) . ',' . ($maxSubItems) :
+            ''
+          )
 		  );
 
 		  $fields = $config['_field'];
@@ -1420,10 +2161,20 @@ class tx_savlibrary_defaultItemviewers {
       
       // add the new button
       $subForm['CUTTERS']['CUT_title'] = ($this->savlibrary->inputIsAllowedInForm() || (!$config['edit'] && $config['labelontitle']) ? 0 : 1);
-      $subForm['MARKERS']['titleIconLeft'] = (!$config['edit'] || ($config['cutnewbuttonifnotsaved'] && !$this->savlibrary->uid) ? '' : $this->savlibrary->newButtonSubForm($this->savlibrary->formName, $uid, $config['_field']));
-      $subForm['MARKERS']['CLASS_titleIconLeft'] = ($this->savlibrary->inputIsAllowedInForm() ? 'subitemTitleIconLeft' : 'subItemtitleIconLeftVoid');
+      $subForm['MARKERS']['titleIconLeft'] = (
+        !$config['edit'] || ($config['cutnewbuttonifnotsaved'] && !$this->savlibrary->uid) ?
+        '' :
+        $this->savlibrary->newButtonSubForm($this->savlibrary->formName, $uid, $config['_field'])
+      );
+      $subForm['MARKERS']['CLASS_titleIconLeft'] = (
+        $this->savlibrary->inputIsAllowedInForm() ?
+        'subitemTitleIconLeft' :
+        'subItemtitleIconLeftVoid'
+      );
       if ($config['labelontitle']) {     
-  		  $subForm['MARKERS']['formTitle'] = $this->savlibrary->getLL_db('LLL:EXT:' . $this->savlibrary->extObj->extKey . '/locallang_db.xml:' . $config['_field']);
+  		  $subForm['MARKERS']['formTitle'] = $this->savlibrary->getLL_db(
+          'LLL:EXT:' . $this->savlibrary->extObj->extKey .
+          '/locallang_db.xml:' . $config['_field']);
       } else {
         $subForm['MARKERS']['formTitle'] = $this->savlibrary->processLocalizationTags($config['subformtitle']);
       }
@@ -1449,11 +2200,20 @@ class tx_savlibrary_defaultItemviewers {
           
           // Check fields are set in the subform
           if (!isset($config[0])) {
-            $out = '<span class="error">' . $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') . '</span>';
+            $out = '<span class="error">' .
+              $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
+              '</span>';
             return $out;
           }
 
-		      $x = $this->savlibrary->generateFormTa($config['name'], $row, array(0 => $config[0]), $config['errors'], $config['edit']);
+		      $x = $this->savlibrary->generateFormTa(
+            $config['name'],
+            $row,
+            array(0 => $config[0]),
+            $config['errors'],
+            $config['edit']
+          );
+          
           $x['TYPE']= 'subFormItem';
           foreach ($x['REGIONS']['items'] as $key => $val) {
             $x['REGIONS']['items'][$key]['MARKERS']['icon'] = '';
@@ -1481,11 +2241,19 @@ class tx_savlibrary_defaultItemviewers {
     		  
           // Check fields are set in the subform
           if (!isset($config[0])) {
-            $out = '<span class="error">' . $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') . '</span>';
+            $out = '<span class="error">' .
+              $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
+              '</span>';
             return $out;
           }
   		  
-		      $x = $this->savlibrary->generateFormTa($config['name'], $row, array(0 => $config[0]), $config['errors'], $config['edit']);
+		      $x = $this->savlibrary->generateFormTa(
+            $config['name'],
+            $row,
+            array(0 => $config[0]),
+            $config['errors'],
+            $config['edit']
+          );
           $x['TYPE'] = 'subFormItem';          
 
           // add the up and down icon
@@ -1500,11 +2268,30 @@ class tx_savlibrary_defaultItemviewers {
           }
 
           if ($config['addupdown']) {
-            $x['REGIONS']['items'][0]['MARKERS']['icon'] .= $this->savlibrary->downButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']) . $this->savlibrary->upButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
+            $x['REGIONS']['items'][0]['MARKERS']['icon'] .=
+              $this->savlibrary->downButton(
+                $this->savlibrary->formName,
+                $uid,
+                $this->savlibrary->rowItem,
+                $config['_field']
+              ) .
+              $this->savlibrary->upButton(
+                $this->savlibrary->formName,
+                $uid,
+                $this->savlibrary->rowItem,
+                $config['_field']
+              );
             $cpt++;
           }
           if ($config['adddelete']){
-            $x['REGIONS']['items'][0]['MARKERS']['icon'] .= ($x['REGIONS']['items'][0]['MARKERS']['icon'] ? '<br />' : '') . $this->savlibrary->deleteItemButton($this->savlibrary->formName, $uid, $this->savlibrary->rowItem, $config['_field']);
+            $x['REGIONS']['items'][0]['MARKERS']['icon'] .=
+              ($x['REGIONS']['items'][0]['MARKERS']['icon'] ? '<br />' : '') .
+              $this->savlibrary->deleteItemButton(
+                $this->savlibrary->formName,
+                $uid,
+                $this->savlibrary->rowItem,
+                $config['_field']
+              );
           }
           $value .= $this->savlibrary->replaceTemplate($x);
         }  		  
@@ -1517,14 +2304,24 @@ class tx_savlibrary_defaultItemviewers {
   		    $cutRight = 1;
         }
   		  if ($this->savlibrary->limitSub[$config['_field']] > 0) {
-          $left = $this->savlibrary->leftArrowButtonSubForm($this->savlibrary->formName, $this->savlibrary->limitSub[$config['_field']] - 1, $uid, $config['_field']);
+          $left = $this->savlibrary->leftArrowButtonSubForm(
+            $this->savlibrary->formName,
+            $this->savlibrary->limitSub[$config['_field']] - 1,
+            $uid,
+            $config['_field']
+          );
   	 	  } else {
           $left = '';
           $cutLeft = 1;
         }
 
     		if($maxSubItems && ($this->savlibrary->limitSub[$config['_field']] + 1)*$maxSubItems < $nbitem ) {
-          $right = $this->savlibrary->rightArrowButtonSubForm($this->savlibrary->formName, $this->savlibrary->limitSub[$config['_field']] + 1, $uid, $config['_field']);
+          $right = $this->savlibrary->rightArrowButtonSubForm(
+            $this->savlibrary->formName,
+            $this->savlibrary->limitSub[$config['_field']] + 1,
+            $uid,
+            $config['_field']
+          );
     		} else {
     			$right = '';
       		$cutRight = 1;
@@ -1558,17 +2355,88 @@ class tx_savlibrary_defaultItemviewers {
       // Modify variables for the call
       $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
       $this->savlibrary->extObj->piVars['limitSub'] = $this->savlibrary->limitSub[$config['_field']];
-      $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' . $this->savlibrary->formName . '[formAction]=browseSubForm';
-      $this->savlibrary->extObj->pi_moreParams .= '&' . $this->savlibrary->formName . '[uid]=' . $config['uid'];
-      $this->savlibrary->extObj->pi_moreParams .= '&' . $this->savlibrary->formName . '[field]=' . $config['_field'];
-  		$subForm['MARKERS']['browse'] = $this->savlibrary->extObj->pi_list_browseresults(0, '', $wrapArr, 'limitSub', false);
+      $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' .
+        $this->savlibrary->formName . '[formAction]=browseSubForm' . '&' .
+        $this->savlibrary->formName . '[uid]=' . $config['uid'] . '&' .
+        $this->savlibrary->formName . '[field]=' . $config['_field'];
+  		$subForm['MARKERS']['browse'] = $this->savlibrary->extObj->pi_list_browseresults(
+        0,
+        '',
+        $wrapArr,
+        'limitSub',
+        false
+      );
 
   		// Replace Next and Previous messages by arrows
-      $subForm['MARKERS']['browse'] = str_replace('Last >>', $this->savlibrary->iconImage('forwardLastButton', 'forwardLast.png', 'button.forwardLast'), $subForm['MARKERS']['browse']);
-      $subForm['MARKERS']['browse'] = str_replace('<< First', $this->savlibrary->iconImage('backwardFirstButton', 'backwardFirst.png', 'button.backwardFirst'), $subForm['MARKERS']['browse']);
+      $subForm['MARKERS']['browse'] = str_replace(
+        'Last >>',
+//        $this->savlibrary->iconImage(
+//          'forwardLastButton',
+//          'forwardLast.png',
+//          'button.forwardLast'
+//        ),
+        utils::htmlImgElement(
+          array(
+            utils::htmlAddAttribute('class', 'forwardLastButton'),
+            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'forwardLast.png'),
+            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.forwardLast')),
+            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.forwardLast')),
+          )
+        ),
+        $subForm['MARKERS']['browse']
+      );
+      $subForm['MARKERS']['browse'] = str_replace(
+        '<< First',
+//        $this->savlibrary->iconImage(
+//          'backwardFirstButton',
+//          'backwardFirst.png',
+//          'button.backwardFirst'
+//        ),
+        utils::htmlImgElement(
+          array(
+            utils::htmlAddAttribute('class', 'backwardFirstButton'),
+            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'backwardFirst.png'),
+            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.backwardFirst')),
+            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.backwardFirst')),
+          )
+        ),
+        $subForm['MARKERS']['browse']
+      );
       
-      $subForm['MARKERS']['browse'] = str_replace('Next >', $this->savlibrary->iconImage('forwardButton', 'forward.png', 'button.forward'), $subForm['MARKERS']['browse']);
-      $subForm['MARKERS']['browse'] = str_replace('< Previous', $this->savlibrary->iconImage('backwardButton', 'backward.png', 'button.backward'), $subForm['MARKERS']['browse']);
+      $subForm['MARKERS']['browse'] = str_replace(
+        'Next >',
+//        $this->savlibrary->iconImage(
+//          'forwardButton',
+//          'forward.png',
+//          'button.forward'
+//        ),
+        utils::htmlImgElement(
+          array(
+            utils::htmlAddAttribute('class', 'forwardButton'),
+            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'forward.png'),
+            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.forward')),
+            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.forward')),
+          )
+        ),
+        $subForm['MARKERS']['browse']
+      );
+      $subForm['MARKERS']['browse'] = str_replace(
+        '< Previous',
+//        $this->savlibrary->iconImage(
+//          'backwardButton',
+//          'backward.png',
+//          'button.backward'
+//        ),
+        utils::htmlImgElement(
+          array(
+            utils::htmlAddAttribute('class', 'backwardButton'),
+            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'backward.png'),
+            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.backward')),
+            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.backward')),
+          )
+        ),
+        $subForm['MARKERS']['browse']
+      );
 
   		// Recover the previous values
   		$this->savlibrary->extObj->prefixId = $prefixId;
@@ -1588,8 +2456,8 @@ class tx_savlibrary_defaultItemviewers {
   			 	/* SELECT   */	'*',		
   				/* FROM     */	$allowed_table,
   	 			/* WHERE    */	'1'.
- 			                    $this->savlibrary->extObj->cObj->enableFields($allowed_table).
-                          ' AND uid='.$config['_value']
+ 			        $this->savlibrary->extObj->cObj->enableFields($allowed_table).
+              ' AND uid='.$config['_value']
   		  );
       	$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
       }
@@ -1610,7 +2478,14 @@ class tx_savlibrary_defaultItemviewers {
           if ($config['cutvalue'] || !count(array_intersect($temp, $GLOBALS['TSFE']->fe_user->groupData['uid'])) || ($row['link_enddate'] && $row['link_enddate'] < time() )) {
             $htmlArray[] = '';
           } else {       
-            $htmlArray[] = $this->savlibrary->extObj->pi_linkToPage(($config['message'] ? $config['message'] : $this->savlibrary->getLibraryLL('general.clickHere')),$row['link_page']);
+            $htmlArray[] = $this->savlibrary->extObj->pi_linkToPage(
+              (
+                $config['message'] ?
+                $config['message'] :
+                $this->savlibrary->getLibraryLL('general.clickHere')
+              ),
+              $row['link_page']
+            );
           }
         } else {
           $subForm = array();            
@@ -1622,7 +2497,13 @@ class tx_savlibrary_defaultItemviewers {
     	
           // Parse the fields
       	  $this->savlibrary->rowItem = $config['_value'];
-		      $x = $this->savlibrary->generateFormTa($config['name'], $row, array(0 => $config[0]), $config['errors'], $config['edit']);
+		      $x = $this->savlibrary->generateFormTa(
+            $config['name'],
+            $row,
+            array(0 => $config[0]),
+            $config['errors'],
+            $config['edit']
+          );
 
           $x['TYPE']= 'subFormItem';
           $x['MARKERS']['icon'] = '';
@@ -1633,7 +2514,14 @@ class tx_savlibrary_defaultItemviewers {
           $htmlArray[] = $this->savlibrary->replaceTemplate($subForm); 
         }
       } else {
-        $htmlArray[] = '<span class="error">' . $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') . '</span>';
+      
+        // Add the span element
+        $htmlArray[] = utils::htmlSpanElement(
+          array(
+            utils::htmlAddAttribute('class', 'error'),
+          ),
+          $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm')
+        );
       } 
 		}
     return $this->savlibrary->arrayToHTML($htmlArray);

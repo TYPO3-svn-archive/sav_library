@@ -41,6 +41,7 @@
 		  <!-- Messages -->		
 			<label index="message.clikToUpdate">Clik on the right button at the top or the bottom of the form to validate data.</label>
 			<label index="message.dataSaved">Your data were saved.</label>
+			<label index="message.forTests">Message for tests.</label>
 
 		  <!-- Warning messages -->
 			<label index="warning.delete">Are you sure you want to delete this record?</label>
@@ -94,6 +95,7 @@
 			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
 			
 			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the "Local table" field of the query associated with your form. </label>
+			<label index="fatal.notAuthentified">Fatal error. You must be authentified to save these data.</label>
 
 		  <!-- Buttons -->		
 			<label index="button.edit">Edit</label>
@@ -198,6 +200,7 @@
 		  <!-- Messages -->		
 			<label index="message.clikToUpdate">Cliquer sur les boutons à droite en haut ou en bas du formulaire pour valider les données.</label>
 			<label index="message.dataSaved">Vos données ont été enregistrées.</label>
+			<label index="message.forTests">Message pour les tests.</label>
 
 		  <!-- Warning messages -->
       <label index="warning.delete">Etes-vous sûr de vouloir supprimer cet enregistrement ?</label>
@@ -251,7 +254,8 @@
 			<label index="error.isValidPattern">La saisie ne correspond pas au format attendu.</label>
 
 			<label index="fatal.incorrectTCA">Erreur fatale. la table locale a un TCA incorrect. Vous n'avez peut-être pas utilisé le bon nom dans le champ "Local table" dans la requête associée à votre formulaire.</label>
-	
+			<label index="fatal.notAuthentified">Erreur fatale. Vous devez être authentifié pour sauver ces données.</label>
+
 		  <!-- Buttons -->		
 			<label index="button.edit">Editer</label>
 			<label index="button.save">Enregistrer</label>

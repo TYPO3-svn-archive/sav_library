@@ -153,7 +153,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
         return false;
       }
 
-      $GLOBALS['TSFE']->additionalHeaderData[$this->extKey] = $this->TAB.$css;	
+      $GLOBALS['TSFE']->additionalHeaderData[$this->extKey] = $this->TAB . $css;
 		}    
     
     return true;		
