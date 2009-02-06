@@ -26,28 +26,11 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-require_once(t3lib_extMgm::extPath("kickstarter")."sections/class.tx_kickstarter_section_tables.php");
-require_once(t3lib_extMgm::extPath("kickstarter")."sections/class.tx_kickstarter_section_pi.php");
+// Needed to have the XCLASS taken into account
+require_once(t3lib_extMgm::extPath('kickstarter') . 'sections/class.tx_kickstarter_section_tables.php');
+require_once(t3lib_extMgm::extPath('kickstarter') . 'sections/class.tx_kickstarter_section_pi.php');
 
 class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
-
-	function cmdHiddenField()	{
-//--------------------------
-// Begin - Modified 
-//--------------------------			
-    $addHidden = '
-		<input type="hidden" name="'.$this->piFieldName("wizKey").'" value="'.$this->wizard->modData["wizKey"].'">
-		<input type="hidden" name="'.$this->piFieldName("wizId").'" value="'.$this->wizard->modData["wizId"].'">
-		<input type="hidden" name="'.$this->piFieldName("wizSpecialCmd").'" value="'.$this->wizard->modData["wizSpecialCmd"].'">
-    ';
-		
-//		return '<input type="hidden" name="'.$this->piFieldName("cmd").'" value="'.htmlspecialchars($this->currentCMD).'">';
-		return '<input type="hidden" name="'.$this->piFieldName("cmd").'" value="'.htmlspecialchars($this->currentCMD).'">'.$addHidden;    
-//--------------------------
-// End - Modified 
-//--------------------------							
-	}
 
 
 	/**
@@ -151,12 +134,6 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 		return $content;
 	}
 
-
-	function bwWithFlag($str,$flag, $style='')	{
-	  $str = '<span style="'.$style.'">'.$str.'</span>';	
-		if ($flag)	$str = '<strong>'.$str.'</strong>';
-		return $str;
-	}
 	
 	function makeFilesArray($extKey) {
 
@@ -230,10 +207,6 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
       $this->wizArray['pi'] = $x;         
     }
 
-//--------------------------
-// End - Modified 
-//--------------------------		
-
     // update the wizArray save information
     if (isset($this->wizArray['save']['overwrite_files'])) {
   		foreach($this->wizArray['save']['overwrite_files'] as $key => $val) {
@@ -242,15 +215,23 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
         }
       }
 		}
+//--------------------------
+// End - Modified
+//--------------------------
 
 		tx_kickstarter_compilefiles::makeFilesArray($extKey);
-
+		
+//--------------------------
+// Begin - Modified
+//--------------------------
     // Change the icon
     if (isset($this->sections['savext'])) {
 		  $iconPath = t3lib_div::getUrl(t3lib_extMgm::extPath('sav_library').'kickstarter/ext_icon.gif');
   		$this->addFileToFileArray("ext_icon.gif",$iconPath);   
     }   
-
+//--------------------------
+// End - Modified
+//--------------------------
   }
 
 
@@ -290,24 +271,22 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 					);
 				}
 				
+//--------------------------
+// Begin - Modified
+//--------------------------
 				$fileContent='<tr' .$this->bgCol(1) .'>
-
 				<td><a name="' . md5($fileName) . '"></a><strong>' . $this->fw($fileName) . '</strong></td>
 				</tr>
-
 				<tr>';
-//debug($fI);
 				if (t3lib_div::inList('xml', strtolower($fI['extension'])))	{
-//debug($data);				
- 				$data['content'] = utf8_decode($data['content']);
-//debug($data);
-				} else {
-//					$data = $data['content'];
+          $data['content'] = utf8_decode($data['content']);
 				}
-//				$fileContent.='</tr><tr><td>'.$this->preWrap($data).'<td></tr>';
 				$fileContent.='</tr><tr><td>'.$this->preWrap($data['content']).'<td></tr>';
-				$filesContent[]=$fileContent;				
-				
+				$filesContent[]=$fileContent;
+//--------------------------
+// End - Modified
+//--------------------------
+
 			} else $linkToFile=$this->fw('&nbsp;');
 
 			$line = '<tr' . $this->bgCol(2) . '>
@@ -406,6 +385,44 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
   function helpIcon($field){	
     return '<a href="#" style="float:left;" onclick="vHWin=window.open(\''.$this->wizard->siteBackPath.TYPO3_mainDir.'view_help.php?tfID=sav_library.'.$field.'\',\'viewFieldHelp\',\'height=400,width=600,status=0,menubar=0,scrollbars=1\');vHWin.focus();return false;"><img src="'.$this->wizard->siteBackPath.TYPO3_mainDir.'gfx/helpbubble.gif" width="16" height="16" hspace="2" border="0" class="typo3-csh-icon" alt="'.$field.'" /></a>';
   }
+  
+ 	/**
+	 * makes a text bold if $flag is set
+	 * (defined in class.tx_kickstarter_sectionbase.php)
+	 *
+	 * @param	string		text
+	 * @param	boolean		flag to make the text bold
+	 * @return	string		text, optionaly made bold
+	 */
+	function bwWithFlag($str,$flag, $style='')	{
+	  $str = '<span style="'.$style.'">'.$str.'</span>';
+		if ($flag)	$str = '<strong>'.$str.'</strong>';
+		return $str;
+	}
+
+	/**
+	 * returns hidden field containing the current command
+	 * (defined in class.tx_kickstarter_sectionbase.php)
+	 *
+	 * @return	sting		hidden field containing the current command
+	 */
+	function cmdHiddenField()	{
+
+//--------------------------
+// Begin - Modified
+//--------------------------
+    $addHidden = '
+		<input type="hidden" name="'.$this->piFieldName("wizKey").'" value="'.$this->wizard->modData["wizKey"].'">
+		<input type="hidden" name="'.$this->piFieldName("wizId").'" value="'.$this->wizard->modData["wizId"].'">
+		<input type="hidden" name="'.$this->piFieldName("wizSpecialCmd").'" value="'.$this->wizard->modData["wizSpecialCmd"].'">
+    ';
+
+//		return '<input type="hidden" name="'.$this->piFieldName("cmd").'" value="'.htmlspecialchars($this->currentCMD).'">';
+		return '<input type="hidden" name="'.$this->piFieldName("cmd").'" value="'.htmlspecialchars($this->currentCMD).'">'.$addHidden;
+//--------------------------
+// End - Modified
+//--------------------------
+	}
 	
 }
 

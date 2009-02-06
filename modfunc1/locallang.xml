@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallang>
+	<meta type="array">
+		<description></description>
+		<type>module</type>
+		<csh_table></csh_table>
+		<labelContext type="array">
+		</labelContext>
+	</meta>
+	<data type="array">
+		<languageKey index="default" type="array">
+			<label index="moduleFunction.tx_savlibrary_modfunc1">SAV Library extensions update</label>
+			<label index="unknown">Unknown</label>
+		</languageKey>
+		<languageKey index="fr" type="array">
+			<label index="moduleFunction.tx_savlibrary_modfunc1">SAV Library extensions update</label>
+			<label index="unknown">Inconnue</label>
+		</languageKey>
+	</data>
+</T3locallang>

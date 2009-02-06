@@ -1,0 +1,21 @@
+/* CSS Document */
+/* --- --- --- */
+
+ul.update {float:left;clear:left;list-style:none; margin:0px; padding:0px;}
+
+li.extNameTitle {float:left;clear:left;width:150px;font-weight:bold;margin:0px; padding:10px 0px 10px 0px; }
+li.xmlTitle {float:left;width:100px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
+li.updateTitle {float:left;width:100px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
+li.version {float:left;width:100px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
+
+li.extName {float:left;clear:left;width:150px;margin:0px; padding:0px; }
+li.xml {float:left;width:100px;padding:0px; margin:0px;text-align:center;}
+li.update {float:left;width:100px; text-align:center;}
+li.versionOk {float:left;width:100px; text-align:center;color:green;}
+li.versionNotOk {float:left;width:100px; text-align:center;color:red;}
+
+input.submit {float:left; clear:left;}
+
+div.extManager {float:left; clear:left;border-top:2px solid black;width:100%;}
+
+

@@ -1,0 +1,23 @@
+<dataset>
+  <fe_groups id="1">
+    <title>validGroup</title>
+  </fe_groups>
+  <fe_groups id="2">
+    <title>unvalidGroup</title>
+  </fe_groups>
+  
+  <fe_users id="1">
+    <username>validUser</username>
+    <name>Valid User</name>
+    <password>test</password>
+    <usergroup ref="fe_groups#1" />
+    <TSconfig>validExt_Export = *</TSconfig>
+  </fe_users>
+  <fe_users id="2">
+    <username>unvalidUser</username>
+    <password>test</password>
+    <name>Unvalid User</name>
+    <usergroup ref="fe_groups#2" />
+  </fe_users>
+
+</dataset>
