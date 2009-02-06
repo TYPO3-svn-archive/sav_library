@@ -33,8 +33,26 @@ require_once(t3lib_extMgm::extPath('rtehtmlarea').'pi2/class.tx_rtehtmlarea_pi2.
 
 class tx_savlibrary_defaultItemviewers {
 
-  public $savlibrary;     // Reference to the savlibrary object
-  
+  // Variables in calling classes
+  private $savlibrary;      // Reference to the savlibrary object
+  private $cObj;            // Reference to the cObj in the extension
+  private $extConfig;       // Reference to the extension configuration
+  private $extKey;          // Extension Key
+
+  /**
+   * Init vars
+   *
+   * @param $ref (reference to the calling object)
+   *
+   * @return none
+   */
+  public function initVars(&$ref) {
+    $this->savlibrary = $ref;
+    $this->extConfig = &$ref->extObj->extConfig;
+    $this->cObj = &$ref->extObj->cObj;
+    $this->extKey = $ref->extObj->extKey;
+  }
+
 /**
  * Start variables for the RTE API
  */
@@ -360,7 +378,7 @@ class tx_savlibrary_defaultItemviewers {
       if ($config['mail']) {     
         $htmlArray[] = $this->savlibrary->mailButton(
           $this->savlibrary->formName,
-          $config['_field'],
+          $config['cryptedFieldName'],
           (
             $config['value'] ?
             '' :
@@ -530,6 +548,9 @@ class tx_savlibrary_defaultItemviewers {
 	/**
 	 * Text area viewer in edit mode
 	 *
+	 * Code could be cleaned when tx_rtehtmlarea_pi2 will separate the id
+	 * and the name.
+	 *
 	 * @param $config array (Configuration array)
 	 *
 	 * @return string (item to display)
@@ -571,11 +592,18 @@ class tx_savlibrary_defaultItemviewers {
           0
         );
 
+        // Replace [ and ] in the id
+				$out = preg_replace('/id="([^"]*)"/e',
+          '\'id="\' . strtr(\'$1\', \'[]\', \'__\') . \'"\'',
+          $out
+        );
+        
 				// Remove the hidden field
 				$out = preg_replace('/<input type="hidden"[^>]*>/', '', $out);
+				
         // Add onchange				
 				$out = preg_replace('/<textarea ([^>]*)>/',
-          '<textarea \\1' . ' cols="' . $config['cols'] . '" rows="' .
+          '<textarea $1' . ' cols="' . $config['cols'] . '" rows="' .
           $config['rows'] . '" onchange="document.changed=1;">'	,
           $out
         );
@@ -601,7 +629,13 @@ class tx_savlibrary_defaultItemviewers {
         
         $htmlArray[] = $out;
         $htmlArray[] = '<script type="text/javascript">';
-        $htmlArray[] = $this->additionalJS_post[$this->RTEcounter-1];       
+
+        // Replace [ and ] in the id
+        $htmlArray[] = preg_replace('/editornumber = "([^"]*)"/e',
+          '\'editornumber = "\' . strtr(\'$1\', \'[]\', \'__\') . \'"\'',
+          $this->additionalJS_post[$this->RTEcounter-1]
+        );
+
 		    $htmlArray[] = '</script>';
 		    if (!$this->RTEinit) {
           $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= $this->additionalJS_initial;  
@@ -617,9 +651,13 @@ class tx_savlibrary_defaultItemviewers {
         );
 		    $js[] = '</script>';
         $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= implode('', $js);
-		      
-		    $this->updateRTEList .= $this->additionalJS_submit[$this->RTEcounter-1];
-		    
+
+        // Replace [ and ] in the id
+		    $this->updateRTEList .= preg_replace('/RTEarea\[\'([^\']*)\'\]/e',
+          '\'RTEarea[\\\'\' . strtr(\'$1\', \'[]\', \'__\') . \'\\\']\'',
+          $this->additionalJS_submit[$this->RTEcounter-1]
+        );
+
 		    $this->changedRTEList .= 'changedTextareaRTE(' . $this->RTEcounter . ');';
 			}
     } else {
@@ -633,7 +671,6 @@ class tx_savlibrary_defaultItemviewers {
         ),
         $config['value']
       );
-
 		}
 
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -693,7 +730,7 @@ class tx_savlibrary_defaultItemviewers {
     if ($config['generatertf']) {
       $htmlArray[] = $this->savlibrary->generateRTFButton(
         $this->savlibrary->formName,
-        $config['_field'],
+        $config['cryptedFieldName'],
         $this->savlibrary->rowItem
       );
       // update the field
@@ -708,10 +745,6 @@ class tx_savlibrary_defaultItemviewers {
         $path_parts = pathinfo($config['savefilertf']);
         $config['folder'] = $path_parts['dirname'];
         $htmlArray[] = '<div class="separator">&nbsp;</div>' .
-//          $this->savlibrary->hiddenField(
-//            $config['elementControlName'],
-//            $config['value']
-//          ) .
           utils::htmlInputHiddenElement(
             array(
               utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -722,10 +755,6 @@ class tx_savlibrary_defaultItemviewers {
           $this->savlibrary->makeLink($config['value'], 0, $config);
       } else {
         $htmlArray[] = '<div class="separator">&nbsp;</div>' .
-//          $this->savlibrary->hiddenField(
-//            $config['elementControlName'],
-//            $config['value']
-//          );
           utils::htmlInputHiddenElement(
             array(
               utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -1075,7 +1104,7 @@ class tx_savlibrary_defaultItemviewers {
 
         $localConfig['elementControlName'] = preg_replace(
           '/\[([^\[]+)\](.*)$/',
-          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+          '[' . $config['fullFieldName'] . '][' . $config['uid'] . '][' .
             $key . '][beginAm][' . $config['uid'] . ']',
           $config['elementControlName']
         );
@@ -1084,7 +1113,7 @@ class tx_savlibrary_defaultItemviewers {
 			 
         $localConfig['elementControlName'] = preg_replace(
           '/\[([^\[]+)\](.*)$/',
-          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+          '[' . $config['fullFieldName'] . '][' . $config['uid'] . '][' .
             $key . '][endAm][' . $config['uid'] . ']',
           $config['elementControlName']
         );
@@ -1093,7 +1122,7 @@ class tx_savlibrary_defaultItemviewers {
 
         $localConfig['elementControlName'] = preg_replace(
           '/\[([^\[]+)\](.*)$/',
-          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+          '[' . $config['fullFieldName'] . '][' . $config['uid'] . '][' .
             $key . '][beginPm][' . $config['uid'] . ']',
           $config['elementControlName']
         );
@@ -1102,7 +1131,7 @@ class tx_savlibrary_defaultItemviewers {
 
         $localConfig['elementControlName'] = preg_replace(
           '/\[([^\[]+)\](.*)$/',
-          '[' . $config['_field'] . '][' . $config['uid'] . '][' .
+          '[' . $config['fullFieldName'] . '][' . $config['uid'] . '][' .
             $key . '][endPm][' . $config['uid'] . ']',
           $config['elementControlName']
         );
@@ -1578,7 +1607,8 @@ class tx_savlibrary_defaultItemviewers {
     $htmlOptionArray = array();
 		$htmlOptionArray[] = '';
 
-		$elementControlName = $this->savlibrary->formName.'['.$config['_field'] . ']' .
+		$elementControlName = $this->savlibrary->formName . '[' .
+      $config['cryptedFieldName'] . ']' .
       (
         isset($this->savlibrary->rowItem) ?
         '[' . $this->savlibrary->rowItem . ']' :
@@ -2147,24 +2177,28 @@ class tx_savlibrary_defaultItemviewers {
 				/* LIMIT    */
           (
             $maxSubItems ?
-            ($maxSubItems*($this->savlibrary->limitSub[$config['_field']])) . ',' . ($maxSubItems) :
+            ($maxSubItems*($this->savlibrary->limitSub[$config['cryptedFieldName']])) . ',' . ($maxSubItems) :
             ''
           )
 		  );
 
-		  $fields = $config['_field'];
+		  $fields = $config['fullFieldName'];
       $value = '';
       
       // Build the subForm
       $subForm = array();            
-      $subForm['TYPE']= ($config['subformtemplate'] ? $config['subformtemplate'] : 'subForm');
+      $subForm['TYPE']= (
+        $config['subformtemplate'] ?
+        $config['subformtemplate'] :
+        'subForm'
+      );
       
       // add the new button
       $subForm['CUTTERS']['CUT_title'] = ($this->savlibrary->inputIsAllowedInForm() || (!$config['edit'] && $config['labelontitle']) ? 0 : 1);
       $subForm['MARKERS']['titleIconLeft'] = (
         !$config['edit'] || ($config['cutnewbuttonifnotsaved'] && !$this->savlibrary->uid) ?
         '' :
-        $this->savlibrary->newButtonSubForm($this->savlibrary->formName, $uid, $config['_field'])
+        $this->savlibrary->newButtonSubForm($this->savlibrary->formName, $uid, $config['fullFieldName'])
       );
       $subForm['MARKERS']['CLASS_titleIconLeft'] = (
         $this->savlibrary->inputIsAllowedInForm() ?
@@ -2173,14 +2207,14 @@ class tx_savlibrary_defaultItemviewers {
       );
       if ($config['labelontitle']) {     
   		  $subForm['MARKERS']['formTitle'] = $this->savlibrary->getLL_db(
-          'LLL:EXT:' . $this->savlibrary->extObj->extKey .
-          '/locallang_db.xml:' . $config['_field']);
+          'LLL:EXT:' . $this->extKey .
+          '/locallang_db.xml:' . $config['fullFieldName']);
       } else {
         $subForm['MARKERS']['formTitle'] = $this->savlibrary->processLocalizationTags($config['subformtitle']);
       }
   
  		  // add a new row if the new button has been activated
-      if ($this->savlibrary->newSubForm && $this->savlibrary->subFormName == $config['_field']) {
+      if ($this->savlibrary->newSubForm && $this->savlibrary->subFormName == $config['fullFieldName']) {
     		  $this->savlibrary->rowItem = 0;
     		  $row = array();
               		  
@@ -2197,9 +2231,9 @@ class tx_savlibrary_defaultItemviewers {
               unset($row[$keyTemp]);
             }
           }
-          
+
           // Check fields are set in the subform
-          if (!isset($config[0])) {
+          if (!isset($config[$this->savlibrary->cryptTag('0')])) {
             $out = '<span class="error">' .
               $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
               '</span>';
@@ -2209,7 +2243,7 @@ class tx_savlibrary_defaultItemviewers {
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
-            array(0 => $config[0]),
+            array($this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]),
             $config['errors'],
             $config['edit']
           );
@@ -2225,7 +2259,7 @@ class tx_savlibrary_defaultItemviewers {
       } else {  
   
         // return empty if no rows and not newSubform and no arrows
-        if (!$config['edit'] && !$this->savlibrary->newSubForm && !$nbitem && !isset($this->savlibrary->limitSub[$config['_field']])) {
+        if (!$config['edit'] && !$this->savlibrary->newSubForm && !$nbitem && !isset($this->savlibrary->limitSub[$config['cryptedFieldName']])) {
           return '';
         }
          // Parse the fields
@@ -2240,7 +2274,7 @@ class tx_savlibrary_defaultItemviewers {
     		  $this->savlibrary->rowItem = $row[$allowed_table.'.uid'];
     		  
           // Check fields are set in the subform
-          if (!isset($config[0])) {
+          if (!isset($config[$this->savlibrary->cryptTag('0')])) {
             $out = '<span class="error">' .
               $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
               '</span>';
@@ -2250,7 +2284,7 @@ class tx_savlibrary_defaultItemviewers {
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
-            array(0 => $config[0]),
+            array($this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]),
             $config['errors'],
             $config['edit']
           );
@@ -2273,13 +2307,13 @@ class tx_savlibrary_defaultItemviewers {
                 $this->savlibrary->formName,
                 $uid,
                 $this->savlibrary->rowItem,
-                $config['_field']
+                $config['fullFieldName']
               ) .
               $this->savlibrary->upButton(
                 $this->savlibrary->formName,
                 $uid,
                 $this->savlibrary->rowItem,
-                $config['_field']
+                $config['fullFieldName']
               );
             $cpt++;
           }
@@ -2290,7 +2324,7 @@ class tx_savlibrary_defaultItemviewers {
                 $this->savlibrary->formName,
                 $uid,
                 $this->savlibrary->rowItem,
-                $config['_field']
+                $config['fullFieldName']
               );
           }
           $value .= $this->savlibrary->replaceTemplate($x);
@@ -2303,24 +2337,25 @@ class tx_savlibrary_defaultItemviewers {
    		    $cutLeft = 1;
   		    $cutRight = 1;
         }
-  		  if ($this->savlibrary->limitSub[$config['_field']] > 0) {
+
+  		  if ($this->savlibrary->limitSub[$config['cryptedFieldName']] > 0) {
           $left = $this->savlibrary->leftArrowButtonSubForm(
             $this->savlibrary->formName,
-            $this->savlibrary->limitSub[$config['_field']] - 1,
+            $this->savlibrary->limitSub[$config['cryptedFieldName']] - 1,
             $uid,
-            $config['_field']
+            $config['cryptedFieldName']
           );
   	 	  } else {
           $left = '';
           $cutLeft = 1;
         }
 
-    		if($maxSubItems && ($this->savlibrary->limitSub[$config['_field']] + 1)*$maxSubItems < $nbitem ) {
+    		if($maxSubItems && ($this->savlibrary->limitSub[$config['cryptedFieldName']] + 1)*$maxSubItems < $nbitem ) {
           $right = $this->savlibrary->rightArrowButtonSubForm(
             $this->savlibrary->formName,
-            $this->savlibrary->limitSub[$config['_field']] + 1,
+            $this->savlibrary->limitSub[$config['cryptedFieldName']] + 1,
             $uid,
-            $config['_field']
+            $config['cryptedFieldName']
           );
     		} else {
     			$right = '';
@@ -2354,11 +2389,11 @@ class tx_savlibrary_defaultItemviewers {
 
       // Modify variables for the call
       $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
-      $this->savlibrary->extObj->piVars['limitSub'] = $this->savlibrary->limitSub[$config['_field']];
+      $this->savlibrary->extObj->piVars['limitSub'] = $this->savlibrary->limitSub[$config['cryptedFieldName']];
       $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' .
         $this->savlibrary->formName . '[formAction]=browseSubForm' . '&' .
         $this->savlibrary->formName . '[uid]=' . $config['uid'] . '&' .
-        $this->savlibrary->formName . '[field]=' . $config['_field'];
+        $this->savlibrary->formName . '[field]=' . $config['cryptedFieldName'];
   		$subForm['MARKERS']['browse'] = $this->savlibrary->extObj->pi_list_browseresults(
         0,
         '',
@@ -2370,11 +2405,6 @@ class tx_savlibrary_defaultItemviewers {
   		// Replace Next and Previous messages by arrows
       $subForm['MARKERS']['browse'] = str_replace(
         'Last >>',
-//        $this->savlibrary->iconImage(
-//          'forwardLastButton',
-//          'forwardLast.png',
-//          'button.forwardLast'
-//        ),
         utils::htmlImgElement(
           array(
             utils::htmlAddAttribute('class', 'forwardLastButton'),
@@ -2387,11 +2417,6 @@ class tx_savlibrary_defaultItemviewers {
       );
       $subForm['MARKERS']['browse'] = str_replace(
         '<< First',
-//        $this->savlibrary->iconImage(
-//          'backwardFirstButton',
-//          'backwardFirst.png',
-//          'button.backwardFirst'
-//        ),
         utils::htmlImgElement(
           array(
             utils::htmlAddAttribute('class', 'backwardFirstButton'),
@@ -2405,11 +2430,6 @@ class tx_savlibrary_defaultItemviewers {
       
       $subForm['MARKERS']['browse'] = str_replace(
         'Next >',
-//        $this->savlibrary->iconImage(
-//          'forwardButton',
-//          'forward.png',
-//          'button.forward'
-//        ),
         utils::htmlImgElement(
           array(
             utils::htmlAddAttribute('class', 'forwardButton'),
@@ -2422,11 +2442,6 @@ class tx_savlibrary_defaultItemviewers {
       );
       $subForm['MARKERS']['browse'] = str_replace(
         '< Previous',
-//        $this->savlibrary->iconImage(
-//          'backwardButton',
-//          'backward.png',
-//          'button.backward'
-//        ),
         utils::htmlImgElement(
           array(
             utils::htmlAddAttribute('class', 'backwardButton'),
@@ -2467,11 +2482,11 @@ class tx_savlibrary_defaultItemviewers {
           $row += $config['keepfieldsinsubformvalues'];      
       }
        
-		  $fields = $config['_field'];
+		  $fields = $config['fullFieldName'];
       $value = '';
       
       // Build the subForm
-      if (isset($config[0])) {
+      if (isset($config[$this->savlibrary->cryptTag('0')])) {
         if ($config['func'] == 'makeLink') { 
 
           $temp = explode(',', $row['link_groups']);          
@@ -2500,7 +2515,7 @@ class tx_savlibrary_defaultItemviewers {
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
-            array(0 => $config[0]),
+            array($this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]),
             $config['errors'],
             $config['edit']
           );

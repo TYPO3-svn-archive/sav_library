@@ -31,10 +31,28 @@
  
 class tx_savlibrary_defaultQueriers {
 
-  public $savlibrary;                // Reference to the savlibrary object
-
   protected $sqlFields;              // Used in sql_fetch_assoc_with_tablename(). Array of field information.
   protected $aliasTable = array();   // Aliases for tables
+
+  // Variables in calling classes
+  private $savlibrary;      // Reference to the savlibrary object
+  private $cObj;            // Reference to the cObj in the extension
+  private $extConfig;       // Reference to the extension configuration
+  private $extKey;          // Extension Key
+
+  /**
+   * Init vars
+   *
+   * @param $ref (reference to the calling object)
+   *
+   * @return none
+   */
+  public function initVars(&$ref) {
+    $this->savlibrary = $ref;
+    $this->extConfig = &$ref->extObj->extConfig;
+    $this->cObj = &$ref->extObj->cObj;
+    $this->extKey = $ref->extObj->extKey;
+  }
 
 	/**
 	 * Default SELECT querier for 'showAll'.
@@ -48,7 +66,13 @@ class tx_savlibrary_defaultQueriers {
 
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' . str_replace('_', '', $this->savlibrary->extObj->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['showAll.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_' .
+      str_replace(
+        '_',
+        '',
+        $this->extKey
+      ) .
+      '.'][$this->savlibrary->formConfig['title'] . '.']['showAll.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -98,8 +122,8 @@ class tx_savlibrary_defaultQueriers {
 			/* FROM     */	$tableReference .
 					'',
  			/* WHERE    */	' 1' .
- 			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
- 			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
+ 			    $this->cObj->enableFields($query['tableLocal']) .
+ 			    ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '') .
 					($whereId 
             ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
             : (($query['where'] && !$search) ? ' AND ' . $query['where'] : '')
@@ -128,33 +152,33 @@ class tx_savlibrary_defaultQueriers {
       	
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	'*' .
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
-					($extFilter['fieldName'] ? ', ' . $extFilter['fieldName'] . ' as fieldname' : '') .
-					'',		
+				$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
+				($extFilter['fieldName'] ? ', ' . $extFilter['fieldName'] . ' as fieldname' : '') .
+				'',
 			/* FROM     */	$tableReference .
-					'',
+				'',
  			/* WHERE    */	' 1' .
- 			    $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
- 			    ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '').
-					($whereId 
-            ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
-            : (($query['where'] && !$search )? ' AND ' . $query['where'] : '')
-          ) .
-					$this->replaceTableNames($addWhere) .
-					'',  
+ 			  $this->cObj->enableFields($query['tableLocal']) .
+ 			  ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '').
+				($whereId
+          ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
+          : (($query['where'] && !$search )? ' AND ' . $query['where'] : '')
+        ) .
+				$this->replaceTableNames($addWhere) .
+				'',
 			/* GROUP BY */	$query['group'] .
-          '',
+        '',
 			/* ORDER BY */	
-					$this->replaceTableNames(
-            $whereId
-            ? ($query['whereTags'][$whereId]['order'] ? $query['whereTags'][$whereId]['order'] : '')
-            : (
-              ($query['order'] && !($search && $searchOrder))
-              ? $query['order'] 
-              : $order)
-          ),
+				$this->replaceTableNames(
+          $whereId
+          ? ($query['whereTags'][$whereId]['order'] ? $query['whereTags'][$whereId]['order'] : '')
+          : (
+            ($query['order'] && !($search && $searchOrder))
+            ? $query['order']
+            : $order)
+        ),
 			/* LIMIT    */	
-					($this->savlibrary->conf['maxItems'] ? ($this->savlibrary->conf['maxItems']*($this->savlibrary->limit)) . ',' . ($this->savlibrary->conf['maxItems']) : '')
+				($this->savlibrary->conf['maxItems'] ? ($this->savlibrary->conf['maxItems']*($this->savlibrary->limit)) . ',' . ($this->savlibrary->conf['maxItems']) : '')
 		);
 
     // Check for errors
@@ -187,7 +211,7 @@ class tx_savlibrary_defaultQueriers {
 
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' . str_replace('_', '', $this->savlibrary->extObj->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['showSingle.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_' . str_replace('_', '', $this->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['showSingle.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -243,7 +267,12 @@ class tx_savlibrary_defaultQueriers {
 	
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' . str_replace('_', '', $this->savlibrary->extObj->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['inputForm.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_' .
+      str_replace(
+        '_',
+        '',
+        $this->extKey
+      ) . '.'][$this->savlibrary->formConfig['title'] . '.']['inputForm.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -260,17 +289,17 @@ class tx_savlibrary_defaultQueriers {
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	'*'.
-					$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
-					'',		
+				$this->replaceTableNames($query['aliases'] ? ', ' . $query['aliases'] : '') .
+				'',
 			/* FROM     */	$tableReference .
-					'',
+				'',
  			/* WHERE    */	' 1' .
-					' AND '.$query['tableLocal'] . '.uid=' . intval($uid) .
-					'',  		
+				' AND '.$query['tableLocal'] . '.uid=' . intval($uid) .
+				'',
 			/* GROUP BY */	$query['group'] .
-					'',
+				'',
 			/* ORDER BY */	
-					'',
+				'',
 			/* LIMIT    */	''	
 		);
 
@@ -301,7 +330,12 @@ class tx_savlibrary_defaultQueriers {
 	
 		  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' . str_replace('_', '', $this->savlibrary->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
+    $fieldTSConfig = $pageTSConfig['tx_' .
+      str_replace(
+        '_',
+        '',
+        $this->extKey
+      ) . '.'][$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -318,7 +352,7 @@ class tx_savlibrary_defaultQueriers {
     $extPOSTVars = t3lib_div::_POST($this->savlibrary->formName); 
 
     // Buid the configuration table
-    $viewConfiguration = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['updateForm']][0]['fields'];
+    $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][0]['fields'];
     $configTable = $this->buildConfigurationTable($viewConfiguration);
     
     // Verify the required fields
@@ -346,7 +380,7 @@ class tx_savlibrary_defaultQueriers {
         } 
       }
       // Update     
-      $errors = $this->savlibrary->queries_update($this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']]);
+      $errors = $this->savlibrary->queries_update($this->extConfig['queries'][$this->savlibrary->formConfig['query']]);
       if ($this->savlibrary->errorInForm) {
         foreach($errors as $key => $error) {
           $this->savlibrary->addError(current($error), ' [' . $key . ']');
@@ -484,8 +518,8 @@ class tx_savlibrary_defaultQueriers {
 			/* FROM     */	$tableReference .
 				'',
  			/* WHERE    */	' 1' .
- 			  $this->savlibrary->extObj->cObj->enableFields($query['tableLocal']) .
- 			  ($this->savlibrary->extObj->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' : '') .
+ 			  $this->cObj->enableFields($query['tableLocal']) .
+ 			  ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '') .
  			  ($query['where'] ? ' AND ' . $this->processWhereClause($query['where']) : '') .
 				'',
 			/* GROUP BY */	$query['group'] .
@@ -540,31 +574,22 @@ class tx_savlibrary_defaultQueriers {
 			return array('fatal' => 'notAuthentified');
 		}
 		
-		// get the page values
-		$page = $this->savlibrary->page;
-
     // Get the view configuration
     if ($this->savlibrary->formConfig['updateForm']) {
-			$viewConfiguration = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['updateForm']][0]['fields'];
+			$viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
 			
 		  // Set viewName for the page TSconfig
       $this->savlibrary->viewName = 'updateForm';
-    } elseif ($page) {
-			$viewConfiguration = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$page]['fields'];
-
-		  // Set viewName for the page TSconfig
-      $this->savlibrary->viewName = 'inputForm';
 		} else {
-		  $key = key($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['inputForm']]);
-		  $viewConfiguration = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$key]['fields'];
-		  
+		  $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$this->savlibrary->folderTab]['fields'];
+
 		  // Set viewName for the page TSconfig
       $this->savlibrary->viewName = 'inputForm';
 		}
 
     // Buid the configuration table
     $configTable = $this->buildConfigurationTable($viewConfiguration);
-        
+
     // Check if the mailAways is set. If found, the first configuration field is taken for configuration
     foreach ($configTable as $field => $config) {
       if ($config['mail'] && $config['mailalways']) {
@@ -740,7 +765,7 @@ class tx_savlibrary_defaultQueriers {
               $config = $configTable[$key];
                
               // Verification 
-              $func=$config['verifier'];       
+              $func = $config['verifier'];
               if ($func) {
                 if (method_exists($this->savlibrary->verifiers, $func)) {
                   $temp = $this->savlibrary->verifiers->$func($v, $config['verifierparam']);
@@ -802,7 +827,7 @@ class tx_savlibrary_defaultQueriers {
 		$special = array();
 
 		foreach ($row as $field => $values) {
-		
+
       // Get the configuration
       $config = $configTable[$field];
 
@@ -915,6 +940,7 @@ class tx_savlibrary_defaultQueriers {
   							case 'date':
 
   								$regularRow[$field][$key] = $this->savlibrary->date2timestamp($value , $config, $errorDate);	
+
                   if ($errorDate)	{
                     $errorForm[$field][$key] = $errorDate;
                     $error_field = true;
@@ -930,11 +956,14 @@ class tx_savlibrary_defaultQueriers {
     		  // check if a mail should be sent
           if ($value || isset($configMailAlways)) {
             $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
-            $query = $this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']];
+            $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
             if ($this->savlibrary->rowItemFromButton) {
               $query['addWhere'] = $config['table'] . '.uid=' . $key;
             }
-        		$temp = $this->$func($this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']], $uid);
+        		$temp = $this->$func(
+              $this->extConfig['queries'][$this->savlibrary->formConfig['query']],
+              $uid
+            );
             $dataset = current($temp);  		     
             if (is_array($dataset)) { 
               $previousData[$key] = $dataset; 
@@ -958,10 +987,9 @@ class tx_savlibrary_defaultQueriers {
 		// Process the regular rows. Explode the key to get the table and field names
 		$vars = array();
 		foreach($regularRow as $key => $value) {
-		  $res = explode('.', $key);
 		  foreach ($value as $k => $v) {
-		    $updateVars[$res[0]][$k][$res[1]] = $v;
-      }		  
+		    $updateVars[$configTable[$key]['table']][$k][$configTable[$key]['field']] = $v;
+      }
 		}		
 
     if ($updateVars) {
@@ -989,7 +1017,8 @@ class tx_savlibrary_defaultQueriers {
             $fields['pid'] = $GLOBALS['TSFE']->id;
   				  // Controls
   				  if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
-  					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] = $GLOBALS['TSFE']->fe_user->user['uid'];
+  					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] =
+                $GLOBALS['TSFE']->fe_user->user['uid'];
   				  }
   				  if ($GLOBALS['TCA'][$table]['ctrl']['crdate']) {
   					  $fields[$GLOBALS['TCA'][$table]['ctrl']['crdate']] = time();
@@ -1071,11 +1100,17 @@ class tx_savlibrary_defaultQueriers {
     if (isset($configMailAlways)) {
       // Get the dataset
       $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
-      $query = $this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']];
+      $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
       $temp = $this->$func($query, $this->savlibrary->uid);
       $dataset = current($temp);  
 
-      $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['updateForm']], $errors, 0);
+      $ta = $this->savlibrary->generateFormTa(
+        'items',
+        $dataset,
+        $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']],
+        $errors,
+        0
+      );
       $mA = array();
       foreach ($ta['REGIONS']['items'] as $item) {
         $mA['###' . $item['MARKERS']['field'] . '###'] = $item['MARKERS'][$item['MARKERS']['field']];
@@ -1084,11 +1119,16 @@ class tx_savlibrary_defaultQueriers {
       $item = array();
       $mA['###ITEMS_AUTO###'] = '';
 		  foreach($regularRow as $keyField => $valueField) {
-		    $x = explode('.', $keyField);
-		    $fieldName = $x[1];
+		    $fieldName = $configTable[$keyField]['field'];
         $item['###mailalways_field###'] = $keyField;
         $item['###mailalways_value###'] = $mA['###' . $fieldName . '###'];
-        $mA['###ITEMS_AUTO###'] = $mA['###ITEMS_AUTO###'] . $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($configMailAlways['mailalwaysitemtmpl'], $item, array(), array() );
+        $mA['###ITEMS_AUTO###'] = $mA['###ITEMS_AUTO###'] .
+          $this->cObj->substituteMarkerArrayCached(
+            $configMailAlways['mailalwaysitemtmpl'],
+            $item,
+            array(),
+            array()
+          );
       }
       
       // Get the new items (posted as New_) 
@@ -1105,14 +1145,20 @@ class tx_savlibrary_defaultQueriers {
         $dataset[$keyField] = $value;
       }   
 
-      $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['updateForm']], $errors, 0); 
+      $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']], $errors, 0);
       foreach ($ta['REGIONS']['items'] as $item) {
         if (array_key_exists($item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'], $newPOSTVars)) {
           $keyField = $item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'];
-          if($dataset[$keyField] && $dataset[$keyField]!=$configTable[$keyField]['default']){
+          if($dataset[$keyField] && $dataset[$keyField] != $configTable[$keyField]['default']){
             $x['###mailalways_field###'] = $item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'];
             $x['###mailalways_value###'] = $item['MARKERS'][$item['MARKERS']['field']];
-            $temp[$x['###mailalways_field###']] = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($configMailAlways['mailalwaysitemtmpl'], $x, array(), array() );  
+            $temp[$x['###mailalways_field###']] =
+              $this->cObj->substituteMarkerArrayCached(
+                $configMailAlways['mailalwaysitemtmpl'],
+                $x,
+                array(),
+                array()
+              );
           }  
         }
       }
@@ -1120,7 +1166,7 @@ class tx_savlibrary_defaultQueriers {
       // Put it in the order of the post
       $mA['###ITEMS_MANUAL###'] = '';
       foreach($newPOSTVars as $keyField => $valueField) {  
-        $mA['###ITEMS_MANUAL###'] = $mA['###ITEMS_MANUAL###'].$temp[$keyField];
+        $mA['###ITEMS_MANUAL###'] = $mA['###ITEMS_MANUAL###'] . $temp[$keyField];
       }        
 
       $this->sendEmail($configMailAlways, $mA);
@@ -1129,7 +1175,7 @@ class tx_savlibrary_defaultQueriers {
 		foreach($regularRow as $keyField => $valueField) {
   		// check if a mail should be sent		
       if (($configTable[$keyField]['mail'] && (
-            ($this->savlibrary->formAction=='updateBtn' && $keyField==$this->savlibrary->fieldFromButton) || 
+            ($this->savlibrary->formAction=='updateBtn' && $keyField == $this->savlibrary->fieldFromButton) ||
             $configTable[$keyField]['mailauto'] ||
             $configTable[$keyField]['mailiffieldsetto']
             ))) {
@@ -1138,7 +1184,7 @@ class tx_savlibrary_defaultQueriers {
   			foreach($valueField as $key => $value) {
           // Get the dataset
           $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
-          $query = $this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']];
+          $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
           if ($this->savlibrary->rowItemFromButton) {
             $query['addWhere'] = $configTable[$keyField]['table'] . '.uid=' . intval($this->savlibrary->rowItemFromButton);
           }
@@ -1157,7 +1203,7 @@ class tx_savlibrary_defaultQueriers {
             }
           } elseif ($configTable[$keyField]['mailiffieldsetto']) {
             // Mail is sent if the field was previsously null and is set to the config value
-            if (!$previousData[$key][$keyField] && $value==$configTable[$keyField]['mailiffieldsetto']) {  			
+            if (!$previousData[$key][$keyField] && $value == $configTable[$keyField]['mailiffieldsetto']) {
               $mailToSend = 1;
             }           
           } else { 
@@ -1177,7 +1223,13 @@ class tx_savlibrary_defaultQueriers {
               $GLOBALS['TSFE']->lang = $configTable[$keyField]['mailmessagelanguage'];     
             }     
 
-            $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]], $errors, 0);
+            $ta = $this->savlibrary->generateFormTa(
+              'items',
+              $dataset,
+              $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]],
+              $errors,
+              0
+            );
 
             // Reset language if a language configuration is set for the message         
             if ($configTable[$keyField]['mailmessagelanguage']) {
@@ -1197,7 +1249,12 @@ class tx_savlibrary_defaultQueriers {
 
             // Set the mail reveiver from field if any
             if (isset($configTable[$keyField]['mailreceiverfromfield'])) {
-              $configTable[$keyField]['mailreceiver'] = $this->savlibrary->getValue($configTable[$keyField]['table'], $configTable[$keyField]['mailreceiverfromfield'], $dataset);
+              $configTable[$keyField]['mailreceiver'] =
+                $this->savlibrary->getValue(
+                  $configTable[$keyField]['table'],
+                  $configTable[$keyField]['mailreceiverfromfield'],
+                  $dataset
+                );
             }
 
             $mailSent = $this->sendEmail($configTable[$keyField], $mA);
@@ -1240,7 +1297,7 @@ class tx_savlibrary_defaultQueriers {
               $foreachValues = explode(',', current($regularRow[$foreachField]));
               foreach($foreachValues as $foreachValue) {
                 $mA['###' . $configTable[$keyField]['queryforeach'] . '###'] = $foreachValue;
-                $fieldQueryTemp = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
+                $fieldQueryTemp = $this->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
                 $queryStrings = explode(';', $fieldQueryTemp);
                 foreach($queryStrings as $queryString) {
                   $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
@@ -1252,7 +1309,7 @@ class tx_savlibrary_defaultQueriers {
                 }
               }
             } else {
-              $fieldQueryTemp = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
+              $fieldQueryTemp = $this->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
               $queryStrings = explode(';', $fieldQueryTemp);
               foreach($queryStrings as $queryString) {
                 $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
@@ -1354,7 +1411,7 @@ class tx_savlibrary_defaultQueriers {
   						    $vars = array(
                     'uid_local' => $new_uid_special,
                     'uid_foreign' => $value,
-                    'sorting' => (int) $initPos+$pos+1
+                    'sorting' => (int) $initPos + $pos + 1
                   );
   						    
   						    // Because no primary key is used, check if the record exists
@@ -1378,7 +1435,7 @@ class tx_savlibrary_defaultQueriers {
               if (!$value) {
                 $pos = -1;
               }
-              $vars = array($config['field'] => (int) $pos +1);
+              $vars = array($config['field'] => (int) $pos + 1);
 
               $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
   						  /* TABLE   */	$table,		
@@ -1411,7 +1468,7 @@ class tx_savlibrary_defaultQueriers {
 	 */  
   public function sendEmail($config, &$mA) {
 
-    $mailSender = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
+    $mailSender = $this->cObj->substituteMarkerArrayCached(
       $config['mailsender'],
       array('###user_email###' => $GLOBALS['TSFE']->fe_user->user['email']),
       array(),
@@ -1420,7 +1477,13 @@ class tx_savlibrary_defaultQueriers {
 
     if ($mailReceiverFromQuery = $config['mailreceiverfromquery']) {
       $mA["###uid###"] = $this->savlibrary->uid;
-      $mailReceiverFromQuery = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($mailReceiverFromQuery, $mA, array(), array() );
+      $mailReceiverFromQuery =
+        $this->cObj->substituteMarkerArrayCached(
+          $mailReceiverFromQuery,
+          $mA,
+          array(),
+          array()
+        );
       
       // Check if the query is a SELECT query and for errors
       if (!$this->savlibrary->isSelectQuery($mailReceiverFromQuery)) {
@@ -1495,21 +1558,19 @@ class tx_savlibrary_defaultQueriers {
       $this->savlibrary->extObj->pi_linkToPage('', $GLOBALS['TSFE']->id)
     );
    
-    $mailMessage = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(nl2br($mailMessage), $mA, array(), array() );
-    $mailSubject = mb_encode_mimeheader($this->savlibrary->extObj->cObj->substituteMarkerArrayCached($mailSubject, $mA, array(), array() ), 'iso-8859-1', 'Q');
+    $mailMessage = $this->cObj->substituteMarkerArrayCached(nl2br($mailMessage), $mA, array(), array() );
+    $mailSubject = mb_encode_mimeheader($this->cObj->substituteMarkerArrayCached($mailSubject, $mA, array(), array() ), 'iso-8859-1', 'Q');
     $headers  = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
-    $headers .= 'From: '.$mailSender . "\r\n";
-    $headers .= 'Reply-To: '.$mailSender . "\r\n";          
-    $headers .= 'Return-Path: '.$mailSender . "\r\n";
+    $headers .= 'From: ' . $mailSender . "\r\n";
+    $headers .= 'Reply-To: ' . $mailSender . "\r\n";
+    $headers .= 'Return-Path: ' . $mailSender . "\r\n";
     if ($config['mailcc']) {
-      $headers .= 'Cc: '.$config['mailcc'] . "\r\n";   
+      $headers .= 'Cc: ' . $config['mailcc'] . "\r\n";
     } 
-//debug($mailSender);    
-//debug($mailReceiver);
-//debug($mailSubject);
-//debug($mailMessage);
-
+debug($mailSubject);
+debug($mailMessage);
+return;
     if (!ini_get('safe_mode')) {
 			// If safe mode is on, the fifth parameter to mail is not allowed,
       // so the fix wont work on unix with safe_mode=On
@@ -1589,7 +1650,7 @@ class tx_savlibrary_defaultQueriers {
       }
     } 
 
-    return $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
+    return $this->cObj->substituteMarkerArrayCached(
       $x,
       $mA,
       array(),
@@ -1683,7 +1744,7 @@ class tx_savlibrary_defaultQueriers {
 				    /* SELECT   */	'uid,title',	
 				    /* FROM     */	'fe_groups',
 	 			    /* WHERE    */	'1' .
-              $this->savlibrary->extObj->cObj->enableFields('fe_groups')
+              $this->cObj->enableFields('fe_groups')
 		    );
         while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
           if (in_array($rows['title'], $groups)) {
@@ -1756,22 +1817,24 @@ class tx_savlibrary_defaultQueriers {
   protected function buildConfigurationTable($viewConfiguration) {
     // Buid the configuration table
     $configTable = array();
-    
-    foreach ($viewConfiguration as $field => $config) {
-      $configTable[$field] = $this->savlibrary->getConfig($config);
-      $res = explode('.', $field);
-      $configTable[$res[0]]['parentField'] = '';
 
-      if (is_array($config['config'][0])) {
+    foreach ($viewConfiguration as $field => $config) {
+      $fieldName = $this->savlibrary->cryptTag($config['config']['table'] . '.' . $config['config']['field']);
+      $configTable[$fieldName] = $this->savlibrary->getConfig($config);
+      $configTable[$config['config']['table']]['parentField'] = '';
+      
+      if (is_array($config['config'][$this->savlibrary->cryptTag('0')])) {
         // A subform is produced by a MM table
-        unset($configTable[$field][0]);
-        foreach ($config['config'][0]['fields'] as $subitemField => $subitemConfig) {
-          $configTable[$subitemField] = $this->savlibrary->getConfig($subitemConfig);
-          $res = explode('.', $subitemField);
-          $configTable[$res[0]]['parentField'] = $field;
+        unset($configTable[$fieldName][$this->savlibrary->cryptTag('0')]);
+
+        foreach ($config['config'][$this->savlibrary->cryptTag('0')]['fields'] as $subitemField => $subitemConfig) {
+          $subitemFieldName = $this->savlibrary->cryptTag($subitemConfig['config']['table'] . '.' . $subitemConfig['config']['field']);
+          $configTable[$subitemFieldName] = $this->savlibrary->getConfig($subitemConfig);
+          $configTable[$subitemConfig['config']['table']]['parentField'] = $fieldName;
         }
       }   
     }
+
     return $configTable;
   }
       
@@ -1836,8 +1899,8 @@ class tx_savlibrary_defaultQueriers {
 		t3lib_div::loadTCA('fe_users');
 
     // Add the columns for existing tables
-    if (isset($this->savlibrary->extObj->extConfig['TCA'][$tableName])) {
-      $temp = $this->savlibrary->extObj->extConfig['TCA'][$tableName];
+    if (isset($this->extConfig['TCA'][$tableName])) {
+      $temp = $this->extConfig['TCA'][$tableName];
       foreach ($temp as $fieldTemp => $descrTemp) {
         $temp[$fieldTemp]['tableLocal'] = $tableName;        
       }     
@@ -1880,7 +1943,7 @@ class tx_savlibrary_defaultQueriers {
             ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
           
           // Check if a link is defined
-          $view = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
+/*          $view = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
           if (is_array($view)) {
         		if (is_numeric(key($view))) {
         		  $page = 0;
@@ -1891,13 +1954,15 @@ class tx_savlibrary_defaultQueriers {
                 $page = key($view);
               }
             }
-          }
-          $extendLink = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$page]['fields'][$tableName . '.' . $field]['config']['setextendlink'];
+          }*/
+//          $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$page]['fields'][$tableName . '.' . $field]['config']['setextendlink'];
+          $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$this->savlibrary->folderTab]['fields'][$this->savlibrary->cryptTag($tableName . '.' . $field)]['config']['setextendlink'];
           if ($extendLink) {
-            $alias2 = $this->buidAliasTable($extendLink, $tableArray, $this->aliasTable);                    
+            $alias2 = $this->buidAliasTable($extendLink, $tableArray, $this->aliasTable);
             $tableReference .= ' LEFT JOIN ' . $alias2['def'] .
               ' ON (' . $alias1['table'] . '.' . $extendLink . '=' . $alias2['table'] . '.uid)';
-          }           
+          }
+                  
         }
       }
     }

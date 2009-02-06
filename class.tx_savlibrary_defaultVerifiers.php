@@ -31,7 +31,25 @@
 
 class tx_savlibrary_defaultVerifiers {
 
-  public $savlibrary;     // Reference to the savlibrary object
+  // Variables in calling classes
+  private $savlibrary;      // Reference to the savlibrary object
+  private $cObj;            // Reference to the cObj in the extension
+  private $extConfig;       // Reference to the extension configuration
+  private $extKey;          // Extension Key
+
+  /**
+   * Init vars
+   *
+   * @param $ref (reference to the calling object)
+   *
+   * @return none
+   */
+  public function initVars(&$ref) {
+    $this->savlibrary = $ref;
+    $this->extConfig = &$ref->extObj->extConfig;
+    $this->cObj = &$ref->extObj->cObj;
+    $this->extKey = $ref->extObj->extKey;
+  }
 
 	/**
 	 * Check if the input is a valid pattern.

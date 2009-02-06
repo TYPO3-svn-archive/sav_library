@@ -175,8 +175,8 @@ plugin.sav_library {
       padding:2px;
     }
 
-        /* Page Folder */       
-    .sav-library DIV.pages {
+        /* Folder Tabs */
+    .sav-library DIV.folderTabs {
       float:left;
       width:100%;
       background:#ffffff url({$plugin.sav_library.extDir}res/images/taMenuBorder.gif) repeat-x bottom;
@@ -184,41 +184,41 @@ plugin.sav_library {
       margin-top:1px;
       padding:0px;
     }
-    .sav-library DIV.pages UL.pages {
+    .sav-library DIV.folderTabs UL.folderTabs {
       float:left;
       margin:0px;
       padding:0px;
       list-style:none; 
     }
-    .sav-library DIV.pages LI {
+    .sav-library DIV.folderTabs LI {
       display:inline;
       margin:0px;
       padding:0px;
     }
-    .sav-library DIV.pages LI A {
+    .sav-library DIV.folderTabs LI A {
       float:left;
       background:url({$plugin.sav_library.extDir}res/images/taMenuRight.gif) no-repeat right top;
       border-bottom:1px solid #84B0C7;
       font-weight:bold;
       text-decoration:none;
     }
-    .sav-library DIV.pages LI A SPAN {
+    .sav-library DIV.folderTabs LI A SPAN {
       display:block;
       background:url({$plugin.sav_library.extDir}res/images/taMenuLeft.gif) no-repeat left top;
       padding:5px 9px;
       white-space:nowrap;
     } 
-    .sav-library DIV.pages LI#currentPage A {
+    .sav-library DIV.folderTabs LI#currentTab A {
       background-position:100% -150px;
       border-width:0px;
     }
-    .sav-library DIV.pages LI A:hover {
+    .sav-library DIV.folderTabs LI A:hover {
       background-position:100% -150px;
     }    
-    .sav-library DIV.pages LI A:hover SPAN {
+    .sav-library DIV.folderTabs LI A:hover SPAN {
       background-position:0% -150px;
     }
-    .sav-library DIV.pages LI#currentPage A SPAN {
+    .sav-library DIV.folderTabs LI#currentTab A SPAN {
       background-position:0% -150px;
       padding-bottom:6px;
     } 

@@ -32,9 +32,29 @@
 
 class tx_savlibrary_defaultViewers {
 
-  public $savlibrary;       // Reference to the savlibrary object
 
   protected $fileHandle;    // File handle for export operation
+
+  // Variables in calling classes
+  private $savlibrary;      // Reference to the savlibrary object
+  private $cObj;            // Reference to the cObj in the extension
+  private $extConfig;       // Reference to the extension configuration
+  private $extKey;          // Extension Key
+
+  /**
+   * Init vars
+   *
+   * @param $ref (reference to the calling object)
+   *
+   * @return none
+   */
+  public function initVars(&$ref) {
+    $this->savlibrary = $ref;
+    $this->extConfig = &$ref->extObj->extConfig;
+    $this->cObj = &$ref->extObj->cObj;
+    $this->extKey = $ref->extObj->extKey;
+  }
+
     
 	/**
 	 * Default viewer for 'showAll'. 
@@ -53,11 +73,11 @@ class tx_savlibrary_defaultViewers {
 
 
     // If print icon is associated with a related view, call it
-    if (t3lib_div::_GET('print') && $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->page ? $this->savlibrary->page : 0]['relViewPrintIcon']) {
-      return $this->printForm_defaultViewer($dataset, $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->page ? $this->savlibrary->page : 0]['relViewPrintIcon']], $errors); 
+    if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
+      return $this->printForm_defaultViewer($dataset, $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']], $errors);
     }
 
-    $showAllTemplate = $this->savlibrary->extObj->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']];
+    $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']];
 
 		// Prepare the template
 		$tmpl = '<!-- ###item### begin -->'.
@@ -86,7 +106,10 @@ class tx_savlibrary_defaultViewers {
               $v['MARKERS'][$v['MARKERS']['field']] = '';
             } elseif ($v['WRAPPERS']['wrapitem']) {
               // Check if there is a wrapper
-              $v['MARKERS'][$v['MARKERS']['field']] = $this->savlibrary->extObj->cObj->dataWrap($v['MARKERS'][$v['MARKERS']['field']], $v['WRAPPERS']['wrapitem']);
+              $v['MARKERS'][$v['MARKERS']['field']] = $this->cObj->dataWrap(
+                $v['MARKERS'][$v['MARKERS']['field']],
+                $v['WRAPPERS']['wrapitem']
+              );
             }
 
     				// get the name
@@ -98,7 +121,7 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->savlibrary->extObj->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
             $label .= (
               $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
               '<span class="required">*</span>' :
@@ -122,7 +145,12 @@ class tx_savlibrary_defaultViewers {
         foreach ($matches[1] as $match) {
           $mA['###'.$match.'###'] = $row[$match];
         }   
-        $value = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($value, $mA, array(), array() );
+        $value = $this->cObj->substituteMarkerArrayCached(
+          $value,
+          $mA,
+          array(),
+          array()
+        );
   			
   			$ta['REGIONS']['items'][$key]['TYPE'] = 'item';
   			$ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $value;
@@ -133,12 +161,18 @@ class tx_savlibrary_defaultViewers {
             $content = '';
   				  // Add the edit button if allowed
             if (!$this->savlibrary->conf['noEditButton']) {
-             	$content .= $this->savlibrary->editButton($this->savlibrary->formName, $row['uid']);
+             	$content .= $this->savlibrary->editButton(
+                $this->savlibrary->formName,
+                $row['uid']
+              );
             }
   				  // Add the delete button if allowed
             if (!$this->savlibrary->conf['noDeleteButton'] && !($this->savlibrary->conf['deleteButtonOnlyForCruser'] && $row['cruser_id']!=$GLOBALS['TSFE']->fe_user->user['uid'])) {
   				    $content .= ($content ? '<br />' : '') .
-              $this->savlibrary->deleteButton($this->savlibrary->formName, $row['uid']);
+              $this->savlibrary->deleteButton(
+                $this->savlibrary->formName,
+                $row['uid']
+              );
             }
           }					
   			} else {
@@ -186,7 +220,8 @@ class tx_savlibrary_defaultViewers {
 		$ta['MARKERS']['titleIconLeft'] = $content;
 
     // Processing for the title
-    $ta['MARKERS']['formTitle'] = $this->savlibrary->processTitle($fields[0]['title'], $dataset[0]);
+    $ta['MARKERS']['formTitle'] =
+      $this->savlibrary->processTitle($fields[0]['title'], $dataset[0]);
 
     // Processing the icon for the input
     $CUT_titleIconRight = !$this->savlibrary->userIsAllowedToInputData();    
@@ -202,7 +237,7 @@ class tx_savlibrary_defaultViewers {
 
     // Add the print icon
     if ($this->savlibrary->inputIsAllowedInForm() || $this->savlibrary->userBelongsToAllowedGroup()) {
-      if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->page ? $this->savlibrary->page : 0]['addPrintIcon']) {
+      if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['addPrintIcon']) {
         $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton(
           $this->savlibrary->formName,
           0
@@ -355,8 +390,8 @@ class tx_savlibrary_defaultViewers {
 	public function showSingle_defaultViewer ($dataset, $fields, $errors='') {
 
     // If print icon is associated with a related view, call it
-    if (t3lib_div::_GET('print') && $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][($this->savlibrary->page ? $this->savlibrary->page : 0)]['relViewPrintIcon']) {
-      return $this->printForm_defaultViewer($dataset, $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->page ? $this->savlibrary->page : 0]['relViewPrintIcon']], $errors); 
+    if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
+      return $this->printForm_defaultViewer($dataset, $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']], $errors);
     }
     
 		$ta = $this->savlibrary->generateFormTa('items', $dataset[0], $fields, $errors, 0);
@@ -364,7 +399,7 @@ class tx_savlibrary_defaultViewers {
 
     // Add the print icon
     $ta['MARKERS']['titleIconRight'] = '';
-    if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][($this->savlibrary->page ? $this->savlibrary->page : 0)]['addPrintIcon']) {
+    if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['addPrintIcon']) {
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton($this->savlibrary->formName, $dataset[0]['uid']);   
     }
    
@@ -395,6 +430,9 @@ class tx_savlibrary_defaultViewers {
 	 */
 
 	public function inputForm_defaultViewer($dataset, $fields, $errors='') {
+	
+    // local variables
+    $viewId = $this->savlibrary->formConfig['inputForm'];
 
 		$row = $dataset[0];
 		if (!$row['uid']) {
@@ -417,7 +455,7 @@ class tx_savlibrary_defaultViewers {
     }      
 		
     // Add the print icon
-    if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['inputForm']][($this->savlibrary->page ? $this->savlibrary->page : 0)]['addPrintIcon']) {
+    if ($this->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$this->savlibrary->folderTab]['addPrintIcon']) {
       $ta['MARKERS']['titleIconLeft'] .= $this->savlibrary->printButton(
         $this->savlibrary->formName,
         $dataset[0]['uid']
@@ -442,7 +480,7 @@ class tx_savlibrary_defaultViewers {
 
 	public function updateForm_defaultViewer(&$dataset, &$fields, $errors='') {
 
-    $showAllTemplate = $this->savlibrary->extObj->extConfig['showAllTemplates'][$this->savlibrary->formConfig['updateForm']];
+    $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['updateForm']];
 
 		// Prepare the template
 		$tmpl = '<!-- ###item### begin -->'.
@@ -478,7 +516,7 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->savlibrary->extObj->extKey . '/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->extKey . '/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
             $label .= (
               $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
               '<span class="required">*</span>' :
@@ -563,7 +601,12 @@ class tx_savlibrary_defaultViewers {
         foreach ($matches[1] as $match) {
           $mA['###'.$match.'###'] = $row[$match];
         }   
-        $value = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($value, $mA, array(), array() );
+        $value = $this->cObj->substituteMarkerArrayCached(
+          $value,
+          $mA,
+          array(),
+          array()
+        );
  			
   			$ta['REGIONS']['items'][$key]['TYPE'] = 'item';
   			$ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $value;
@@ -631,7 +674,7 @@ class tx_savlibrary_defaultViewers {
 
 	public function printForm_defaultViewer(&$dataset, &$fields, $errors='') {
 
-    $showAllTemplate = $this->savlibrary->extObj->extConfig['showAllTemplates'][$this->savlibrary->formConfig['altForm']];
+    $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['altForm']];
     
 		// Prepare the template
 		$tmpl = '<!-- ###item### begin -->'.
@@ -659,7 +702,10 @@ class tx_savlibrary_defaultViewers {
             $cut[$v['MARKERS']['field']] = 1;
           } elseif ($v['WRAPPERS']['wrapitem']) {
             // Check if there is a wrapper
-            $v['MARKERS'][$v['MARKERS']['field']] = $this->savlibrary->extObj->cObj->dataWrap($v['MARKERS'][$v['MARKERS']['field']], $v['WRAPPERS']['wrapitem']);
+            $v['MARKERS'][$v['MARKERS']['field']] = $this->cObj->dataWrap(
+              $v['MARKERS'][$v['MARKERS']['field']],
+              $v['WRAPPERS']['wrapitem']
+            );
           }
           
   				// get the name
@@ -670,7 +716,7 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->savlibrary->extObj->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
             $label .= (
               $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
               '<span class="required">*</span>' :
@@ -707,7 +753,7 @@ class tx_savlibrary_defaultViewers {
         foreach ($matches[1] as $match) {
           $mA['###'.$match.'###'] = $row[$match];
         }   
-        $value = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($value, $mA, array(), array() );
+        $value = $this->cObj->substituteMarkerArrayCached($value, $mA, array(), array() );
         
         // add the page break cutter        
   			$ta['REGIONS']['items'][$key]['CUTTERS']['CUT_break'] = 1;
@@ -775,12 +821,14 @@ class tx_savlibrary_defaultViewers {
 
     // Define the exclude list of fields
     $excludeFields = array (
-      'uid','pid','crdate','tstamp','hidden','deleted','cruser_id','disable','starttime','endtime','password','lockToDomain','is_online','lastlogin','TSconfig',
+      'uid','pid','crdate','tstamp','hidden','deleted','cruser_id','disable',
+      'starttime','endtime','password','lockToDomain','is_online','lastlogin',
+      'TSconfig',
     );
 
     // Get the ressource id of the query    
     $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['export']);
-    $query = $this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']];
+    $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
 
     $table = 'tx_savlibrary_export_configuration';
     $exportOK = 1;
@@ -798,7 +846,7 @@ class tx_savlibrary_defaultViewers {
 
 		    $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
           /* TABLE   */	$table,
-			    /* WHERE   */	$table.'.uid='.intval($extPOSTVars['configuration'][0]),
+			    /* WHERE   */	$table . '.uid=' . intval($extPOSTVars['configuration'][0]),
 			    /* FIELDS  */	array('deleted' => 1)
 			  );
         foreach($extPOSTVars as $k=>$v) {
@@ -819,7 +867,7 @@ class tx_savlibrary_defaultViewers {
   				$fields['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
   				$fields['crdate'] = time();
           $fields['pid'] = $GLOBALS['TSFE']->id;
-          $fields['cid'] = $this->savlibrary->extObj->cObj->data['uid'];
+          $fields['cid'] = $this->cObj->data['uid'];
                      
    				$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
     				/* TABLE   */	$table,
@@ -864,7 +912,7 @@ class tx_savlibrary_defaultViewers {
           $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   				    /* SELECT   */	'*',		
   				    /* FROM     */	$table,
-  	 			    /* WHERE    */	'uid='.intval($extPOSTVars['configuration'][0])
+  	 			    /* WHERE    */	'uid=' . intval($extPOSTVars['configuration'][0])
   		    );
   		    $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
           $extPOSTVars = unserialize($row['configuration']); 
@@ -923,7 +971,7 @@ class tx_savlibrary_defaultViewers {
 
     // Display the form      
 		$ta['TYPE'] = 'showSingle';
-		$ta['CUTTERS']['CUT_pagesTop'] = 1;
+		$ta['CUTTERS']['CUT_folderTabsTop'] = 1;
 
     // set the key counter
     $key = -1;
@@ -941,7 +989,7 @@ class tx_savlibrary_defaultViewers {
       $res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   			/* SELECT   */	'*',
   			/* FROM     */	$table,
-  	 		/* WHERE    */	'cid=' . intval($this->savlibrary->extObj->cObj->data['uid']) .
+  	 		/* WHERE    */	'cid=' . intval($this->cObj->data['uid']) .
           ' AND ' . $table . '.deleted=0 AND ' . $table . '.hidden=0' .
           ' AND (' .
           '(cruser_id=' . intval($GLOBALS['TSFE']->fe_user->user['uid']) .
@@ -1061,8 +1109,10 @@ class tx_savlibrary_defaultViewers {
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
       $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.error');;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewTextArea($config);
+      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+        $this->savlibrary->getLibraryLL('itemviewer.error');
+      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+        $this->savlibrary->itemviewers->viewTextArea($config);
       $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
       $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
       $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1092,8 +1142,8 @@ class tx_savlibrary_defaultViewers {
 
       // Build Alias fields. An alias field is defined by a reqValue attribute in the showAll form
       $aliasFields = array();
-      if (is_array($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][0]['fields'])) {
-        foreach ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][0]['fields'] as $keyField => $valueField) {
+      if (is_array($this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->cryptTag('0')]['fields'])) {
+        foreach ($this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->cryptTag('0')]['fields'] as $keyField => $valueField) {
           if (array_key_exists('reqvalue', $valueField['config'])) {
             $name = 'showAll_' . $valueField['config']['field'];
             $this->savlibrary->queriers->sqlFieldsExport[$cpt++]->name = $name;
@@ -1130,7 +1180,8 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = (($nbRows || !$exportOK) ? 'class="export"' : 'class="error"');
+    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] =
+      (($nbRows || !$exportOK) ? 'class="export"' : 'class="error"');
     $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
     
     // Display the textarea for the where clause
@@ -1148,8 +1199,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.whereClause');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.whereClause');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1170,8 +1223,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.orderClause');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.orderClause');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewStringInputEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1198,8 +1253,11 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.additionalTables');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config).$this->savlibrary->itemviewers->viewCheckboxEditMode($config1);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.additionalTables');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewStringInputEditMode($config) .
+      $this->savlibrary->itemviewers->viewCheckboxEditMode($config1);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1221,8 +1279,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.additionalFields');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.additionalFields');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewStringInputEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1242,8 +1302,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 1;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.exportMM');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.exportMM');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1264,8 +1326,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.groupBy');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewStringInputEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.groupBy');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewStringInputEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1285,8 +1349,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 1;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.includeAllFields');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.includeAllFields');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1306,8 +1372,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.exportFieldNames');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.exportFieldNames');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1329,8 +1397,10 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = $this->savlibrary->getLibraryLL('itemviewer.orderedFieldList');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
+    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
+      $this->savlibrary->getLibraryLL('itemviewer.orderedFieldList');
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+      $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1339,7 +1409,7 @@ class tx_savlibrary_defaultViewers {
           
     // Processing for the title
 		if (!isset($ta['MARKERS']['formTitle'])) {
-      $ta['MARKERS']['formTitle'] = $this->savlibrary->extObj->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']]['config']['title'];
+      $ta['MARKERS']['formTitle'] = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']]['config']['title'];
     }
 
     // Add the export icon
@@ -1394,9 +1464,15 @@ class tx_savlibrary_defaultViewers {
 		      $arrValues = array();
 		      if ($extPOSTVars['fields'][0]) {
 
-            $orderedFieldList = explode(';', preg_replace('/[\n\r]/', '', $extPOSTVars['orderedFieldList'][0]));
+            $orderedFieldList = explode(
+              ';',
+              preg_replace('/[\n\r]/', '', $extPOSTVars['orderedFieldList'][0])
+            );
             $fields = array_keys($extPOSTVars['fields'][0]);
-            $fieldList = array_merge($orderedFieldList, array_diff($fields, $orderedFieldList));
+            $fieldList = array_merge(
+              $orderedFieldList,
+              array_diff($fields, $orderedFieldList)
+            );
 
             foreach ($fieldList as $key => $field) {
 
@@ -1412,14 +1488,18 @@ class tx_savlibrary_defaultViewers {
                   $table = $config['table'];
                   if (preg_match_all('/###row\[([^\]]+)\]###/', $queryReqValue, $matches)) {
                     foreach ($matches[0] as $k => $match) {
-                      $mA[$matches[0][$k]] = $this->savlibrary->getValue($table, $matches[1][$k], $row);
+                      $mA[$matches[0][$k]] = $this->savlibrary->getValue(
+                        $table,
+                        $matches[1][$k],
+                        $row
+                      );
                     }
                   }
 
                   $mA['###uid###'] = $row[$config['table'] . '.uid'];
                   $mA['###uidParent###'] = $row[$query['tableLocal'] . '.uid'];
                   $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                  $queryReqValue = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached($queryReqValue, $mA, array(), array() );
+                  $queryReqValue = $this->cObj->substituteMarkerArrayCached($queryReqValue, $mA, array(), array() );
 
                   // Check if the query is a SELECT query and for errors
                   if (!$this->savlibrary->isSelectQuery($queryReqValue)) {
@@ -1478,7 +1558,7 @@ class tx_savlibrary_defaultViewers {
                   $value = $config['value'];                
                 }              
                 $arrValues[] = $value;
-              } elseif (preg_match('/ (as|AS) ' . $field .'/', $extPOSTVars['additionalFields'][0])) {
+              } elseif (preg_match('/ (as|AS) ' . $field . '/', $extPOSTVars['additionalFields'][0])) {
                 $arrValues[] = stripslashes($row[$field]);
               }
             }
@@ -1514,7 +1594,7 @@ class tx_savlibrary_defaultViewers {
 	 * @param	string		Quote-character to wrap around the values.
 	 * @return	string		A single line of CSV
 	 */
-	protected function csvValues($row,$delim=',',$quote='"')	{
+	protected function csvValues($row, $delim=',', $quote='"')	{
 
 		reset($row);
 		$out = array();

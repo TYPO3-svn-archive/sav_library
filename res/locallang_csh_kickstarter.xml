@@ -370,6 +370,8 @@
         Optional attributes can be added:
         . updateForm = 1; makes it possible to open an "update" view instead of the "Show single" view.
         . inputForm = 1; makes it possible to open an "Input form" view instead of the "Show single" view.
+        . folderTab = string; (string is the folder name, if the extension uses serveral folders).
+        . page = string; (same as folderTab but deprecated).
 
         &lt;b&gt;func = makeLink;&lt;/b&gt;
         This function generates an internal link (typolink).
@@ -387,7 +389,8 @@
         . pageId = integer; (integer is the page id where the extension is the content element).
         . contentId = integer; (integer is the content id of the extension).
         Optional attributes can be added:
-        . page = string; (string is the folder name, if the extension uses serveral folders).
+        . folderTab = string; (string is the folder name, if the extension uses serveral folders).
+        . page = string; (same as folderTab but deprecated).
         . setUid = this; The uid of the record to open, is given by the value of the field.
         . restrictLinkTo = ###usergroup=group_name###; the link will be displayed if the user belongs to the group_name.
         . restrictLinkTo = ###usergroup!=group_name###; the link will be displayed if the user does not belong to the group_name.
@@ -1111,7 +1114,9 @@
         Des attributs optionnels peuvent être ajoutés :
         . updateForm = 1; permet d'ouvrir une vue de type "update" à la place de la vue de type "Show single".
         . inputForm = 1; permet d'ouvrir une vue de type "Input form" à la place de la vue de type "Show single".
-     
+        . folderTab = string; (La chaîne est le nom d'un "folder" si l'extension utilise plusieurs "folders").
+        . page = string; (idem folderTab mais obsolète).
+        
         &lt;b&gt;func = makeLink;&lt;/b&gt;
         Cette fonction engendre un lien interne au sens typolink.
         Des attributs optionnels peuvent être ajoutés :
@@ -1128,7 +1133,8 @@
         . pageId = integer; (l'entier est l'id de la page où l'extension est l'élément de contenu);
         . contentId = integer; (l'entier est l'id de l'extension, c'est-à-dire son id en tant qu'élément de contenu).
         Des attributs optionnels peuvent être ajoutés :
-        . page = string; (La chaîne est le nom d'un "folder" si l'extension utilise plusieurs "folders").
+        . folderTab = string; (La chaîne est le nom d'un "folder" si l'extension utilise plusieurs "folders").
+        . page = string; (idem folderTab mais obsolète).
         . setUid = this; (L'uid de l'enregistrement à ouvrir est donné par la valeur du champ).
         . restrictLinkTo = ###usergroup=group_name###; Le lien sera affiché si l'utilisateur appartient au groupe "group_name".
         . restrictLinkTo = ###usergroup!=group_name###; Lelien sera affiché si l'utilisateur n'appartient pas au groupe "group_name".

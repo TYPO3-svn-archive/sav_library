@@ -97,7 +97,7 @@ if (!function_exists('user_helpIcon_savlibrary')) {
   }
 }
 
-// Adding context sensitive help (CSH)
+// Add context sensitive help (CSH)
 t3lib_extMgm::addLLrefForTCAdescr('sav_library','EXT:sav_library/res/locallang_csh_kickstarter.xml');
 if (t3lib_div::int_from_ver(TYPO3_version) < 4002000) {
   t3lib_extMgm::addLLrefForTCAdescr('sav_library','EXT:sav_library/res/locallang_csh_flexform.xml');
@@ -125,4 +125,12 @@ $TCA["tx_savlibrary_export_configuration"] = array (
 		"fe_admin_fieldList" => "hidden, fe_group, name, cid, configuration",
 	)
 );
+
+// Add a new function to the extension manager
+	t3lib_extMgm::insertModuleFunction(
+		'tools_em',
+		'tx_savlibrary_modfunc1',
+		t3lib_extMgm::extPath($_EXTKEY) . 'modfunc1/class.tx_savlibrary_modfunc1.php',
+		'LLL:EXT:sav_library/modfunc1/locallang.xml:moduleFunction.tx_savlibrary_modfunc1'
+	);
 ?>
