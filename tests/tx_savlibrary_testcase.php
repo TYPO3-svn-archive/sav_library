@@ -45,8 +45,10 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 
     // Create the sav_library object
     $this->fixture = new tx_savlibrary();
-    $this->fixture->extObj = &$GLOBALS['TSFE'];
+    $this->fixture->extObj = $this->initExt();
     $this->fixture->xmlToSavlibrayConfig($this->fixture->extObj->cObj->fileResource('EXT:sav_library/res/sav_library.xml'));
+    $this->fixture->queriers = t3lib_div::makeInstance('tx_savlibrary_defaultQueriers');
+    $this->fixture->queriers->initVars($this->fixture);
 
   }
 
@@ -55,16 +57,84 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 		// insures that test database always is dropped
 		// even when testcases fails
 		$this->dropDatabase();
-
 	}
 
+   /***************************************************************/
+   /* Form methods                                                */
+   /***************************************************************/
 
+  public function test_getFunc() {
 
+    // Check String Input
+    $config = array(
+      'type' => 'input',
+    );
+    $this->assertEquals('viewStringInput', $this->fixture->getFunc($config));
+
+    // Check String Input in edit mode
+    $config = array(
+      'type' => 'input',
+      'edit' => 1,
+    );
+    $this->assertEquals('viewStringInputEditMode', $this->fixture->getFunc($config));
+
+    // Check password
+    $config = array(
+      'type' => 'input',
+      'eval' => 'password',
+    );
+    $this->assertEquals('viewStringPassword', $this->fixture->getFunc($config));
+
+    // check file
+    $config = array(
+      'type' => 'group',
+      'internal_type' => 'file',
+    );
+    $this->assertEquals('viewFile', $this->fixture->getFunc($config));
+
+    // check global selector
+    $config = array(
+      'type' => 'select',
+      'foreign_table' => 'test',
+    );
+    $this->assertEquals('viewDbRelationSelectorGlobal', $this->fixture->getFunc($config));
+  }
+
+  public function test_getValue(){
+  
+    // Get the content of the fe_users table
+    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+      '*, substring_index(name, \' \', 1) as firstName',
+      'fe_users',
+      ''
+    );
+		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
+			$data[] = $row;
+		}
+    $GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+    // Get the name of the first user (Valid User) with only the field name
+    $this->assertEquals('Valid User', $this->fixture->getValue('fe_users', 'name', $data[0]));
+
+    // Get the name of the first user (Valid User) with the full field name
+    $this->assertEquals('Valid User', $this->fixture->getValue('fe_users', 'fe_users.name', $data[0]));
+
+    // Get the first name (case of an alias)
+    $this->assertEquals('Valid', $this->fixture->getValue('', 'firstName', $data[0]));
+    
+    // Return void string if data is not an array
+    $data = '';
+    $this->assertEquals('', $this->fixture->getValue('', 'firstName', $data));
+  }
+  
+	/***************************************************************/
+	/* Admin methods                                               */
+	/***************************************************************/
+	
   public function test_userIsAllowedToExportData() {
-
-    // Assert true if the user is allowed to export data for anextension
+    // Assert true if the user is allowed to export data for an extension
     // Set a valid extension
-    $this->fixture->extObj->extKey = 'validExt';
+    $this->fixture->setExtKey('validExt');
     // set a valid user
     $this->userAuth('validUser', 'test');
 
@@ -72,7 +142,7 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 
     // Assert false if the user is not allowed to export data for an extension
     // Set another extension
-    $this->fixture->extObj->extKey = 'unvalidExt';
+    $this->fixture->setExtKey('unvalidExt');
 
     $this->assertFalse($this->fixture->userIsAllowedToExportData());
 
@@ -80,12 +150,11 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // set an unvalid user
     $this->userAuth('unvalidUser', 'test');
 
-    $this->fixture->extObj->extKey = 'validExt';
+    $this->fixture->setExtKey('validExt');
 
     $this->assertFalse($this->fixture->userIsAllowedToExportData());
-    
   }
-
+  
   public function test_inputIsAllowedInForm() {
     // Assert true if there is allowed groups and the user belongs to it and inputMode is true
     $this->fixture->inputMode = true;
@@ -125,7 +194,6 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
   }
   
   public function test_userBelongsToAllowedGroup() {
-
     // Assert true if the user belongs to a valid group
     $this->fixture->conf['allowedGroups'] = 1;
     $this->userAuth('validUser', 'test');
@@ -139,46 +207,49 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // Assert false if there is no valid group
     $this->fixture->conf['allowedGroups'] = 0;
     $this->assertFalse($this->fixture->userBelongsToAllowedGroup());
-
   }
 
-  public function test_getFunc() {
-
-    // Check String Input
-    $config = array(
-      'type' => 'input',
-    );
-    $this->assertEquals('viewStringInput', $this->fixture->getFunc($config));
-
-    // Check String Input in edit mode
-    $config = array(
-      'type' => 'input',
-      'edit' => 1,
-    );
-    $this->assertEquals('viewStringInputEditMode', $this->fixture->getFunc($config));
-
-    // Check password
-    $config = array(
-      'type' => 'input',
-      'eval' => 'password',
-    );
-    $this->assertEquals('viewStringPassword', $this->fixture->getFunc($config));
-
-    // check file
-    $config = array(
-      'type' => 'group',
-      'internal_type' => 'file',
-    );
-    $this->assertEquals('viewFile', $this->fixture->getFunc($config));
-
-    // check global selector
-    $config = array(
-      'type' => 'select',
-      'foreign_table' => 'test',
-    );
-    $this->assertEquals('viewDbRelationSelectorGlobal', $this->fixture->getFunc($config));
+	/***************************************************************/
+	/* Language methods                                            */
+	/***************************************************************/
+	
+  public function test_getLibraryLL() {
+    $this->assertEquals('Message for tests.', $this->fixture->getLibraryLL('message.forTests'));
+    $this->assertEquals('Message for tests. Added message.', $this->fixture->getLibraryLL('message.forTests', ' Added message.'));
+    $this->assertEquals('', $this->fixture->getLibraryLL('unknown'));
   }
+  
+  public function test_getExtLL() {
+    // The extension sav_library_example1 must be loaded for this test
+    $this->loadExt('sav_library_example1');
+    $this->assertEquals('Back', $this->fixture->getExtLL('back'));
 
+    // For an unknown label, getExtLL returns a void string
+    // and errors is set to the message associated with error.missingLabel.
+    $this->assertEquals('', $this->fixture->getExtLL('unknown'));
+    $this->assertEquals($this->fixture->getLibraryLL('error.missingLabel', 'unknown'), $this->fixture->getError(0));
+
+    // For an unknown label, getExtLL returns the label if the second argument is 0
+    $this->assertEquals('unknown', $this->fixture->getExtLL('unknown', 0));
+  }
+  
+  public function test_processLocalizationTags() {
+    // The extension sav_library_example1 must be loaded for this test
+    $this->loadExt('sav_library_example1');
+    // The string is not modified if there is no tag
+    $this->assertEquals('Test without a tag', $this->fixture->processLocalizationTags('Test without a tag'));
+
+    // The tag is replaced by its definition
+    $this->assertEquals('Test without a tag : Back', $this->fixture->processLocalizationTags('Test without a tag : $$$back$$$'));
+
+    // The tag is replaced by its definition. Several tags can be used
+    $this->assertEquals('Back : Test without a tag : Back', $this->fixture->processLocalizationTags('$$$back$$$ : Test without a tag : $$$back$$$'));
+  }
+  
+  /***************************************************************/
+  /* Condition methods                                       	   */
+  /***************************************************************/
+  
   public function test_isGroupMember() {
 
     // Assert true with an user with a valid group

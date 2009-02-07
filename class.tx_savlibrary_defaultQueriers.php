@@ -1113,7 +1113,8 @@ class tx_savlibrary_defaultQueriers {
       );
       $mA = array();
       foreach ($ta['REGIONS']['items'] as $item) {
-        $mA['###' . $item['MARKERS']['field'] . '###'] = $item['MARKERS'][$item['MARKERS']['field']];
+        $mA['###' . $item['MARKERS']['field'] . '###'] =
+          $item['MARKERS'][$item['MARKERS']['field']];
       }
      
       $item = array();
@@ -1140,7 +1141,11 @@ class tx_savlibrary_defaultQueriers {
 		    $value = current($valueField);
         // process special type
         if ($configTable[$keyField]['type'] == 'input' && ($configTable[$keyField]['eval'] == 'date' || $configTable[$keyField]['eval'] == 'datetime')) {
-          $value = $this->savlibrary->date2timestamp($value , $configTable[$keyField], $errorDate);        
+          $value = $this->savlibrary->date2timestamp(
+            $value ,
+            $configTable[$keyField],
+            $errorDate
+          );
         }         
         $dataset[$keyField] = $value;
       }   
@@ -1186,7 +1191,8 @@ class tx_savlibrary_defaultQueriers {
           $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
           $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
           if ($this->savlibrary->rowItemFromButton) {
-            $query['addWhere'] = $configTable[$keyField]['table'] . '.uid=' . intval($this->savlibrary->rowItemFromButton);
+            $query['addWhere'] = $configTable[$keyField]['table'] . '.uid=' .
+              intval($this->savlibrary->rowItemFromButton);
           }
           $temp = $this->$func($query, $this->savlibrary->uid);
           $dataset = current($temp);  
@@ -1568,9 +1574,7 @@ class tx_savlibrary_defaultQueriers {
     if ($config['mailcc']) {
       $headers .= 'Cc: ' . $config['mailcc'] . "\r\n";
     } 
-debug($mailSubject);
-debug($mailMessage);
-return;
+
     if (!ini_get('safe_mode')) {
 			// If safe mode is on, the fifth parameter to mail is not allowed,
       // so the fix wont work on unix with safe_mode=On
@@ -1943,19 +1947,6 @@ return;
             ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
           
           // Check if a link is defined
-/*          $view = $this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
-          if (is_array($view)) {
-        		if (is_numeric(key($view))) {
-        		  $page = 0;
-        		} else {
-              if ($this->savlibrary->page) {
-                $page = $this->savlibrary->page;
-              } else {
-                $page = key($view);
-              }
-            }
-          }*/
-//          $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$page]['fields'][$tableName . '.' . $field]['config']['setextendlink'];
           $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$this->savlibrary->folderTab]['fields'][$this->savlibrary->cryptTag($tableName . '.' . $field)]['config']['setextendlink'];
           if ($extendLink) {
             $alias2 = $this->buidAliasTable($extendLink, $tableArray, $this->aliasTable);

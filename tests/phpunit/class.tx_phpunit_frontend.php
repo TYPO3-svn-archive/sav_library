@@ -23,6 +23,7 @@
 ***************************************************************/
 
 require_once(PATH_tslib . 'class.tslib_fe.php');
+require_once(PATH_tslib . 'class.tslib_pibase.php');
 require_once(PATH_tslib . 'class.tslib_content.php');
 require_once(PATH_t3lib. 'class.t3lib_timetrack.php');
 
@@ -67,6 +68,7 @@ class tx_phpunit_frontend extends tx_phpunit_database_testcase {
 
     chdir(PATH_site);
     $temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
+
     $GLOBALS['TSFE'] = new $temp_TSFEclassName(
    		$GLOBALS['TYPO3_CONF_VARS'],
   		t3lib_div::_GP('id'),
@@ -79,8 +81,23 @@ class tx_phpunit_frontend extends tx_phpunit_database_testcase {
   	);
   	$GLOBALS['TSFE']->newCObj();
   	$GLOBALS['TSFE']->initTemplate();
-	  $GLOBALS['TSFE']->tmpl->init();
-	  }
+  	$GLOBALS['TSFE']->config['config'] = array();
+  	$GLOBALS['TSFE']->initLLvars();
+	}
+
+  protected function initExt() {
+    $piObj = t3lib_div::makeInstance('tslib_pibase');
+    $piObj->cObj = t3lib_div::makeInstance('tslib_cObj');
+    return $piObj;
+  }
+  
+  
+  protected function loadExt($extKey) {
+    $this->fixture->extObj->extKey = $extKey;
+    $this->fixture->extObj->prefixId = 'tx' . str_replace('_', '', $extKey) . '_pi1';
+    $this->fixture->extObj->scriptRelPath = 'pi1/class.' . $this->fixture->extObj->prefixId . '.php';
+    $this->fixture->extObj->pi_loadLL();
+  }
 }
 
 ?>
