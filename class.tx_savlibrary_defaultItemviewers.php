@@ -226,7 +226,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewCheckbox(&$config) {
-//debug($config,'viewCheckbox');
   
     $htmlArray = array();
     
@@ -299,7 +298,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewCheckboxEditMode(&$config) {
-//debug($config,'viewCheckboxEditMode');
   
     $htmlArray = array();
     
@@ -450,7 +448,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewRadio(&$config) {
-//debug($config,'viewRadio');
   
     $htmlArray = array();
     
@@ -474,7 +471,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewRadioEditMode(&$config) {
-//debug($config,'viewRadioEditMode');
   
     $htmlArray = array();
     
@@ -556,7 +552,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewTextAreaEditMode(&$config) {
-//debug($config,'viewTextAreaEditMode');
   
     $htmlArray = array();
     
@@ -564,7 +559,8 @@ class tx_savlibrary_defaultItemviewers {
 
 			if(!$this->RTEObj) {
         $this->RTEObj = t3lib_div::makeInstance('tx_rtehtmlarea_pi2');
-        $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= $this->additionalJS_initial;       
+        $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .=
+          $this->additionalJS_initial;
       }
 			if($this->RTEObj->isAvailable()) {
 				$this->RTEcounter++;
@@ -638,7 +634,8 @@ class tx_savlibrary_defaultItemviewers {
 
 		    $htmlArray[] = '</script>';
 		    if (!$this->RTEinit) {
-          $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= $this->additionalJS_initial;  
+          $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .=
+            $this->additionalJS_initial;
           $this->RTEinit = 1;   
         }
 
@@ -687,8 +684,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	   
   public function viewLink(&$config){
-//debug($config,'viewLink');
-  
+
     $htmlArray = array();
     
     if ($config['generatertf'] && $config['value']) {
@@ -722,7 +718,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewLinkEditMode(&$config){
-//debug($config,'viewLinkEdit');
   
     $htmlArray = array();
     
@@ -785,7 +780,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewDateTime(&$config){
-//debug($config,'viewDateTime');
   
     $htmlArray = array();
     
@@ -810,7 +804,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDateTimeEditMode(&$config){
-//debug($config,'viewDateTimeEdit');
 		
 		$out = tx_savdateselectlib::getInputButton(
       $config['elementControlName'],
@@ -838,7 +831,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewDate(&$config){
-//debug($config,'viewDate');
   
     $htmlArray = array();
     
@@ -863,7 +855,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewDateEditMode(&$config){
-//debug($config,'viewDateEdit');
   
     $out = tx_savdateselectlib::getInputButton(
       $config['elementControlName'],
@@ -891,7 +882,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewFile(&$config){
-//debug($config,'viewFile');
   
     $htmlArray = array();
     
@@ -1001,7 +991,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewFileEditMode(&$config){
-//debug($config,'viewFileEditMode');
   
     $htmlArray = array();
     
@@ -1058,7 +1047,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewSchedule(&$config){
-//debug($config,'viewSchedule');
   
     $htmlArray = array();
       
@@ -1175,8 +1163,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewSelectorbox(&$config){
-//debug($config,'viewSelectorbox');
-  
+
     $htmlArray = array();
 
     // find the selected item
@@ -1207,7 +1194,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewSelectorboxEditMode(&$config){
-//debug($config,'viewSelectorboxEditMode');
   
     $htmlArray = array();
     
@@ -1270,8 +1256,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDbRelationSingleSelector(&$config){
-//debug($config,'viewDbRelationSingleSelector');
-  
+
     $htmlArray = array();
     
     // Search for the key
@@ -1331,7 +1316,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	    
   public function viewDbRelationSingleSelectorEditMode(&$config) {
-//debug($config,'viewDbRelationSingleSelectorEditMode');
 
     $htmlArray = array();
     
@@ -1393,7 +1377,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDbRelationSingleSelectorMultiple(&$config) {
-//debug($config,'viewDbRelationSingleSelectorMultiple');
   
     $htmlArray = array();
     
@@ -1525,7 +1508,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewDbRelationSingleSelectorMultipleEditMode(&$config) {
-//debug($config,'viewDbRelationSingleSelectorMultipleEditMode');
   
     $htmlArray = array();
 
@@ -1599,7 +1581,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  	
  	public function viewDbRelationDoubleWindowSelectorEditMode(&$config) {
-//debug($config,'viewDbRelationDoubleWindowSelectorEditMode');
   
     $htmlArray = array();
     
@@ -1716,7 +1697,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDbRelationSelectorGlobal(&$config) {
-//debug($config,'viewDbRelationSelectorGlobal');
   
     $htmlArray = array();
     
@@ -1900,12 +1880,19 @@ class tx_savlibrary_defaultItemviewers {
 
 		if (!isset($config['items'])) {
 		  if($config['addedit'] && $config['addedit'] && $config['singlewindow'] && !$config['MM'] && $config['maxitems']>1) {
-        $config['items'][0] = array('uid'=>0, 'label'=>'', 'selected' => $selected[0]);
+        $config['items'][0] = array(
+          'uid'=>0,
+          'label'=>'',
+          'selected' => $selected[0]
+        );
       } else {
         $config['items'] = array();
       }     
     } else {
-      $config['items'][0] = array('uid'=>0,'label'=>'');
+      $config['items'][0] = array(
+        'uid'=>0,
+        'label'=>''
+      );
     }
     $items = $config['items'];
     
@@ -2086,7 +2073,6 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewDbRelationElementBrowser(&$config) {
-//debug($config,'viewDbRelationElementBrowser','','',10);
   
     $htmlArray = array();
     
@@ -2243,7 +2229,9 @@ class tx_savlibrary_defaultItemviewers {
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
-            array($this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]),
+            array(
+              $this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]
+            ),
             $config['errors'],
             $config['edit']
           );
@@ -2284,7 +2272,9 @@ class tx_savlibrary_defaultItemviewers {
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
-            array($this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]),
+            array(
+              $this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]
+            ),
             $config['errors'],
             $config['edit']
           );
@@ -2381,7 +2371,8 @@ class tx_savlibrary_defaultItemviewers {
       $this->savlibrary->extObj->internal['res_count'] = ($nbitem/$maxSubItems) + 1;
       $this->savlibrary->extObj->internal['results_at_a_time'] = $maxSubItems;
       $this->savlibrary->extObj->internal['pagefloat'] = 'center';
-      $this->savlibrary->extObj->internal['showFirstLast'] = ($config['nofirstlast'] ? false : true);
+      $this->savlibrary->extObj->internal['showFirstLast'] =
+        ($config['nofirstlast'] ? false : true);
 
       // Save variables
       $prefixId = $this->savlibrary->extObj->prefixId;
@@ -2389,18 +2380,20 @@ class tx_savlibrary_defaultItemviewers {
 
       // Modify variables for the call
       $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
-      $this->savlibrary->extObj->piVars['limitSub'] = $this->savlibrary->limitSub[$config['cryptedFieldName']];
+      $this->savlibrary->extObj->piVars['limitSub'] =
+        $this->savlibrary->limitSub[$config['cryptedFieldName']];
       $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' .
         $this->savlibrary->formName . '[formAction]=browseSubForm' . '&' .
         $this->savlibrary->formName . '[uid]=' . $config['uid'] . '&' .
         $this->savlibrary->formName . '[field]=' . $config['cryptedFieldName'];
-  		$subForm['MARKERS']['browse'] = $this->savlibrary->extObj->pi_list_browseresults(
-        0,
-        '',
-        $wrapArr,
-        'limitSub',
-        false
-      );
+  		$subForm['MARKERS']['browse'] =
+        $this->savlibrary->extObj->pi_list_browseresults(
+          0,
+          '',
+          $wrapArr,
+          'limitSub',
+          false
+        );
 
   		// Replace Next and Previous messages by arrows
       $subForm['MARKERS']['browse'] = str_replace(
@@ -2515,7 +2508,9 @@ class tx_savlibrary_defaultItemviewers {
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
-            array($this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]),
+            array(
+              $this->savlibrary->cryptTag('0') => $config[$this->savlibrary->cryptTag('0')]
+            ),
             $config['errors'],
             $config['edit']
           );

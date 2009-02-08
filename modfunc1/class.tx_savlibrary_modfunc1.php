@@ -59,6 +59,14 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
           $wizardForm['savext'][1]['xmlConfiguration'] = ($xmlArray[$extKey] ? 1 : 0);
           t3lib_div::writeFile(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat', serialize($wizardForm));
 
+          // reset the files
+          unset($kickstarter->ext_localconf);
+          unset($kickstarter->ext_tables);
+          unset($kickstarter->ext_tca);
+          unset($kickstarter->ext_tables_sql);
+          unset($kickstarter->ext_locallang);
+          unset($kickstarter->ext_locallang_db);
+
           // Update the extension
           $wizardFormFile = t3lib_div::getURL(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat');
           $kickstarter->modData['wizArray_ser'] = base64_encode($wizardFormFile);

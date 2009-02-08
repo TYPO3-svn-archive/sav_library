@@ -352,7 +352,7 @@ class tx_savlibrary_defaultQueriers {
     $extPOSTVars = t3lib_div::_POST($this->savlibrary->formName); 
 
     // Buid the configuration table
-    $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][0]['fields'];
+    $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
     $configTable = $this->buildConfigurationTable($viewConfiguration);
     
     // Verify the required fields
@@ -786,7 +786,7 @@ class tx_savlibrary_defaultQueriers {
                 $path_parts = pathinfo($value);
 
                 if (($config['allowed'] && strpos($config['allowed'], $path_parts['extension']) === false)
-                  || (!$config['allowed'] && (strpos($config['disallowed'], $path_parts['extension'])===true))     
+                  || (!$config['allowed'] && (strpos($config['disallowed'], $path_parts['extension']) === true))
                   ) {
 						      $error = true;
 						      $errorForm[$key][$k] = 'error.extensionNotAllowed';
@@ -981,9 +981,6 @@ class tx_savlibrary_defaultQueriers {
 			return $errorForm;
 		}
 
-//debug($regularRow,'$regularRow');
-//debug($special, '$special');
-
 		// Process the regular rows. Explode the key to get the table and field names
 		$vars = array();
 		foreach($regularRow as $key => $value) {
@@ -1116,12 +1113,12 @@ class tx_savlibrary_defaultQueriers {
         $mA['###' . $item['MARKERS']['field'] . '###'] =
           $item['MARKERS'][$item['MARKERS']['field']];
       }
-     
+
       $item = array();
       $mA['###ITEMS_AUTO###'] = '';
 		  foreach($regularRow as $keyField => $valueField) {
 		    $fieldName = $configTable[$keyField]['field'];
-        $item['###mailalways_field###'] = $keyField;
+        $item['###mailalways_field###'] = $configTable[$keyField]['fullFieldName'];
         $item['###mailalways_value###'] = $mA['###' . $fieldName . '###'];
         $mA['###ITEMS_AUTO###'] = $mA['###ITEMS_AUTO###'] .
           $this->cObj->substituteMarkerArrayCached(
@@ -1147,17 +1144,18 @@ class tx_savlibrary_defaultQueriers {
             $errorDate
           );
         }         
-        $dataset[$keyField] = $value;
+        $dataset[$configTable[$keyField]['fullFieldName']] = $value;
       }   
 
       $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']], $errors, 0);
       foreach ($ta['REGIONS']['items'] as $item) {
-        if (array_key_exists($item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'], $newPOSTVars)) {
-          $keyField = $item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'];
-          if($dataset[$keyField] && $dataset[$keyField] != $configTable[$keyField]['default']){
-            $x['###mailalways_field###'] = $item['MARKERS'][$item['MARKERS']['field'] . '_FieldName'];
+        if (array_key_exists($item['MARKERS'][$item['MARKERS']['field'] . '_cryptedFieldName'], $newPOSTVars)) {
+          $keyCryptedField = $item['MARKERS'][$item['MARKERS']['field'] . '_cryptedFieldName'];
+          $keyFullField = $item['MARKERS'][$item['MARKERS']['field'] . '_fullFieldName'];
+          if($dataset[$keyFullField] && $dataset[$keyFullField] != $configTable[$keyCryptedField]['default']) {
+            $x['###mailalways_field###'] = $keyFullField;
             $x['###mailalways_value###'] = $item['MARKERS'][$item['MARKERS']['field']];
-            $temp[$x['###mailalways_field###']] =
+            $temp[$keyCryptedField] =
               $this->cObj->substituteMarkerArrayCached(
                 $configMailAlways['mailalwaysitemtmpl'],
                 $x,

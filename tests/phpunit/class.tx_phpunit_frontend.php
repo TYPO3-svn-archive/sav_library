@@ -94,6 +94,7 @@ class tx_phpunit_frontend extends tx_phpunit_database_testcase {
   
   protected function loadExt($extKey) {
     $this->fixture->extObj->extKey = $extKey;
+    $this->fixture->setExtKey($extKey);
     $this->fixture->extObj->prefixId = 'tx' . str_replace('_', '', $extKey) . '_pi1';
     $this->fixture->extObj->scriptRelPath = 'pi1/class.' . $this->fixture->extObj->prefixId . '.php';
     $this->fixture->extObj->pi_loadLL();

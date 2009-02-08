@@ -74,7 +74,11 @@ class tx_savlibrary_defaultViewers {
 
     // If print icon is associated with a related view, call it
     if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
-      return $this->printForm_defaultViewer($dataset, $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']], $errors);
+      return $this->printForm_defaultViewer(
+        $dataset,
+        $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']],
+        $errors
+      );
     }
 
     $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']];
@@ -121,7 +125,10 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label = $this->savlibrary->getLL_db(
+              'LLL:EXT:' . $this->extKey.'/locallang_db.xml:' .
+              $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']
+            );
             $label .= (
               $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
               '<span class="required">*</span>' :
@@ -305,7 +312,8 @@ class tx_savlibrary_defaultViewers {
 		);   
 
     $this->savlibrary->extObj->internal['res_count'] = $nbitem;
-    $this->savlibrary->extObj->internal['results_at_a_time'] = $this->savlibrary->conf['maxItems'];
+    $this->savlibrary->extObj->internal['results_at_a_time'] =
+      $this->savlibrary->conf['maxItems'];
     $this->savlibrary->extObj->internal['pagefloat'] = 'center';
     $this->savlibrary->extObj->internal['showFirstLast'] = true;
    
@@ -316,8 +324,10 @@ class tx_savlibrary_defaultViewers {
     // Modify variables for the call
     $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
     $this->savlibrary->extObj->piVars['limit'] = $this->savlibrary->limit;
-    $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' . $this->savlibrary->formName . '[formAction]=browse';
-		$ta['MARKERS']['browse'] = $this->savlibrary->extObj->pi_list_browseresults(0, '', $wrapArr, 'limit', false);
+    $this->savlibrary->extObj->pi_moreParams =
+      '&sav_library=1&' . $this->savlibrary->formName . '[formAction]=browse';
+		$ta['MARKERS']['browse'] =
+      $this->savlibrary->extObj->pi_list_browseresults(0, '', $wrapArr, 'limit', false);
 
 		// Replace Next and Previous messages by arrows
     $ta['MARKERS']['browse'] = str_replace(
@@ -391,27 +401,49 @@ class tx_savlibrary_defaultViewers {
 
     // If print icon is associated with a related view, call it
     if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
-      return $this->printForm_defaultViewer($dataset, $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']], $errors);
+      return $this->printForm_defaultViewer(
+        $dataset,
+        $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']],
+        $errors
+      );
     }
     
-		$ta = $this->savlibrary->generateFormTa('items', $dataset[0], $fields, $errors, 0);
+		$ta = $this->savlibrary->generateFormTa(
+      'items',
+      $dataset[0],
+      $fields,
+      $errors,
+      0
+    );
 		$ta['TYPE'] = 'showSingle';
 
     // Add the print icon
     $ta['MARKERS']['titleIconRight'] = '';
     if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['addPrintIcon']) {
-      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton($this->savlibrary->formName, $dataset[0]['uid']);   
+      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton(
+        $this->savlibrary->formName,
+        $dataset[0]['uid']
+      );
     }
    
     // Add the help icon
     if ($this->savlibrary->conf['helpPage']) {
-      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->helpButton($this->savlibrary->formName, 0);
+      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->helpButton(
+        $this->savlibrary->formName,
+        0
+      );
     }      
 
-    $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->closeButton($this->savlibrary->formName, $dataset[0]['uid']);
+    $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->closeButton(
+      $this->savlibrary->formName,
+      $dataset[0]['uid']
+    );
 
     if ($this->savlibrary->userIsAllowedToInputData() && $this->savlibrary->userIsAdmin($dataset[0])) {
-      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->inputModeButton($this->savlibrary->formName, $dataset[0]['uid']);
+      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->inputModeButton(
+        $this->savlibrary->formName,
+        $dataset[0]['uid']
+      );
     }
 		
 		return $ta;
@@ -492,7 +524,13 @@ class tx_savlibrary_defaultViewers {
   		$ta['REGIONS']['items']='';
   		foreach ($dataset as $key => $row) {
         $nbitem = $row['__nbitem__'];
-  			$x = $this->savlibrary->generateFormTa('items', $row, $fields, $errors, 0);
+  			$x = $this->savlibrary->generateFormTa(
+          'items',
+          $row,
+          $fields,
+          $errors,
+          0
+        );
 
   			// Make some processing to retrieve a simple item type			
   			$items['MARKERS'] = array();
@@ -516,7 +554,10 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->extKey . '/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label = $this->savlibrary->getLL_db(
+              'LLL:EXT:' . $this->extKey . '/locallang_db.xml:' .
+              $items['MARKERS'][$matches[1][$keyMatch] . '_fullFieldName']
+            );
             $label .= (
               $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
               '<span class="required">*</span>' :
@@ -533,7 +574,11 @@ class tx_savlibrary_defaultViewers {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
             $func = 'user_' . $valueMatch . 'Button';
             if (method_exists($this->savlibrary, $func)) {
-              $tmpl = str_replace($matches[0][$keyMatch], $this->savlibrary->$func($this->savlibrary->formName, 0), $tmpl);
+              $tmpl = str_replace(
+                $matches[0][$keyMatch],
+                $this->savlibrary->$func($this->savlibrary->formName, 0),
+                $tmpl
+              );
             }
           }
         }
@@ -542,20 +587,59 @@ class tx_savlibrary_defaultViewers {
         preg_match_all('/###field\[([^\],]+)(,?)([^\]]*)\]###/', $tmpl, $matches);
         foreach ($matches[1] as $keyMatch => $valueMatch) {
           if ($this->savlibrary->inputIsAllowedInForm()) {      
-            $checked = ($items['MARKERS'][$matches[1][$keyMatch] . '_Checked'] ? 'checked ' : '');
+            $checked = (
+              $items['MARKERS'][$matches[1][$keyMatch] . '_Checked'] ?
+              'checked ' :
+              ''
+            );
+
             if ($items['MARKERS'][$matches[1][$keyMatch] . '_Check']) {
-              $checkbox = ($matches[2][$keyMatch] ? '<div class="updateCol4">' : '');
-              $temp = '<input class="check" type="checkbox" ' . $checked . 'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field'] . '"  value="1" />';
+              $checkbox = (
+                $matches[2][$keyMatch] ?
+                '<div class="updateCol4">' :
+                ''
+              );
+//              $temp = '<input class="check" type="checkbox" ' . $checked . 'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field'] . '"  value="1" />';
+
+              $temp = utils::htmlInputCheckboxElement(
+                array(
+                  utils::htmlAddAttribute('class', 'check'),
+                  utils::htmlAddAttributeIfNotNull('checked', $checked),
+                  utils::htmlAddAttribute('name', 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field']),
+                  utils::htmlAddAttribute('value', 1),
+                )
+              );
+
               if (!$matches[2][$keyMatch] && $items['MARKERS'][$matches[1][$keyMatch] . '_WrapChecked']) {
-                $temp = $this->savlibrary->extObj->cObj->dataWrap($temp, $items['MARKERS'][$matches[1][$keyMatch] . '_WrapChecked']);
+                $temp = $this->savlibrary->extObj->cObj->dataWrap(
+                  $temp,
+                  $items['MARKERS'][$matches[1][$keyMatch] . '_WrapChecked']
+                );
               }
               $checkbox .= $temp;
               $checkbox .= ($matches[2][$keyMatch] ? '</div>' : '');
             } else {
-              $checkbox = ($matches[2][$keyMatch] ? '<div class="updateCol4Manual">' : '');
-              $temp =  '<input class="checkManual" type="checkbox" ' . $checked.'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field'] . '"  value="1" />';
+              $checkbox = (
+                $matches[2][$keyMatch] ?
+                '<div class="updateCol4Manual">' :
+                ''
+              );
+//              $temp =  '<input class="checkManual" type="checkbox" ' . $checked.'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field'] . '"  value="1" />';
+
+              $temp = utils::htmlInputCheckboxElement(
+                array(
+                  utils::htmlAddAttribute('class', 'checkManual'),
+                  utils::htmlAddAttributeIfNotNull('checked', $checked),
+                  utils::htmlAddAttribute('name', 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field']),
+                  utils::htmlAddAttribute('value', 1),
+                )
+              );
+
               if (!$matches[2][$keyMatch] && $items['MARKERS'][$matches[1][$keyMatch] . '_WrapNotChecked']) {
-                $temp = $this->savlibrary->extObj->cObj->dataWrap($temp, $items['MARKERS'][$matches[1][$keyMatch] . '_WrapNotChecked']);
+                $temp = $this->savlibrary->extObj->cObj->dataWrap(
+                  $temp,
+                  $items['MARKERS'][$matches[1][$keyMatch] . '_WrapNotChecked']
+                );
               }
               $checkbox .= $temp;
               $checkbox .= ($matches[2][$keyMatch] ? '</div>' : '');
@@ -568,13 +652,20 @@ class tx_savlibrary_defaultViewers {
           if ($matches[2][$keyMatch]) {
             $tmpl = str_replace(
               $matches[0][$keyMatch],
-              '<div class="updateCol1">' . $matches[3][$keyMatch] . '</div><div class="updateCol2">###' . $matches[1][$keyMatch] . '###</div><div class="updateCol3">###' . $matches[1][$keyMatch] . '_Edit###</div>' . $checkbox,
+              '<div class="updateCol1">' . $matches[3][$keyMatch] . '</div>' .
+                '<div class="updateCol2">###' . $matches[1][$keyMatch] . '###</div>' .
+                '<div class="updateCol3">###' . $matches[1][$keyMatch] . '_Edit###</div>' .
+                $checkbox,
               $tmpl
             );
           } else {
             $tmpl = str_replace(
               $matches[0][$keyMatch],
-              ($items['MARKERS'][$matches[1][$keyMatch] . '_Edit'] ? '###' . $matches[1][$keyMatch] . '_Edit###' : '###' . $matches[1][$keyMatch] . '###') . $checkbox,
+              (
+                $items['MARKERS'][$matches[1][$keyMatch] . '_Edit'] ?
+                '###' . $matches[1][$keyMatch] . '_Edit###' :
+                '###' . $matches[1][$keyMatch] . '###'
+              ) . $checkbox,
               $tmpl
             );
           }
@@ -585,7 +676,9 @@ class tx_savlibrary_defaultViewers {
         foreach ($matches[1] as $keyMatch => $valueMatch) {
           $tmpl = str_replace(
             $matches[0][$keyMatch],
-            '<div class="updateCol1">' . $matches[2][$keyMatch] . '</div><div class="updateCol2">&nbsp;</div><div class="updateCol3">###' . $matches[1][$keyMatch] . '_New###</div>',
+            '<div class="updateCol1">' . $matches[2][$keyMatch] . '</div>' .
+              '<div class="updateCol2">&nbsp;</div>' .
+              '<div class="updateCol3">###' . $matches[1][$keyMatch] . '_New###</div>',
             $tmpl
           );
         } 
@@ -674,7 +767,8 @@ class tx_savlibrary_defaultViewers {
 
 	public function printForm_defaultViewer(&$dataset, &$fields, $errors='') {
 
-    $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['altForm']];
+    $showAllTemplate =
+      $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['altForm']];
     
 		// Prepare the template
 		$tmpl = '<!-- ###item### begin -->'.
@@ -689,7 +783,13 @@ class tx_savlibrary_defaultViewers {
   		
   		foreach ($dataset as $key => $row) {
         $nbitem = $row['__nbitem__'];
-  			$x = $this->savlibrary->generateFormTa('items', $row, $fields, $errors, 0);
+  			$x = $this->savlibrary->generateFormTa(
+          'items',
+          $row,
+          $fields,
+          $errors,
+          0
+        );
 
   			// Make some processing to retrieve a simple item type			
   			$items['MARKERS'] = array();
@@ -716,7 +816,10 @@ class tx_savlibrary_defaultViewers {
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
-            $label = $this->savlibrary->getLL_db('LLL:EXT:' . $this->extKey.'/locallang_db.xml:' . $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']);
+            $label = $this->savlibrary->getLL_db(
+              'LLL:EXT:' . $this->extKey.'/locallang_db.xml:' .
+              $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']
+            );
             $label .= (
               $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
               '<span class="required">*</span>' :
@@ -735,7 +838,8 @@ class tx_savlibrary_defaultViewers {
           if (!$cut[$valueMatch]) {
             $tmpl = str_replace(
               $matches[0][$keyMatch],
-              '<div class="printCol1">' . $matches[2][$keyMatch] . '</div><div class="printCol2">###' . $matches[1][$keyMatch] . '###</div>',
+              '<div class="printCol1">' . $matches[2][$keyMatch] . '</div>' .
+                '<div class="printCol2">###' . $matches[1][$keyMatch] . '###</div>',
               $tmpl
             );
           }
@@ -753,7 +857,12 @@ class tx_savlibrary_defaultViewers {
         foreach ($matches[1] as $match) {
           $mA['###'.$match.'###'] = $row[$match];
         }   
-        $value = $this->cObj->substituteMarkerArrayCached($value, $mA, array(), array() );
+        $value = $this->cObj->substituteMarkerArrayCached(
+          $value,
+          $mA,
+          array(),
+          array()
+        );
         
         // add the page break cutter        
   			$ta['REGIONS']['items'][$key]['CUTTERS']['CUT_break'] = 1;
@@ -941,7 +1050,8 @@ class tx_savlibrary_defaultViewers {
             unset($fields[$key]);
           }
         }
-        $query['fields'] = $query['tableLocal'] . '.uid,' . implode(',', $fields);
+        $query['fields'] = $query['tableLocal'] . '.uid,' .
+          implode(',', $fields);
       }
       $query['fields'] = (
         $extPOSTVars['includeAllFields'][0] ?
@@ -949,8 +1059,18 @@ class tx_savlibrary_defaultViewers {
         $query['fields']
       );
       $query['addTables']  = $extPOSTVars['additionalTables'][0];
-      $query['aliases'] = trim($extPOSTVars['additionalFields'][0] ? ($query['aliases'] ? $query['aliases'] . ',' . $extPOSTVars['additionalFields'][0] : $extPOSTVars['additionalFields'][0]) : $query['aliases']);
-      $query['where'] = $this->savlibrary->queriers->processWhereClause($extPOSTVars['where'][0]);  
+      $query['aliases'] = trim(
+        $extPOSTVars['additionalFields'][0] ?
+        (
+          $query['aliases'] ?
+          $query['aliases'] . ',' . $extPOSTVars['additionalFields'][0] :
+          $extPOSTVars['additionalFields'][0]
+          ) :
+        $query['aliases']
+      );
+      $query['where'] = $this->savlibrary->queriers->processWhereClause(
+        $extPOSTVars['where'][0]
+      );
       $query['order'] = (
         $extPOSTVars['order'][0] ?
         $extPOSTVars['order'][0] :
@@ -961,10 +1081,19 @@ class tx_savlibrary_defaultViewers {
         ($extPOSTVars['groupBy'][0] ? $extPOSTVars['groupBy'][0] : '' ) :
         $query['group']
       );
-      $exportOK = $exportOK && !$extPOSTVars['includeAllFields'][0] &&
-        (($extPOSTVars['additionalTablesValidated'][0] && $extPOSTVars['additionalTables'][0]) || !$extPOSTVars['additionalTables'][0]) ;
+      $exportOK =
+        $exportOK &&
+        !$extPOSTVars['includeAllFields'][0] &&
+        (
+          (
+            $extPOSTVars['additionalTablesValidated'][0] &&
+            $extPOSTVars['additionalTables'][0]
+        ) ||
+        !$extPOSTVars['additionalTables'][0]
+        );
       $extPOSTVars['additionalTablesValidated'][0] = (
-        $extPOSTVars['additionalTablesValidated'][0] && $extPOSTVars['additionalTables'][0]
+        $extPOSTVars['additionalTablesValidated'][0] &&
+        $extPOSTVars['additionalTables'][0]
       );
     }
     $res = $this->savlibrary->queriers->$func($query, $this->savlibrary->uid);
@@ -1100,7 +1229,9 @@ class tx_savlibrary_defaultViewers {
       $config = array(
         '_field' => 'error',
         'uid' => 0,
-        'value' => '<b>ERROR : </b><br />'.$res['ERROR'].'<br /><br /><b>QUERY : </b><br />'.$res['lastBuiltQuery'],
+        'value' => '<b>ERROR : </b><br />' .
+          $res['ERROR'] . '<br /><br /><b>QUERY : </b><br />' .
+          $res['lastBuiltQuery'],
       );
 
       $key++; 
@@ -1156,14 +1287,21 @@ class tx_savlibrary_defaultViewers {
       // Process the fields
     if (is_array($this->savlibrary->queriers->sqlFieldsExport)) {
       foreach ($this->savlibrary->queriers->sqlFieldsExport as $key=>$sqlField) {
-        $field = ($sqlField->table ? $sqlField->table . '.' . $sqlField->name : $sqlField->name);
+        $field = (
+          $sqlField->table ?
+          $sqlField->table . '.' . $sqlField->name :
+          $sqlField->name
+        );
 
         // skip the field if not selected and showSelectedFieldsOnly is set
         if (!$extPOSTVars['fields'][0][$field] && $showSelectedFieldsOnly) {
           continue;
         }
         $config['items'][$field][0] = $field;
-        $config['items'][$field]['addattributes'] = 'ondblclick="' . $this->savlibrary->formName . '[\'' . $this->savlibrary->formName . '[where][0]\'].value+=\'' . stripslashes($config['items'][$field][0]) . '\'"';
+        $config['items'][$field]['addattributes'] = 'ondblclick="' .
+          $this->savlibrary->formName . '[\'' . $this->savlibrary->formName .
+          '[where][0]\'].value+=\'' .
+          stripslashes($config['items'][$field][0]) . '\'"';
         if ($extPOSTVars) {
           $config['items'][$field][1] = $extPOSTVars['fields'][0][$field];
         }
@@ -1176,7 +1314,11 @@ class tx_savlibrary_defaultViewers {
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
     $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = (($nbRows || !$exportOK) ? $this->savlibrary->itemviewers->viewCheckboxEditMode($config) : $this->savlibrary->getLibraryLL('warning.noRecord'));
+    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = (
+      ($nbRows || !$exportOK) ?
+      $this->savlibrary->itemviewers->viewCheckboxEditMode($config) :
+      $this->savlibrary->getLibraryLL('warning.noRecord')
+    );
     $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
     $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
     $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
@@ -1414,12 +1556,14 @@ class tx_savlibrary_defaultViewers {
 
     // Add the export icon
     if ($this->savlibrary->userIsAllowedToExportData()) {
-      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->exportokButton($this->savlibrary->formName, 0);
+      $ta['MARKERS']['titleIconRight'] .=
+      $this->savlibrary->exportokButton($this->savlibrary->formName);
     }      
     
     // Add the help icon
     if ($this->savlibrary->conf['helpPage']) {
-      $ta['MARKERS']['titleIconLeft'] .= $this->savlibrary->helpButton($this->savlibrary->formName, 0);
+      $ta['MARKERS']['titleIconLeft'] .=
+        $this->savlibrary->helpButton($this->savlibrary->formName);
     }      
 
     $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->closeButton($this->savlibrary->formName, $dataset[0]['uid']);
@@ -1481,7 +1625,11 @@ class tx_savlibrary_defaultViewers {
                 if (array_key_exists($field, $aliasFields)) {
 
                   $config = $this->savlibrary->getConfig($aliasFields[$field]);                 
-           			  $config['type'] = ($config['type'] ? $config['type'] : 'input');
+           			  $config['type'] = (
+                    $config['type'] ?
+                    $config['type'] :
+                    'input'
+                  );
        				
            				// Process the query
                   $queryReqValue = $config['reqvalue'];
@@ -1499,7 +1647,12 @@ class tx_savlibrary_defaultViewers {
                   $mA['###uid###'] = $row[$config['table'] . '.uid'];
                   $mA['###uidParent###'] = $row[$query['tableLocal'] . '.uid'];
                   $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                  $queryReqValue = $this->cObj->substituteMarkerArrayCached($queryReqValue, $mA, array(), array() );
+                  $queryReqValue = $this->cObj->substituteMarkerArrayCached(
+                    $queryReqValue,
+                    $mA,
+                    array(),
+                    array()
+                  );
 
                   // Check if the query is a SELECT query and for errors
                   if (!$this->savlibrary->isSelectQuery($queryReqValue)) {

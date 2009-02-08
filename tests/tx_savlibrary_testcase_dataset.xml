@@ -11,7 +11,9 @@
     <name>Valid User</name>
     <password>test</password>
     <usergroup ref="fe_groups#1" />
-    <TSconfig>validExt_Export = *</TSconfig>
+    <TSconfig>validExt_Export = *
+    sav_library_example1_Admin = DOE
+    </TSconfig>
   </fe_users>
   <fe_users id="2">
     <username>unvalidUser</username>
@@ -19,5 +21,40 @@
     <name>Unvalid User</name>
     <usergroup ref="fe_groups#2" />
   </fe_users>
-
+  <fe_users id="3">
+    <username>validSuperUser</username>
+    <name>Valid Super User</name>
+    <password>test</password>
+    <usergroup ref="fe_groups#1" />
+    <TSconfig>validExt_Export = *
+    sav_library_example1_Admin = *
+    </TSconfig>
+  </fe_users>
+  <fe_users id="4">
+    <username>validAdminPlusUser</username>
+    <name>Valid Admin Plus User</name>
+    <password>test</password>
+    <usergroup ref="fe_groups#1" />
+    <TSconfig>validExt_Export = *
+    sav_library_example1_Admin = DOE+
+    </TSconfig>
+  </fe_users>
+  
+  <tx_savlibraryexample1_members id="1">
+	 <cruser_id ref="fe_users#1" />
+	 <firstname>John</firstname>
+	 <lastname>DOE</lastname>
+	 <street>1, somewhere street</street>
+	 <zipcode>12345</zipcode>
+	 <city>NOWHERE</city>
+  </tx_savlibraryexample1_members>
+  <tx_savlibraryexample1_members id="2">
+	 <cruser_id ref="fe_users#2" />
+	 <firstname>John</firstname>
+	 <lastname>DOE</lastname>
+	 <street>1, somewhere street</street>
+	 <zipcode>12345</zipcode>
+	 <city>NOWHERE</city>
+  </tx_savlibraryexample1_members>
+  
 </dataset>
