@@ -23,6 +23,7 @@
 ***************************************************************/
 
 require_once(PATH_tslib . 'class.tslib_fe.php');
+
 require_once(PATH_tslib . 'class.tslib_pibase.php');
 require_once(PATH_tslib . 'class.tslib_content.php');
 require_once(PATH_t3lib. 'class.t3lib_timetrack.php');
@@ -30,9 +31,20 @@ require_once(PATH_t3lib. 'class.t3lib_timetrack.php');
 class tx_phpunit_frontend extends tx_phpunit_database_testcase {
 
     // Init the test database
-  protected function initDatabase() {
+  protected function initDatabase($importCore = true) {
     $this->createDatabase();
  		$this->useTestDatabase();
+ 		
+ 		if ($importCore) {
+   		$this->importCore();
+  		$this->importDataSet(dirname(__FILE__). '/core_dataset.xml');
+  		
+      $importList[] = 'cms';
+      if (t3lib_extMgm::isLoaded('templavoila')) {
+        $importList[] = 'templavoila';
+      }
+      $this->importExtensions($importList);
+    }
   }
   
   // Basic authentication
@@ -60,45 +72,110 @@ class tx_phpunit_frontend extends tx_phpunit_database_testcase {
     $GLOBALS['TSFE']->fe_user->user = $result[0];
     $GLOBALS['TSFE']->fe_user->loginType = 'FE';
     $GLOBALS['TSFE']->initUserGroups();
-
   }
 
   // Basic FE environment
   protected function initFE() {
 
     chdir(PATH_site);
+    $GLOBALS['TT'] = new t3lib_timeTrack;
     $temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
-
+      $GLOBALS['TYPO3_DB']->debugOutput = true;
     $GLOBALS['TSFE'] = new $temp_TSFEclassName(
    		$GLOBALS['TYPO3_CONF_VARS'],
-  		t3lib_div::_GP('id'),
-  		t3lib_div::_GP('type'),
-  		t3lib_div::_GP('no_cache'),
-  		t3lib_div::_GP('cHash'),
-  		t3lib_div::_GP('jumpurl'),
-  		t3lib_div::_GP('MP'),
-  		t3lib_div::_GP('RDCT')
+  		/* id       */ 1,
+  		/* type     */ '',
+  		/* no_cache */ 0,
+  		/* cHash    */ '',
+  		/*jumpurl   */ '',
+  		/* MP       */ '',
+  		/* RDCT     */ ''
   	);
   	$GLOBALS['TSFE']->newCObj();
   	$GLOBALS['TSFE']->initTemplate();
   	$GLOBALS['TSFE']->config['config'] = array();
   	$GLOBALS['TSFE']->initLLvars();
+
+  	$GLOBALS['TSFE']->sys_page = t3lib_div::makeInstance('t3lib_pageSelect');
+		$GLOBALS['TSFE']->setSysPageWhereClause();
+  	$GLOBALS['TSFE']->getPageAndRootline();
 	}
 
-  protected function initExt() {
+	/**
+	 * Import core tables.sql file
+	 *
+	 * @none
+	 *
+	 * @return void
+	 */
+	private function importCore() {
+		// read sql file content
+		$sqlFilename = t3lib_div::getFileAbsFileName(PATH_t3lib.'stddb/tables.sql');
+		$fileContent = t3lib_div::getUrl($sqlFilename);
+
+		// find definitions
+		$install = new t3lib_install;
+		$FDfile = $install->getFieldDefinitions_sqlContent($fileContent);
+
+		if (count($FDfile)) {
+			// find statements to query
+			$FDdatabase = $install->getFieldDefinitions_sqlContent($this->getTestDatabaseSchema());
+			$diff = $install->getDatabaseExtra($FDfile, $FDdatabase);
+			$updateStatements = $install->getUpdateSuggestions($diff);
+
+			$updateTypes = array('add', 'change', 'create_table');
+
+			foreach ($updateTypes as $updateType) {
+				if (array_key_exists($updateType, $updateStatements)) {
+					foreach ((array)$updateStatements[$updateType] as $string) {
+						$GLOBALS['TYPO3_DB']->admin_query($string);
+					}
+				}
+			}
+		}
+	}
+
+  protected function loadExt($extKey) {
     $piObj = t3lib_div::makeInstance('tslib_pibase');
     $piObj->cObj = t3lib_div::makeInstance('tslib_cObj');
+    $piObj->extKey = $extKey;
+    $piObj->prefixId = 'tx' . str_replace('_', '', $extKey) . '_pi1';
+    $piObj->scriptRelPath = 'pi1/class.' . $this->fixture->extObj->prefixId . '.php';
+    $piObj->pi_loadLL();
+    
     return $piObj;
   }
-  
-  
-  protected function loadExt($extKey) {
-    $this->fixture->extObj->extKey = $extKey;
-    $this->fixture->setExtKey($extKey);
-    $this->fixture->extObj->prefixId = 'tx' . str_replace('_', '', $extKey) . '_pi1';
-    $this->fixture->extObj->scriptRelPath = 'pi1/class.' . $this->fixture->extObj->prefixId . '.php';
-    $this->fixture->extObj->pi_loadLL();
-  }
+
+	/**
+	 * Returns test database schema dump
+	 * It overloads the private method in the class tx_phpunit_database_testcase
+	 * If this method is defined as protected, the following will be removed
+	 *
+	 * @return string
+	 */
+	protected function getTestDatabaseSchema() {
+		$db = $this->useTestDatabase();
+		$tables = $this->getDatabaseTables();
+
+		// find create statement for every table
+		$linebreak =  chr(10);
+		$schema = '';
+		$db->sql_query('SET SQL_QUOTE_SHOW_CREATE = 0');
+		foreach ($tables as $tableName) {
+			$res = $db->sql_query('show create table '. $tableName);
+			$row = $db->sql_fetch_row($res);
+
+			// modify statement to be accepted by TYPO3
+			$createStatement = preg_replace('/ENGINE.*$/', '', $row[1]);
+			$createStatement = preg_replace('/(CREATE TABLE.*\()/', $linebreak.'\\1'.$linebreak, $createStatement);
+			$createStatement = preg_replace('/\) $/', $linebreak.')', $createStatement);
+
+			$schema .= $createStatement. ';';
+		}
+
+		return $schema;
+	}
+
 }
 
 ?>

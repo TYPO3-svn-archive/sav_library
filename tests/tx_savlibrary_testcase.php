@@ -34,26 +34,23 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
   public $fixture;
 
   public function setUp() {
+
 		// Init database
 		$this->initDatabase();
 
     // Import data in the database
     // The extension sav_library_example1 must be installed for this test case
-		$this->importExtensions(array('cms','sav_library_example1'));
+		$this->importExtensions(array('sav_library_example1'));
 		$this->importDataSet(dirname(__FILE__). '/tx_savlibrary_testcase_dataset.xml');
 
 		$this->initFE();
 
     // Create the sav_library object
     $this->fixture = new tx_savlibrary();
-    $this->fixture->extObj = $this->initExt();
+    $this->fixture->extObj = $this->loadExt('sav_library_example1');
     $this->fixture->xmlToSavlibrayConfig($this->fixture->extObj->cObj->fileResource('EXT:sav_library/res/sav_library.xml'));
-    $this->fixture->queriers = t3lib_div::makeInstance('tx_savlibrary_defaultQueriers');
-    $this->fixture->queriers->initVars($this->fixture);
-    
-    // Use the extension sav_library_example1 for this test case
-    $this->loadExt('sav_library_example1');
-
+    $this->fixture->initVars($this->fixture->extObj);
+    $this->fixture->initClasses();
   }
 
 	public function tearDown() {
@@ -128,6 +125,41 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // Return void string if data is not an array
     $data = '';
     $this->assertEquals('', $this->fixture->getValue('', 'firstName', $data));
+  }
+
+  public function test_processTitle() {
+
+     // set the tableLocal
+     $this->fixture->tableLocal = 'tx_savlibraryexample1_members';
+    // Get the content of the tx_savlibraryexample1_members table as data test
+    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+      '*',
+      $this->fixture->tableLocal,
+      ''
+    );
+		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
+			$data[] = $row;
+		}
+    $GLOBALS['TYPO3_DB']->sql_free_result($res);
+
+    // If title is not an array return &nbsp;
+    $this->assertEquals('&nbsp;', $this->fixture->processTitle('', $data[0]));
+    
+    // If the tag is a full field name and the viewName is not showAll, then it is replaced by its value
+    $title['config']['field'] = 'Test with a full field name tag : ###tx_savlibraryexample1_members.lastname###';
+    $this->assertEquals('Test with a full field name tag : DOE', $this->fixture->processTitle($title, $data[0]));
+
+    // If the tag is a full field name and the viewName is showAll, then it is replaced by its label
+    $this->fixture->viewName = 'showAll';
+    $title['config']['field'] = 'Test with a full field name tag : ###tx_savlibraryexample1_members.lastname###';
+    $this->assertEquals('Test with a full field name tag : Last Name', $this->fixture->processTitle($title, $data[0]));
+
+    // If the tag is a short field name and the viewName is showAll, then it is replaced by its label
+    // Local table is assumed to be the table in which the field is
+    $this->fixture->viewName = 'showAll';
+    $title['config']['field'] = 'Test with a short field name tag : ###firstname###';
+    $this->assertEquals('Test with a short field name tag : First Name', $this->fixture->processTitle($title, $data[0]));
+
   }
   
 	/***************************************************************/
@@ -223,25 +255,12 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 
   public function test_userIsAllowedToExportData() {
     // Assert true if the user is allowed to export data for an extension
-    // Set a valid extension
-    $this->fixture->setExtKey('validExt');
-    // set a valid user
     $this->userAuth('validUser', 'test');
-
     $this->assertTrue($this->fixture->userIsAllowedToExportData());
-
-    // Assert false if the user is not allowed to export data for an extension
-    // Set another extension
-    $this->fixture->setExtKey('unvalidExt');
-
-    $this->assertFalse($this->fixture->userIsAllowedToExportData());
 
     // Assert false if the user has no TSconfig
     // set an unvalid user
     $this->userAuth('unvalidUser', 'test');
-
-    $this->fixture->setExtKey('validExt');
-
     $this->assertFalse($this->fixture->userIsAllowedToExportData());
   }
   

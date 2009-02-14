@@ -1,4 +1,5 @@
 <dataset>
+
   <fe_groups id="1">
     <title>validGroup</title>
   </fe_groups>
@@ -11,7 +12,7 @@
     <name>Valid User</name>
     <password>test</password>
     <usergroup ref="fe_groups#1" />
-    <TSconfig>validExt_Export = *
+    <TSconfig>sav_library_example1_Export = *
     sav_library_example1_Admin = DOE
     </TSconfig>
   </fe_users>

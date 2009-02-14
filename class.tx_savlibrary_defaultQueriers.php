@@ -92,11 +92,19 @@ class tx_savlibrary_defaultQueriers {
 
 		} else {
         // Add a where clause depending on the configuration
-			 $addWhere = ' AND '.(isset($this->savlibrary->conf['noFilterShowAll']) ? $this->savlibrary->conf['noFilterShowAll'] : 1);
+			 $addWhere = ' AND '.(
+        isset($this->savlibrary->conf['noFilterShowAll']) ?
+        $this->savlibrary->conf['noFilterShowAll'] :
+        1
+      );
 		}
 
 		// Add the permanent filter if any
-		$addWhere .= (isset($this->savlibrary->conf['permanentFilter']) && $this->savlibrary->conf['permanentFilter'] ? ' AND ' . $this->savlibrary->conf['permanentFilter'] : '');
+		$addWhere .= (
+      isset($this->savlibrary->conf['permanentFilter']) && $this->savlibrary->conf['permanentFilter'] ?
+      ' AND ' . $this->savlibrary->conf['permanentFilter'] :
+      ''
+    );
     $addWhere = $this->processWhereClause($addWhere);
 
     // Get the where identifier if sent via the get method
@@ -117,25 +125,26 @@ class tx_savlibrary_defaultQueriers {
 
     // Get the number of items satisfying the query with no limit field
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			/* SELECT   */	'count(' . ($query['group'] ? 'distinct ' . $query['group']:'*') . ') as nbitem' .
-					'',		
+			/* SELECT   */	'count(' .
+        ($query['group'] ? 'distinct ' . $query['group']:'*') . ') as nbitem' .
+				'',
 			/* FROM     */	$tableReference .
-					'',
+				'',
  			/* WHERE    */	' 1' .
- 			    $this->cObj->enableFields($query['tableLocal']) .
- 			    ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '') .
-					($whereId 
-            ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
-            : (($query['where'] && !$search) ? ' AND ' . $query['where'] : '')
-          ).
-					$this->replaceTableNames($addWhere) .
-					'',  
+ 			  $this->cObj->enableFields($query['tableLocal']) .
+ 			  ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '') .
+				($whereId ?
+          ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '') :
+          (($query['where'] && !$search) ? ' AND ' . $query['where'] : '')
+        ).
+				$this->replaceTableNames($addWhere) .
+				'',
 			/* GROUP BY */	
-          '',
+        '',
 			/* ORDER BY */	
-          '',
+        '',
 			/* LIMIT    */	
-					''
+				''
 			);
 
     // Check for errors
@@ -380,7 +389,9 @@ class tx_savlibrary_defaultQueriers {
         } 
       }
       // Update     
-      $errors = $this->savlibrary->queries_update($this->extConfig['queries'][$this->savlibrary->formConfig['query']]);
+      $errors = $this->savlibrary->queries_update(
+        $this->extConfig['queries'][$this->savlibrary->formConfig['query']]
+      );
       if ($this->savlibrary->errorInForm) {
         foreach($errors as $key => $error) {
           $this->savlibrary->addError(current($error), ' [' . $key . ']');
@@ -1220,7 +1231,9 @@ class tx_savlibrary_defaultQueriers {
           
             // Check if a language configuration is set for the message
             if ($configTable[$keyField]['mailmessagelanguagefromfield']) {            
-              $configTable[$keyField]['mailmessagelanguage'] = $regularRow[$configTable[$keyField]['table'] . '.' . $configTable[$keyField]['mailmessagelanguagefromfield']][$key];
+              $configTable[$keyField]['mailmessagelanguage'] =
+                $regularRow[$configTable[$keyField]['table'] . '.' .
+                $configTable[$keyField]['mailmessagelanguagefromfield']][$key];
             } 
             if ($configTable[$keyField]['mailmessagelanguage']) {
               $lang = $GLOBALS['TSFE']->lang;
@@ -1248,7 +1261,11 @@ class tx_savlibrary_defaultQueriers {
             $this->savlibrary->titleProcessed = false;
 
             foreach ($ta['REGIONS']['items'] as $item) {
-              $mA['###'.$item['MARKERS']['field'].'###'] = ($this->savlibrary->viewName == 'inputForm' ? $item['MARKERS']['Value'] : $item['MARKERS'][$item['MARKERS']['field']]);
+              $mA['###'.$item['MARKERS']['field'].'###'] = (
+                $this->savlibrary->viewName == 'inputForm' ?
+                $item['MARKERS']['Value'] :
+                $item['MARKERS'][$item['MARKERS']['field']]
+              );
             }
 
             // Set the mail reveiver from field if any
@@ -1301,7 +1318,12 @@ class tx_savlibrary_defaultQueriers {
               $foreachValues = explode(',', current($regularRow[$foreachField]));
               foreach($foreachValues as $foreachValue) {
                 $mA['###' . $configTable[$keyField]['queryforeach'] . '###'] = $foreachValue;
-                $fieldQueryTemp = $this->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
+                $fieldQueryTemp = $this->cObj->substituteMarkerArrayCached(
+                  $fieldQuery,
+                  $mA,
+                  array(),
+                  array()
+                );
                 $queryStrings = explode(';', $fieldQueryTemp);
                 foreach($queryStrings as $queryString) {
                   $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
@@ -1313,7 +1335,12 @@ class tx_savlibrary_defaultQueriers {
                 }
               }
             } else {
-              $fieldQueryTemp = $this->cObj->substituteMarkerArrayCached($fieldQuery, $mA, array(), array() );
+              $fieldQueryTemp = $this->cObj->substituteMarkerArrayCached(
+                $fieldQuery,
+                $mA,
+                array(),
+                array()
+              );
               $queryStrings = explode(';', $fieldQueryTemp);
               foreach($queryStrings as $queryString) {
                 $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
@@ -1366,7 +1393,8 @@ class tx_savlibrary_defaultQueriers {
                 $fields['pid'] = $GLOBALS['TSFE']->id;
       				  // Controls
       				  if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
-      					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] = $GLOBALS['TSFE']->fe_user->user['uid'];
+      					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] =
+                    $GLOBALS['TSFE']->fe_user->user['uid'];
       				  }
       				  if ($GLOBALS['TCA'][$table]['ctrl']['crdate']) {
       					  $fields[$GLOBALS['TCA'][$table]['ctrl']['crdate']] = time();
@@ -1462,6 +1490,12 @@ class tx_savlibrary_defaultQueriers {
 	}
 
 
+   /***************************************************************
+    *
+    *   Utils
+    *
+   ***************************************************************/
+
 	/**
 	 * Send an email.
 	 *
@@ -1536,7 +1570,8 @@ class tx_savlibrary_defaultQueriers {
       }      
     }
 
-    // Check if the subject contains localization variable, that is tags in the locallang.xml file. Tags are defined as §§§tag§§§.  
+    // Check if the subject contains localization variable, that is tags in
+    // the locallang.xml file. Tags are defined as §§§tag§§§.
     $mailSubject = $config['mailsubject'];
     if (preg_match_all('/\$\$\$([^§]+)\$\$\$/', $mailSubject, $matches)) {
         
@@ -1562,8 +1597,22 @@ class tx_savlibrary_defaultQueriers {
       $this->savlibrary->extObj->pi_linkToPage('', $GLOBALS['TSFE']->id)
     );
    
-    $mailMessage = $this->cObj->substituteMarkerArrayCached(nl2br($mailMessage), $mA, array(), array() );
-    $mailSubject = mb_encode_mimeheader($this->cObj->substituteMarkerArrayCached($mailSubject, $mA, array(), array() ), 'iso-8859-1', 'Q');
+    $mailMessage = $this->cObj->substituteMarkerArrayCached(
+      nl2br($mailMessage),
+      $mA,
+      array(),
+      array()
+    );
+    $mailSubject = mb_encode_mimeheader(
+      $this->cObj->substituteMarkerArrayCached(
+        $mailSubject,
+        $mA,
+        array(),
+        array()
+      ),
+      'iso-8859-1',
+      'Q'
+    );
     $headers  = 'MIME-Version: 1.0' . "\r\n";
     $headers .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
     $headers .= 'From: ' . $mailSender . "\r\n";
@@ -1839,26 +1888,67 @@ class tx_savlibrary_defaultQueriers {
 
     return $configTable;
   }
-      
+
+	/**
+	 * Number to alias
+	 *
+   * @param $number int (Number to convert)
+ 	 *
+	 * @return string (Alias A to Z then AA to AZ then BA to BZ and so on)
+	 */
+  public function numberToAlias($number) {
+    $quotient = (int) (($number-1)/26);
+    $firstLetter = ($quotient ? chr($quotient + 64) : '');
+    $secondLetter = chr(($number-1)%26 + 65);
+
+    return $firstLetter . $secondLetter;
+  }
+
+	/**
+	 * Alias to number
+	 *
+   * @param $alias string (alias to convert A ..Z, AA..ZZ)
+ 	 *
+	 * @return int (1 to 702)
+	 */
+  public function aliasToNumber($alias) {
+    switch(strlen($alias)) {
+      case 0:
+        $value = 0;
+        break;
+      case 1:
+        $value = ord($alias) - 64;
+        break;
+      case 2:
+        $value = (ord($alias[0]) - 64) * 26 + ord($alias[1]) - 64;
+        break;
+      default:
+        $value = '';
+        $this->savlibrary->addError('error.incorrectAlias', $alias);
+    }
+
+    return $value;
+  }
+  
 	/**
 	 * Build the aliases for tables
 	 *
    * @param $tableName string (table name)
 	 * @param $tableArray array (table array IN/OUT)
-	 * @param $aliasTable array (alias table IN/OUT)
  	 *
 	 * @return array (result)
 	 */  
-  public function buidAliasTable($tableName, &$tableArray, &$aliasTable) {
-
+  public function buidAliasTable($tableName, &$tableArray) {
     $nbTable = count($tableArray[$tableName]);         
     $tableArray[$tableName][] = 1;  
+
     if ($nbTable) {
-      $alias = end($aliasTable);
-      $aliasTable[$tableName . $nbTable] = ($alias ? $alias + 1 : 'A');
+      $alias = end($this->aliasTable);
+      $this->aliasTable[$tableName . $nbTable] =
+        $this->numberToAlias($this->aliasToNumber($alias) + 1);
       return array(
-        'def' => $tableName . ' AS ' . $aliasTable[$tableName . $nbTable],
-        'table' => $aliasTable[$tableName . $nbTable]
+        'def' => $tableName . ' AS ' . $this->aliasTable[$tableName . $nbTable],
+        'table' => $this->aliasTable[$tableName . $nbTable]
       );
     }
     return array('def' => $tableName, 'table' => $tableName);
@@ -1884,7 +1974,7 @@ class tx_savlibrary_defaultQueriers {
     if (isset($TCA)) {
       foreach ($TCA as $field => $descr) {
         $TCA[$field]['tableLocal'] = $tableName;
-        if ($descr['config']['type']=='group' && $descr['config']['internal_type']=='db') {
+        if ($descr['config']['type'] == 'group' && $descr['config']['internal_type'] == 'db') {
           t3lib_div::loadTCA($descr['config']['allowed']);
           $temp = $GLOBALS['TCA'][$descr['config']['allowed']]['columns'];
           if (is_array($temp)) {
@@ -1918,13 +2008,13 @@ class tx_savlibrary_defaultQueriers {
       if ($config['type'] == 'group' && $config['internal_type'] == 'db' && !$config['norelation']) {
         if ($config['MM']) {
           // MM table
-          $alias1 = $this->buidAliasTable($config['MM'], $tableArray, $this->aliasTable);          
-          $alias2 = $this->buidAliasTable($config['allowed'], $tableArray, $this->aliasTable);          
+          $alias1 = $this->buidAliasTable($config['MM'], $tableArray);          
+          $alias2 = $this->buidAliasTable($config['allowed'], $tableArray);          
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
         } else {
-          $alias1 = $this->buidAliasTable($config['allowed'], $tableArray, $this->aliasTable);          
+          $alias1 = $this->buidAliasTable($config['allowed'], $tableArray);          
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
           ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
@@ -1933,13 +2023,13 @@ class tx_savlibrary_defaultQueriers {
       if ($config['type'] == 'select') {
         if ($config['MM']) {
           // MM table
-          $alias1 = $this->buidAliasTable($config['MM'], $tableArray, $this->aliasTable);          
-          $alias2 = $this->buidAliasTable($config['foreign_table'], $tableArray, $this->aliasTable);                    
+          $alias1 = $this->buidAliasTable($config['MM'], $tableArray);          
+          $alias2 = $this->buidAliasTable($config['foreign_table'], $tableArray);                    
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
         } elseif ($config['foreign_table']) {
-          $alias1 = $this->buidAliasTable($config['foreign_table'], $tableArray, $this->aliasTable);          
+          $alias1 = $this->buidAliasTable($config['foreign_table'], $tableArray);          
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
@@ -1947,7 +2037,7 @@ class tx_savlibrary_defaultQueriers {
           // Check if a link is defined
           $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$this->savlibrary->folderTab]['fields'][$this->savlibrary->cryptTag($tableName . '.' . $field)]['config']['setextendlink'];
           if ($extendLink) {
-            $alias2 = $this->buidAliasTable($extendLink, $tableArray, $this->aliasTable);
+            $alias2 = $this->buidAliasTable($extendLink, $tableArray);
             $tableReference .= ' LEFT JOIN ' . $alias2['def'] .
               ' ON (' . $alias1['table'] . '.' . $extendLink . '=' . $alias2['table'] . '.uid)';
           }

@@ -39,6 +39,18 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
 	 */
 	function main()	{
 
+    // Check if the version of the kickstarter is the ood one
+    if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['errorKickstarterVersion']) {
+		  return $this->pObj->doc->section('',
+        $GLOBALS['LANG']->getLL('fatal.incorrectKickstarterVersion') .
+          '<span style="color:red;font-weight:bold;">' .
+          $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['errorKickstarterVersion'] .
+          '</span>',
+        0,
+        1
+      );
+    }
+
     // Check if extensions have to be updated
     $updateArray = t3lib_div::_POST('update');
     $xmlArray = t3lib_div::_POST('xml');

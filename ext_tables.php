@@ -5,7 +5,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
     'savext' => array (
       'classname' => 'tx_kickstarter_section_savext',
       'filepath' => 'EXT:sav_library/kickstarter/class.tx_kickstarter_section_savext.php',
-      'title' => 'SAV Extension generator',
+      'title' => 'SAV Library Extension Generator',
       'description' => 'Create extension using SAV Library',
       'single' => 1,
       'styles' => array(
@@ -72,10 +72,21 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
     ),
   );
 
-$TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] = (array) $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] + $savExtKickstarter;
-
-$TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['tables']['styles'] = $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['formviews']['styles'];
-$TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['fields']['styles'] = $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['formviews']['styles'];
+if (!$TYPO3_CONF_VARS['EXTCONF'][$_EXTKEY]['errorKickstarterVersion']) {
+  $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] = (array) $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] + $savExtKickstarter;
+  $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['tables']['styles'] = $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['formviews']['styles'];
+  $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['fields']['styles'] = $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['formviews']['styles'];
+} else {
+  $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] = (array) $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] + array(
+    'error' => array (
+      'classname' => 'tx_kickstarter_section_error',
+      'filepath' => 'EXT:sav_library/kickstarter/class.tx_kickstarter_section_error.php',
+      'title' => 'SAV Library Extension Generator<br /><span style="color:red;font-weight:bold;">Error Kickstarter ' . $TYPO3_CONF_VARS['EXTCONF'][$_EXTKEY]['errorKickstarterVersion'] . ' required</span>',
+      'description' => '',
+	    'singleItem'  => true,
+    ),
+  );
+}
 
 // Add user function for help icons in flexforms for extension depending on SAV Library
 if (!function_exists('user_helpIcon_savlibrary')) {

@@ -11,10 +11,12 @@
 		<languageKey index="default" type="array">
 			<label index="moduleFunction.tx_savlibrary_modfunc1">SAV Library extensions update</label>
 			<label index="unknown">Unknown</label>
+			<label index="fatal.incorrectKickstarterVersion">Fatal error. Your version of the kickstarter is incorrect. Please download version </label>
 		</languageKey>
 		<languageKey index="fr" type="array">
 			<label index="moduleFunction.tx_savlibrary_modfunc1">SAV Library extensions update</label>
 			<label index="unknown">Inconnue</label>
+			<label index="fatal.incorrectKickstarterVersion">Erreur fatale. Votre version du kickstarter est incorrecte. Merci de télécharger la version </label>
 		</languageKey>
 	</data>
 </T3locallang>

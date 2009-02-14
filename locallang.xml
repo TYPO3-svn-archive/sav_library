@@ -54,6 +54,7 @@
 			<label index="error.fieldRequired">Error: missing required values(s)</label>
 			<label index="error.fieldVoid">Error: the field must not be empty</label>
 			<label index="error.fieldIncorrectValue">Error: incorrect value for this field</label>
+			<label index="error.incorrectAlias">Error: incorrect alias:</label>
 			<label index="error.incorrectDateFormat">Error: incorrect date format</label>
 			<label index="error.incorrectDateOption">Error: incorrect date % option</label>
 			<label index="error.incorrectCSS">Error: unknown CSS file.</label>
@@ -213,6 +214,7 @@
 			<label index="error.fieldRequired">Erreur : un ou plusieurs champs requis sont manquants.</label>
 			<label index="error.fieldVoid">Erreur : le champ ne doit pas être vide</label>
 			<label index="error.fieldIncorrectValue">Erreur : valeur incorrecte pour ce champ</label>
+			<label index="error.incorrectAlias">Erreur : alias incorrect :</label>
 			<label index="error.incorrectDateFormat">Erreur: format de date incorrect</label>
 			<label index="error.incorrectDateOption">Erreur: une option % de la date est incorrecte</label>
 			<label index="error.incorrectCSS">Erreur : fichier CSS inconnu.</label>

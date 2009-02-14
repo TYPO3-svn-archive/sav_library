@@ -32,6 +32,7 @@ $EM_CONF[$_EXTKEY] = array(
 	'version' => '2.0.8',
 	'constraints' => array(
 		'depends' => array(
+      'kickstarter' => '0.4.0',
 		),
 		'conflicts' => array(
 		),

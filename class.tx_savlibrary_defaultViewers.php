@@ -228,7 +228,10 @@ class tx_savlibrary_defaultViewers {
 
     // Processing for the title
     $ta['MARKERS']['formTitle'] =
-      $this->savlibrary->processTitle($fields[0]['title'], $dataset[0]);
+      $this->savlibrary->processTitle(
+        $fields[$this->savlibrary->cryptTag('0')]['title'],
+        $dataset[0]
+      );
 
     // Processing the icon for the input
     $CUT_titleIconRight = !$this->savlibrary->userIsAllowedToInputData();    
@@ -725,7 +728,7 @@ class tx_savlibrary_defaultViewers {
 
     // Processing for the title
     $ta['MARKERS']['formTitle'] = $this->savlibrary->processTitle(
-      $fields[0]['title'],
+      $fields[$this->savlibrary->cryptTag('0')]['title'],
       $dataset[0]
     );
 
@@ -879,7 +882,6 @@ class tx_savlibrary_defaultViewers {
           $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_break'] = 0;
         }
 
- 			
   			$ta['REGIONS']['items'][$key]['TYPE'] = 'item';
   			$ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $value;
   		}      
@@ -903,7 +905,7 @@ class tx_savlibrary_defaultViewers {
 
     // Processing for the title
     $ta['MARKERS']['formTitle'] = $this->savlibrary->processTitle(
-      $fields[0]['title'],
+      $fields[$this->savlibrary->cryptTag('0')]['title'],
       $dataset[0]
     );
      
@@ -1566,7 +1568,10 @@ class tx_savlibrary_defaultViewers {
         $this->savlibrary->helpButton($this->savlibrary->formName);
     }      
 
-    $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->closeButton($this->savlibrary->formName, $dataset[0]['uid']);
+    $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->closeButton(
+      $this->savlibrary->formName,
+      $dataset[0]['uid']
+    );
 
     // Export the fields in csv
     if ($exportOK && is_array($extPOSTVars['fields']) && in_array(1, $extPOSTVars['fields'][0]) && $nbRows > 0 && !isset($res['ERROR'])) { 
@@ -1656,11 +1661,17 @@ class tx_savlibrary_defaultViewers {
 
                   // Check if the query is a SELECT query and for errors
                   if (!$this->savlibrary->isSelectQuery($queryReqValue)) {
-                    $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
+                    $this->savlibrary->addError(
+                      'error.onlySelectQueryAllowed',
+                      $config['field']
+                    );
                     $arrError['reqValue'] = false;
                     continue;
                   } elseif (!($resLocal = $GLOBALS['TYPO3_DB']->sql_query($queryReqValue))) {
-                    $this->savlibrary->addError('error.incorrectQueryInReqValue', $config['field']);
+                    $this->savlibrary->addError(
+                      'error.incorrectQueryInReqValue',
+                      $config['field']
+                    );
                     $arrError['reqValue'] = false;
                     continue;
                   }
@@ -1762,7 +1773,6 @@ class tx_savlibrary_defaultViewers {
 		
 		return $str;
 	}
-
   
 }
 
