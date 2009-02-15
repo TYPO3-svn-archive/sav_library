@@ -133,9 +133,17 @@ class tx_savlibrary_queriers_testcase extends tx_phpunit_frontend {
     $this->assertEquals(array('def' => 'fe_users AS A', 'table' => 'A'),
       $this->fixture->queriers->buidAliasTable('fe_users', $tableArray));
 
-    // Samme as above, the alias becomes B
+    // Same as above, the alias becomes B
     $this->assertEquals(array('def' => 'fe_users AS B', 'table' => 'B'),
       $this->fixture->queriers->buidAliasTable('fe_users', $tableArray));
+      
+    // Add a new table
+    $this->assertEquals(array('def' => 'fe_groups', 'table' => 'fe_groups'),
+      $this->fixture->queriers->buidAliasTable('fe_groups', $tableArray));
+
+    // Add the same table, the alias becomes C
+    $this->assertEquals(array('def' => 'fe_groups AS C', 'table' => 'C'),
+      $this->fixture->queriers->buidAliasTable('fe_groups', $tableArray));
 
   }
   

@@ -34,24 +34,10 @@ require_once(t3lib_extMgm::extPath('rtehtmlarea').'pi2/class.tx_rtehtmlarea_pi2.
 class tx_savlibrary_defaultItemviewers {
 
   // Variables in calling classes
-  private $savlibrary;      // Reference to the savlibrary object
-  private $cObj;            // Reference to the cObj in the extension
-  private $extConfig;       // Reference to the extension configuration
-  private $extKey;          // Extension Key
-
-  /**
-   * Init vars
-   *
-   * @param $ref (reference to the calling object)
-   *
-   * @return none
-   */
-  public function initVars(&$ref) {
-    $this->savlibrary = $ref;
-    $this->extConfig = &$ref->extObj->extConfig;
-    $this->cObj = &$ref->extObj->cObj;
-    $this->extKey = $ref->extObj->extKey;
-  }
+  protected $savlibrary;      // Reference to the savlibrary object
+  protected $cObj;            // Reference to the cObj in the extension
+  protected $extConfig;       // Reference to the extension configuration
+  protected $extKey;          // Extension Key
 
 /**
  * Start variables for the RTE API
@@ -76,6 +62,20 @@ class tx_savlibrary_defaultItemviewers {
   /**
  * End variables for the RTE API
  */
+
+  /**
+   * Init vars
+   *
+   * @param $ref (reference to the calling object)
+   *
+   * @return none
+   */
+  public function initVars(&$ref) {
+    $this->savlibrary = $ref;
+    $this->extConfig = &$ref->extObj->extConfig;
+    $this->cObj = &$ref->extObj->cObj;
+    $this->extKey = $ref->extObj->extKey;
+  }
 
 
 	/**
@@ -2297,13 +2297,13 @@ class tx_savlibrary_defaultItemviewers {
                 $this->savlibrary->formName,
                 $uid,
                 $this->savlibrary->rowItem,
-                $config['fullFieldName']
+                $config['cryptedFieldName']
               ) .
               $this->savlibrary->upButton(
                 $this->savlibrary->formName,
                 $uid,
                 $this->savlibrary->rowItem,
-                $config['fullFieldName']
+                $config['cryptedFieldName']
               );
             $cpt++;
           }
@@ -2314,7 +2314,7 @@ class tx_savlibrary_defaultItemviewers {
                 $this->savlibrary->formName,
                 $uid,
                 $this->savlibrary->rowItem,
-                $config['fullFieldName']
+                $config['cryptedFieldName']
               );
           }
           $value .= $this->savlibrary->replaceTemplate($x);

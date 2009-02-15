@@ -41,6 +41,18 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 	 * @return	HTML code of the side menu
 	 */
 	function sidemenu()	{
+//--------------------------
+// Begin - Modified
+//--------------------------
+  // Get the extension version
+  if ($this->saveKey && file_exists(t3lib_extMgm::extPath($this->saveKey) . 'ext_emconf.php')) {
+    $_EXTKEY = $this->saveKey;
+    require(t3lib_extMgm::extPath($this->saveKey) . 'ext_emconf.php');
+    $this->wizArray['savext'][1]['version'] = $EM_CONF[$_EXTKEY]['version'];
+  }
+//--------------------------
+// End - Modified
+//--------------------------
 		$actionType = $this->modData['wizSubCmd'].':'.$this->modData['wizAction'];
 		$singles    = $this->getSingles();
 		$lines      = array();
@@ -58,7 +70,7 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
           if (isset($this->sections[$k]['styles'])) {
             $style = $this->sections[$k]['styles']['value'][$conf[$this->sections[$k]['styles']['field']]];
           }      
-   			
+
           // Get the title
           $title = '[Click to Edit]';
           if (isset($this->sections[$k]['singleTitles'])) {

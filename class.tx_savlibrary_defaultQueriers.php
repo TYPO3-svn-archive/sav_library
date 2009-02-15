@@ -35,10 +35,10 @@ class tx_savlibrary_defaultQueriers {
   protected $aliasTable = array();   // Aliases for tables
 
   // Variables in calling classes
-  private $savlibrary;      // Reference to the savlibrary object
-  private $cObj;            // Reference to the cObj in the extension
-  private $extConfig;       // Reference to the extension configuration
-  private $extKey;          // Extension Key
+  protected $savlibrary;      // Reference to the savlibrary object
+  protected $cObj;            // Reference to the cObj in the extension
+  protected $extConfig;       // Reference to the extension configuration
+  protected $extKey;          // Extension Key
 
   /**
    * Init vars
@@ -1558,7 +1558,8 @@ class tx_savlibrary_defaultQueriers {
       $this->savlibrary->extObj->pi_loadLL();
     }          
 
-    // Check if the message contains localization variable, that is tags in the locallang.xml file. Tags are defined as §§§tag§§§.  
+    // Check if the message contains localization variable,
+    //that is tags in the locallang.xml file. Tags are defined as §§§tag§§§.
     $mailMessage = $config['mailmessage'];
     if (preg_match_all('/\$\$\$([^§]+)\$\$\$/', $mailMessage, $matches)) {
         
@@ -1653,7 +1654,7 @@ class tx_savlibrary_defaultQueriers {
 	 * @return string (result)
 	 */  
   public function processFieldTags($x, &$row, &$config = array()) {
-  
+
     $x = preg_replace('/(###[^\r\n#]*)[\r\n]*([^#]*###)/m', '$1$2' ,$x);
     preg_match_all('/###(([^\.#]+)\.?([^#]*))###/', $x, $matches);
 
@@ -1663,7 +1664,7 @@ class tx_savlibrary_defaultQueriers {
       $tag = $matches[1][$key];
       // Clean the tag 
       $tag = preg_replace('/\\\\[^ ]+ /','' ,$tag);
-      
+
       // If the tag is in the configuration, get the replacement string.
       // Otherwise, replace NL by NL+\\par
       if ($config[$tag]) {

@@ -32,10 +32,10 @@
 class tx_savlibrary_defaultVerifiers {
 
   // Variables in calling classes
-  private $savlibrary;      // Reference to the savlibrary object
-  private $cObj;            // Reference to the cObj in the extension
-  private $extConfig;       // Reference to the extension configuration
-  private $extKey;          // Extension Key
+  protected $savlibrary;      // Reference to the savlibrary object
+  protected $cObj;            // Reference to the cObj in the extension
+  protected $extConfig;       // Reference to the extension configuration
+  protected $extKey;          // Extension Key
 
   /**
    * Init vars
