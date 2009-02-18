@@ -132,7 +132,7 @@ class tx_savlibrary_defaultQueriers {
 				'',
  			/* WHERE    */	' 1' .
  			  $this->cObj->enableFields($query['tableLocal']) .
- 			  ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '') .
+ 			  $this->getAllowedPages($query['tableLocal']) .
 				($whereId ?
           ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '') :
           (($query['where'] && !$search) ? ' AND ' . $query['where'] : '')
@@ -168,7 +168,7 @@ class tx_savlibrary_defaultQueriers {
 				'',
  			/* WHERE    */	' 1' .
  			  $this->cObj->enableFields($query['tableLocal']) .
- 			  ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '').
+ 			  $this->getAllowedPages($query['tableLocal']) .
 				($whereId
           ? ($query['whereTags'][$whereId]['where'] ? ' AND ' . $query['whereTags'][$whereId]['where'] : '')
           : (($query['where'] && !$search )? ' AND ' . $query['where'] : '')
@@ -530,7 +530,7 @@ class tx_savlibrary_defaultQueriers {
 				'',
  			/* WHERE    */	' 1' .
  			  $this->cObj->enableFields($query['tableLocal']) .
- 			  ($this->cObj->data['pages'] ? ' AND ' . $query['tableLocal'] . '.pid IN (' . $this->cObj->data['pages'] . ')' : '') .
+ 			  $this->getAllowedPages($query['tableLocal']) .
  			  ($query['where'] ? ' AND ' . $this->processWhereClause($query['where']) : '') .
 				'',
 			/* GROUP BY */	$query['group'] .
@@ -584,7 +584,7 @@ class tx_savlibrary_defaultQueriers {
  		if (! $GLOBALS['TSFE']->fe_user->user['uid']) {
 			return array('fatal' => 'notAuthentified');
 		}
-		
+
     // Get the view configuration
     if ($this->savlibrary->formConfig['updateForm']) {
 			$viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
@@ -1021,8 +1021,13 @@ class tx_savlibrary_defaultQueriers {
           
           } else {
 
-            // Insert the fields
-            $fields['pid'] = $GLOBALS['TSFE']->id;
+            // Insert the fields in the storage page if any or in the current
+            // page by default
+            $fields['pid'] = (
+              $this->savlibrary->conf['storagePage'] ?
+              $this->savlibrary->conf['storagePage'] :
+              $GLOBALS['TSFE']->id
+            );
   				  // Controls
   				  if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
   					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] =
@@ -1222,7 +1227,7 @@ class tx_savlibrary_defaultQueriers {
               $mailToSend = 1;
             }           
           } else { 
-            if (!$value && ($this->savlibrary->rowItemFromButton ? ($this->savlibrary->rowItemFromButton==$key) : 1) ) {
+            if (!$value && ($this->savlibrary->rowItemFromButton ? ($this->savlibrary->rowItemFromButton == $key) : 1) ) {
               $mailToSend = 1;
             }
           }
@@ -1285,7 +1290,7 @@ class tx_savlibrary_defaultQueriers {
               $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             		/* TABLE   */	$configTable[$keyField]['table'],		
             		/* WHERE   */	$configTable[$keyField]['table'] . '.uid=' . intval($this->savlibrary->rowItemFromButton ? $this->savlibrary->rowItemFromButton : $this->savlibrary->uid),
-            		/* FIELDS  */	array($configTable[$keyField]['_field'] => $mailSent)
+            		/* FIELDS  */	array($configTable[$keyField]['fullFieldName'] => $mailSent)
            		);
            	}
           }
@@ -1389,9 +1394,14 @@ class tx_savlibrary_defaultQueriers {
                   $uid
                 );
               } elseif (!$this->savlibrary->uid) {
-                // Insert the fields
-                $fields['pid'] = $GLOBALS['TSFE']->id;
-      				  // Controls
+                // Insert the fields in the storage page if any or in the current
+                // page by default
+                $fields['pid'] = (
+                  $this->savlibrary->conf['storagePage'] ?
+                  $this->savlibrary->conf['storagePage'] :
+                  $GLOBALS['TSFE']->id
+                );
+     				  // Controls
       				  if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
       					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] =
                     $GLOBALS['TSFE']->fe_user->user['uid'];
@@ -1495,6 +1505,34 @@ class tx_savlibrary_defaultQueriers {
     *   Utils
     *
    ***************************************************************/
+
+	/**
+	 * Get allowed Pages from the starting point and the storage page
+	 *
+   * @param $table string (table name)
+ 	 *
+	 * @return string
+	 */
+  public function getAllowedPages($table) {
+    if (!$table) {
+      return '';
+    } else {
+      // Add the starting point pages
+      if ($this->cObj->data['pages']) {
+        $pageListArray = explode(',', $this->cObj->data['pages']);
+      } else {
+        $pageListArray = array();
+      }
+      // Add the storage page
+      if ($this->savlibrary->conf['storagePage']) {
+        $pageListArray[] = $this->savlibrary->conf['storagePage'];
+      }
+
+      $pageList = implode(',', $pageListArray);
+    
+   		return ($pageList ? ' AND ' . $table . '.pid IN (' . $pageList . ')' : '');
+    }
+  }
 
 	/**
 	 * Send an email.

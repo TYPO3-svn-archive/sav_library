@@ -65,7 +65,7 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 				foreach($items as $k2=>$conf)	{
 //--------------------------
 // Begin - Modified 
-//--------------------------			
+//--------------------------
           $style = $this->sections[$k]['styles']['defaultValue'];
           if (isset($this->sections[$k]['styles'])) {
             $style = $this->sections[$k]['styles']['value'][$conf[$this->sections[$k]['styles']['field']]];

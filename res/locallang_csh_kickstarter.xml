@@ -139,11 +139,10 @@
         
         &lt;b&gt;Generate form&lt;/b&gt;
         Checks the box to use the form generator.
-        
-        &lt;b&gt;Version x.y.z.&lt;/b&gt;
-        This field can be used to set the version of the extension. The format x.y.z should be used.
-        You may also automatically upgrade the version when saving.
-        
+
+        &lt;b&gt;Display the icon below the plugin selector&lt;/b&gt;
+        If set, the icon of your extension will be displayed under the plugin selector when you insert an extension in a page.
+
         &lt;b&gt;Additional Code&lt;/b&gt;
         Use this field to add your own php function.
 
@@ -885,10 +884,9 @@
         
         &lt;b&gt;Generate form&lt;/b&gt;
         Sélectionner pour utiliser le générateur.
-        
-        &lt;b&gt;Version x.y.z.&lt;/b&gt;
-        Ce champ peut être utilisé pour définir la version de l'extension. Le format x.y.z doit être utilisé.
-        Vous pouvez aussi faire des montées automatiques de version lors de la sauvegarde.
+
+        &lt;b&gt;Display the icon below the plugin selector&lt;/b&gt;
+        Si vous cochez cette case, l'icône de l'extension s'affichera sous le sélecteur de "plugin" quand vous insérez un "plugin" dans une page.
         
         &lt;b&gt;Additional Code&lt;/b&gt;
         Utiliser ce champ pour ajouter vos propres fonctions php.

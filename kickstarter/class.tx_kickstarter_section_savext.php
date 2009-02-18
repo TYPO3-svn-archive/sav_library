@@ -50,11 +50,12 @@ class tx_kickstarter_section_savext extends tx_kickstarter_sectionbase {
         $this->renderCheckBox($ffPrefix.'[generateForm]',$piConf['generateForm']);
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
     	
-    	// Enter version
-    	$subContent="<strong>Version x.y.z:</strong><BR>".
-    		$this->renderStringBox($ffPrefix.'[version]',($piConf['version'] ? $piConf['version'] : '0.0.0'), 50);
-    	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
+    	// Set the version
       $this->wizard->wizArray['emconf'][1]['version'] = $this->wizard->wizArray[$this->sectionID][1]['version'];
+    	// Select if the icono should be displayed below the plugin selector
+      $subContent='<strong>Display the icon below the plugin selector:</strong><BR>'.
+        $this->renderCheckBox($ffPrefix.'[displayIconBelowPluginSelector]',$piConf['displayIconBelowPluginSelector']);
+    	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
       
   		// Enter additionalCode
   		$nbLines = substr_count($piConf['additionalCode'], chr(13).chr(10)) + 2;      

@@ -381,8 +381,10 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 	/* Language methods                                            */
 	/***************************************************************/
   public function test_getLibraryLL() {
-    $this->assertEquals('Message for tests.', $this->fixture->getLibraryLL('message.forTests'));
-    $this->assertEquals('Message for tests. Added message.', $this->fixture->getLibraryLL('message.forTests', ' Added message.'));
+    $this->assertEquals('Message for tests.',
+      $this->fixture->getLibraryLL('message.forTests'));
+    $this->assertEquals('Message for tests. Added message.',
+      $this->fixture->getLibraryLL('message.forTests', ' Added message.'));
     $this->assertEquals('', $this->fixture->getLibraryLL('unknown'));
   }
   
@@ -393,7 +395,8 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // For an unknown label, getExtLL returns a void string
     // and errors is set to the message associated with error.missingLabel.
     $this->assertEquals('', $this->fixture->getExtLL('unknown'));
-    $this->assertEquals($this->fixture->getLibraryLL('error.missingLabel', 'unknown'), $this->fixture->getError(0));
+    $this->assertEquals($this->fixture->getLibraryLL('error.missingLabel', 'unknown'),
+      $this->fixture->getError(0));
 
     // For an unknown label, getExtLL returns the label if the second argument is 0
     $this->assertEquals('unknown', $this->fixture->getExtLL('unknown', 0));
@@ -403,13 +406,16 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 
     $this->loadExt('sav_library_example1');
     // The string is not modified if there is no tag
-    $this->assertEquals('Test without a tag', $this->fixture->processLocalizationTags('Test without a tag'));
+    $this->assertEquals('Test without a tag',
+      $this->fixture->processLocalizationTags('Test without a tag'));
 
     // The tag is replaced by its definition
-    $this->assertEquals('Test without a tag : Back', $this->fixture->processLocalizationTags('Test without a tag : $$$back$$$'));
+    $this->assertEquals('Test without a tag : Back',
+      $this->fixture->processLocalizationTags('Test without a tag : $$$back$$$'));
 
     // The tag is replaced by its definition. Several tags can be used
-    $this->assertEquals('Back : Test without a tag : Back', $this->fixture->processLocalizationTags('$$$back$$$ : Test without a tag : $$$back$$$'));
+    $this->assertEquals('Back : Test without a tag : Back',
+      $this->fixture->processLocalizationTags('$$$back$$$ : Test without a tag : $$$back$$$'));
   }
 
 	/***************************************************************/
@@ -421,18 +427,21 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     $config = array(
       'eval' => 'date',
     );
-    $this->assertEquals(mktime(0,0,0,2,1,2009), $this->fixture->date2timestamp('01/02/2009', $config, $errors));
+    $this->assertEquals(mktime(0,0,0,2,1,2009),
+      $this->fixture->date2timestamp('01/02/2009', $config, $errors));
     $config = array(
       'eval' => 'datetime',
     );
-    $this->assertEquals(mktime(19,30,0,2,1,2009), $this->fixture->date2timestamp('01/02/2009 19:30', $config, $errors));
+    $this->assertEquals(mktime(19,30,0,2,1,2009),
+      $this->fixture->date2timestamp('01/02/2009 19:30', $config, $errors));
 
     // use another format
     $config = array(
       'eval' => 'datetime',
       'format' => '%d/%m/%y %H:%M',
     );
-    $this->assertEquals(mktime(7,30,0,2,1,2009), $this->fixture->date2timestamp('01/02/09 07:30', $config, $errors));
+    $this->assertEquals(mktime(7,30,0,2,1,2009),
+      $this->fixture->date2timestamp('01/02/09 07:30', $config, $errors));
   }
 	
 	

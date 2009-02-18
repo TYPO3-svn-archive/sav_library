@@ -65,6 +65,34 @@ class tx_savlibrary_queriers_testcase extends tx_phpunit_frontend {
     *   Utils
     *
    ***************************************************************/
+   
+  public function test_getAllowedPages() {
+    // return '' if no table
+    $this->assertEquals('',
+      $this->fixture->queriers->getAllowedPages(''));
+
+    // return '' if no storage page nor strating points
+    $this->assertEquals('',
+      $this->fixture->queriers->getAllowedPages('tableName'));
+      
+    // return the query if a storage page is used
+    $this->fixture->conf['storagePage'] = 1000;
+    $this->assertEquals(' AND tableName.pid IN (1000)',
+      $this->fixture->queriers->getAllowedPages('tableName'));
+
+    // return the query if starting points pages are used
+    $this->fixture->conf['storagePage'] = '';
+    $this->fixture->extObj->cObj->data['pages'] = '2000,3000';
+    $this->assertEquals(' AND tableName.pid IN (2000,3000)',
+      $this->fixture->queriers->getAllowedPages('tableName'));
+
+    // return the query if starting points pages and storage are used
+    $this->fixture->conf['storagePage'] = '1000';
+    $this->fixture->extObj->cObj->data['pages'] = '2000,3000';
+    $this->assertEquals(' AND tableName.pid IN (2000,3000,1000)',
+      $this->fixture->queriers->getAllowedPages('tableName'));
+  }
+
 
   public function test_numberToAlias() {
     // 1 gives A

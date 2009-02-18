@@ -602,7 +602,6 @@ class tx_savlibrary_defaultViewers {
                 '<div class="updateCol4">' :
                 ''
               );
-//              $temp = '<input class="check" type="checkbox" ' . $checked . 'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field'] . '"  value="1" />';
 
               $temp = utils::htmlInputCheckboxElement(
                 array(
@@ -627,7 +626,6 @@ class tx_savlibrary_defaultViewers {
                 '<div class="updateCol4Manual">' :
                 ''
               );
-//              $temp =  '<input class="checkManual" type="checkbox" ' . $checked.'name="' . 'Check_' . $items['MARKERS'][$matches[1][$keyMatch] . '_Field'] . '"  value="1" />';
 
               $temp = utils::htmlInputCheckboxElement(
                 array(

@@ -125,7 +125,9 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
 
     foreach($extArray as $ext) {
       $extKey = $ext['extKey'];
-      $content[] = '    <li class="extName">' . $ext['extKey'] . '</li>';
+      $content[] = '    <li class="extName">' .
+				'<a href="' . htmlspecialchars('index.php?CMD[showExt]='.$extKey.'&SET[singleDetails]=tx_kickstarter_modfunc2'). '">' .
+        $ext['extKey'] . '</a></li>';
       $content[] = '    <li class="xml">' . '<input type="checkbox" name="xml[' . $extKey .']" ' . ($xmlArray[$extKey] || !is_array($updateArray) ? 'checked="checked"' : '') . ' /></li>';
       $content[] = '    <li class="update">' . '<input type="checkbox" name="update[' . $extKey . ']" ' . ($updateArray[$extKey] == 'on' ? 'checked="checked"' : '') . ' /></li>';
       $content[] = '    <li class="version' .
@@ -143,7 +145,7 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
     $this->pObj->doc->styleSheetFile2 =
               t3lib_extMgm::extRelPath('sav_library'). 'modfunc1/savlibrary_modfunc1.css';
               
-		return $this->pObj->doc->section('', implode(chr(10), $content),0,1);
+		return $this->pObj->doc->section('Extension Manager', implode(chr(10), $content),0,1);
 	}
 }
 

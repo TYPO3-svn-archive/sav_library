@@ -37,7 +37,8 @@
 			<label index="pi_flexform.allowQueryProperty">Allow the use of the "query" property</label>
 			<label index="pi_flexform.helpPage">Help page</label>
 			<label index="pi_flexform.help">Help</label>
-           		
+			<label index="pi_flexform.storagePage">Storage page</label>
+
 		  <!-- Messages -->		
 			<label index="message.clikToUpdate">Clik on the right button at the top or the bottom of the form to validate data.</label>
 			<label index="message.dataSaved">Your data were saved.</label>
@@ -197,7 +198,8 @@
 			<label index="pi_flexform.allowQueryProperty">Autoriser l'utilisation de la propriété "query"</label>
 			<label index="pi_flexform.helpPage">Page d'aide</label>
 			<label index="pi_flexform.help">Aide</label>
-		
+			<label index="pi_flexform.storagePage">Page de stockage des enregistrements</label>
+
 		  <!-- Messages -->		
 			<label index="message.clikToUpdate">Cliquer sur les boutons à droite en haut ou en bas du formulaire pour valider les données.</label>
 			<label index="message.dataSaved">Vos données ont été enregistrées.</label>

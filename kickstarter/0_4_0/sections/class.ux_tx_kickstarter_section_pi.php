@@ -160,7 +160,32 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
 				),'" . $setType . "');
 			");
 		}
+//--------------------------
+// Begin - Modified
+//--------------------------
+		if ($this->wizard->wizArray['savext'][1]['generateForm']) {
 
+      if ($setType && !t3lib_div::inList('typotags,includeLib', $setType)) {
+        // Unset the previous insertion in the array
+        $count = count($this->wizard->ext_tables);
+        unset($this->wizard->ext_tables[$count - 1]);
+
+        // Add the icon file only if the option is checked in savext
+  			$this->wizard->ext_tables[]=$this->sPS('
+  				'.$this->WOPcomment('WOP:'.$WOP.'[addType]')."
+  				t3lib_extMgm::addPlugin(array(
+  					'" . addslashes($this->getSplitLabels_reference($config, 'title', 'tt_content.' . $setType . '_pi' . $k)) . "',
+  					\$_EXTKEY . '_pi" . $k . "'," .
+  					($this->wizard->wizArray['savext'][1]['displayIconBelowPluginSelector'] ?
+            't3lib_extMgm::extRelPath($_EXTKEY) . \'ext_icon.gif\'' :
+            '' ). "
+  				),'" . $setType . "');
+  			");
+  		}
+    }
+//--------------------------
+// End - Modified
+//--------------------------
 			// Make Plugin class:
 		switch($config['addType'])	{
 			case 'list_type':

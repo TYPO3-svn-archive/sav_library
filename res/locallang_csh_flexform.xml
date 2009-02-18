@@ -70,9 +70,13 @@
         &lt;b&gt;Add a fragment (# content id) to links&lt;/b&gt;
         The content id is added as a fragment to the links.
         
-        &lt;b&gt;Allow the use of the “query” property&lt;/b&gt;
+        &lt;b&gt;Allow the use of the "query" property&lt;/b&gt;
         The "query" property makes it possible to execute queries in "input" or "update" forms.
         Because any query may be executed, for security reason, only admin users can check this field must when this property is needed.
+
+        &lt;b&gt;Storage page&lt;/b&gt;
+        This option makes it possible to store your record in a storage page, for example a "sysfolder", otherwise records are stored in the current page.
+        When this option is used, records are fetched in the storage page and in the pages defined in the "starting point" if any.
 
 			</label>
 			
@@ -153,6 +157,10 @@
         &lt;b&gt;Autoriser l'utilisation de la propriété "query"&lt;/b&gt;
         La propriété "query" permet d'ecécuter des requêtes dans les formulaires "input" ou "update".
         Parce que n'importe quelle requête peut être exécutée, pour des raisons de sécurité, seuls les utilisateurs "admin" peuvent modifier ce champ.
+
+        &lt;b&gt;Page de stockage des enregistrements&lt;/b&gt;
+        Cette option permet de stoker vos enregistrements dans une page spécifique, par exemple un "sysfolder", sinon ils sont stockés dans la page courante.
+        Quand cette option est utilisée, les enregistrements sont recherchés dans la page de stockage et, le cas échéant, dans les pages sélectionnées comme "point d'entrée".
 
 			</label>
 
