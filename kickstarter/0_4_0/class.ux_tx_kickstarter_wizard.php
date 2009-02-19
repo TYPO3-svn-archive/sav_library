@@ -45,7 +45,7 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 // Begin - Modified
 //--------------------------
   // Get the extension version
-  if ($this->saveKey && file_exists(t3lib_extMgm::extPath($this->saveKey) . 'ext_emconf.php')) {
+  if ($this->saveKey && t3lib_extMgm::isLoaded($this->saveKey) && file_exists(t3lib_extMgm::extPath($this->saveKey) . 'ext_emconf.php')) {
     $_EXTKEY = $this->saveKey;
     require(t3lib_extMgm::extPath($this->saveKey) . 'ext_emconf.php');
     $this->wizArray['savext'][1]['version'] = $EM_CONF[$_EXTKEY]['version'];
@@ -57,6 +57,18 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 		$singles    = $this->getSingles();
 		$lines      = array();
 		foreach($this->options as $k => $v)	{
+
+//--------------------------
+// Begin - Modified
+//--------------------------
+      // Check if the field shoould be displayed
+      if (is_array($this->sections[$k]['activationField']) && !$this->wizArray[$this->sections[$k]['activationField']['section']][1][$this->sections[$k]['activationField']['field']]) {
+        continue;
+      }
+//--------------------------
+// End - Modified
+//--------------------------
+
 			// Add items:
 			$items = $this->wizArray[$k];
 			$c = 0;
@@ -66,6 +78,10 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 //--------------------------
 // Begin - Modified 
 //--------------------------
+          // Check if the field shoould be displayed
+          if (is_array($this->sections[$k]['activationField'])) {
+            continue;
+          }
           $style = $this->sections[$k]['styles']['defaultValue'];
           if (isset($this->sections[$k]['styles'])) {
             $style = $this->sections[$k]['styles']['value'][$conf[$this->sections[$k]['styles']['field']]];
@@ -84,14 +100,14 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
           }  
 //					$dummyTitle = t3lib_div::inList($singles,$k)  ? '[Click to Edit]' : '<em>Item '.$k2.'</em>';
 					$dummyTitle = (t3lib_div::inList($singles,$k) || $this->sections[$k]['single'])  ? $title : '<em>Item '.$k2.'</em>';
-//--------------------------
-// End - Modified 
-//--------------------------							
+							
 					$isActive   = !strcmp($k.':edit:'.$k2, $actionType);
 					$delIcon    = $this->linkStr('<img src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/garbage.gif" width="11" height="12" border="0" title="Remove item" />','','deleteEl:'.$k.':'.$k2);
-//--------------------------
-// Begin - Modified 
-//--------------------------			
+
+          if (isset($this->sections[$k]['singleTitles']) && $this->sections[$k]['singleTitles']['noDelIcon']) {
+            $delIcon = '&nbsp;';
+          }
+			
 //					$iLines[]   = '<tr'.($isActive?$this->bgCol(2,-30):$this->bgCol(2)).'><td>'.$this->fw($this->linkStr($this->bwWithFlag($conf['title']?$conf['title']:$dummyTitle,$isActive),$k,'edit:'.$k2)).'</td><td>'.$delIcon.'</td></tr>';
   				$iLines[]   = '<tr'.($isActive?$this->bgCol(2,-30):$this->bgCol(2)).'><td>&nbsp;'.$this->fw($this->linkStr($this->bwWithFlag($conf['title']?$conf['title']:$dummyTitle,$isActive,$style),$k,'edit:'.$k2)).'</td><td>'.$delIcon.'</td></tr>';
 //--------------------------

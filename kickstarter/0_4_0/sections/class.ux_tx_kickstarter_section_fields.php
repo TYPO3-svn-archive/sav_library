@@ -243,8 +243,8 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 				  //  Add the overview
           $subContent .= '<tr><td colspan="5" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;"><div style="float: left;width: 100%; background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuBorder.gif) repeat-x bottom;"><ul style="margin: 0px;padding: 0px;list-style: none;">';
                    
+          $viewKeys = array();
           if (isset($this->wizard->wizArray['formviews'])) {
-            $viewKeys = array();
             foreach($this->wizard->wizArray['formviews'] as $key => $view) {
 
               // Get the style

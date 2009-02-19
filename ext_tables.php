@@ -18,7 +18,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
                       ),
       'singleTitles' => array(
                       'field' => 'generateForm',
-                      'defaultValue' => '[Click to Edit]',
+                      'defaultValue' => '[Off]',
                       'value' => array (
                             '0' => array ('label' => 'Off',
                                 ),
@@ -27,6 +27,7 @@ if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
                                     'addField' => 'version',
                                 ),
                             ),
+                      'noDelIcon' => 1,
                       ),
       ),
     'formviews' => array (
@@ -77,6 +78,7 @@ if (!$TYPO3_CONF_VARS['EXTCONF'][$_EXTKEY]['errorKickstarterVersion']) {
   $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['tables']['styles'] = $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['formviews']['styles'];
   $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['fields']['styles'] = $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections']['formviews']['styles'];
 } else {
+
   $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] = (array) $TYPO3_CONF_VARS['EXTCONF']['kickstarter']['sections'] + array(
     'error' => array (
       'classname' => 'tx_kickstarter_section_error',
@@ -86,6 +88,7 @@ if (!$TYPO3_CONF_VARS['EXTCONF'][$_EXTKEY]['errorKickstarterVersion']) {
 	    'singleItem'  => true,
     ),
   );
+
 }
 
 // Add user function for help icons in flexforms for extension depending on SAV Library

@@ -1102,75 +1102,55 @@ class tx_savlibrary_defaultViewers {
 		$ta['TYPE'] = 'showSingle';
 		$ta['CUTTERS']['CUT_folderTabsTop'] = 1;
 
-    // set the key counter
-    $key = -1;
+    // Display the selector with the saved configuration
+    $config = array(
+      'emptyitem' => 1,
+      'items' => array(),
+  		'elementControlName' => $this->savlibrary->formName . '[configuration][0]',
+      'value' => $extPOSTVars['configuration'][0],
+    );
 
-      // Display the selector with the saved configuration
-      $config = array(
-        '_field' => 'configuration',
-        'uid' => 0,
-        'emptyitem' => 1,
-        'items' => array(),
-  		  'elementControlName' => $this->savlibrary->formName . '[configuration][0]',
-        'value' => $extPOSTVars['configuration'][0],
-      );
+    $res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+  		/* SELECT   */	'*',
+  		/* FROM     */	$table,
+  	 	/* WHERE    */	'cid=' . intval($this->cObj->data['uid']) .
+        ' AND ' . $table . '.deleted=0 AND ' . $table . '.hidden=0' .
+        ' AND (' .
+        '(cruser_id=' . intval($GLOBALS['TSFE']->fe_user->user['uid']) .
+        ' AND (' . $table . '.fe_group=\'\' OR ' . $table . '.fe_group IS NULL OR ' . $table . '.fe_group=0))' .
+        ' OR ' . $table . '.fe_group IN (' . $GLOBALS['TSFE']->fe_user->user['usergroup'] . '))' .
+        '',
+  		/* GROUP BY */	'',
+  		/* ORDER BY */	'name',
+  		/* LIMIT    */	''
+  	);
 
-      $res1 = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-  			/* SELECT   */	'*',
-  			/* FROM     */	$table,
-  	 		/* WHERE    */	'cid=' . intval($this->cObj->data['uid']) .
-          ' AND ' . $table . '.deleted=0 AND ' . $table . '.hidden=0' .
-          ' AND (' .
-          '(cruser_id=' . intval($GLOBALS['TSFE']->fe_user->user['uid']) .
-          ' AND (' . $table . '.fe_group=\'\' OR ' . $table . '.fe_group IS NULL OR ' . $table . '.fe_group=0))' .
-          ' OR ' . $table . '.fe_group IN (' . $GLOBALS['TSFE']->fe_user->user['usergroup'] . '))' .
-          '',
-  			/* GROUP BY */	'',
-  			/* ORDER BY */	'name',
-  			/* LIMIT    */	''
-  		);
+  	while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res1))) {
+  		$item = array();
+  		$item['label'] = $row['name'];
+  		$item['uid'] = $row['uid'];
+  		if($extPOSTVars['configuration'][0] == $row['uid']) {
+        $item['selected'] = 1;
+      }
+  		$config['items'][] = $item;
+    };
+    $cutters = array('CUT_fusionEnd' => 1);
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.configuration'),
+      'Value' => $this->savlibrary->itemviewers->viewDbRelationSingleSelectorEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
 
-  		while (($row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res1))) {
-  		    $item = array();
-  		    $item['label'] = $row['name'];
-  		    $item['uid'] = $row['uid'];
-  		    if($extPOSTVars['configuration'][0] == $row['uid']) {
-            $item['selected'] = 1;
-          }
-  		    $config['items'][] = $item;
-      };
-
-      $key++;
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 1;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-        $this->savlibrary->getLibraryLL('itemviewer.configuration');
-      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-        $this->savlibrary->itemviewers->viewDbRelationSingleSelectorEditMode($config);
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
-
-      $config = array(
-        '_field' => 'configurationName',
-        'uid' => 0,
-  		  'elementControlName' => $this->savlibrary->formName.'[configurationName][0]',
-        'value' => $extPOSTVars['configurationName'][0],
-      );
-
-      $key++;
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 1;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
+    $config = array(
+  		'elementControlName' => $this->savlibrary->formName.'[configurationName][0]',
+      'value' => $extPOSTVars['configurationName'][0],
+    );
+    $cutters = array(
+      'CUT_label' => 1,
+      'CUT_fusionBegin' => 1,
+    );
+    $markers = array(
+      'Value' =>
         $this->savlibrary->loadExportConfiguration($this->savlibrary->formName) .
         $this->savlibrary->saveExportConfiguration($this->savlibrary->formName) .
         $this->savlibrary->deleteExportConfiguration($this->savlibrary->formName) .
@@ -1181,74 +1161,46 @@ class tx_savlibrary_defaultViewers {
             utils::htmlAddAttribute('name', $this->savlibrary->formName . '[showSelectedFieldsOnly]'),
             utils::htmlAddAttribute('value', $showSelectedFieldsOnly),
           )
-        );
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
-
-      // Add the group of the fe_user
-      $config = array(
-        '_field' => 'configurationGroup',
-        'uid' => 0,
-        'emptyitem' => 1,
-        'items' => array(),
-  		  'elementControlName' => $this->savlibrary->formName.'[configurationGroup][0]',
-        'value' => $extPOSTVars['configurationGroup'][0],
-      );
-
-      foreach($GLOBALS['TSFE']->fe_user->groupData['title'] as $keyGroup => $valueGroup) {
-  		  $item = array();
-  		  $item['label'] = $valueGroup;
-  		  $item['uid'] = $keyGroup;
-  		  if($extPOSTVars['configurationGroup'][0] == $keyGroup) {
-          $item['selected'] = 1;
-        }
-  		  $config['items'][] = $item;
+        ),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    // Add the group of the fe_user
+    $config = array(
+      'emptyitem' => 1,
+      'items' => array(),
+  		'elementControlName' => $this->savlibrary->formName.'[configurationGroup][0]',
+      'value' => $extPOSTVars['configurationGroup'][0],
+    );
+    foreach($GLOBALS['TSFE']->fe_user->groupData['title'] as $keyGroup => $valueGroup) {
+  		$item = array();
+  		$item['label'] = $valueGroup;
+  		$item['uid'] = $keyGroup;
+  		if($extPOSTVars['configurationGroup'][0] == $keyGroup) {
+        $item['selected'] = 1;
       }
-
-      $key++;
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-        $this->savlibrary->getLibraryLL('itemviewer.configurationGroup');
-      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-        $this->savlibrary->itemviewers->viewDbRelationSingleSelectorEditMode($config);
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+  		$config['items'][] = $item;
+    }
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.configurationGroup'),
+      'Value' => $this->savlibrary->itemviewers->viewDbRelationSingleSelectorEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
       
     // Display the error if any
     if (isset($res['ERROR'])) {
       $config = array(
-        '_field' => 'error',
-        'uid' => 0,
         'value' => '<b>ERROR : </b><br />' .
           $res['ERROR'] . '<br /><br /><b>QUERY : </b><br />' .
           $res['lastBuiltQuery'],
       );
-
-      $key++; 
-      $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-      $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-      $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-        $this->savlibrary->getLibraryLL('itemviewer.error');
-      $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-        $this->savlibrary->itemviewers->viewTextArea($config);
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-      $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="error"';
-      $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+      $cutters = array();
+      $markers = array(
+        'Label' => $this->savlibrary->getLibraryLL('itemviewer.error'),
+        'Value' => $this->savlibrary->itemviewers->viewTextArea($config),
+        'classValue' => 'class="error"',
+      );
+      $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
  
     } else {    
       $nbRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
@@ -1256,8 +1208,6 @@ class tx_savlibrary_defaultViewers {
       // Display the checkboxes
       $config = array(
         'nbcols' => 2,
-        '_field' => 'fields',        
-        'uid' => 0,
   		  'elementControlName' => $this->savlibrary->formName.'[fields][0]',
       );
  
@@ -1284,7 +1234,7 @@ class tx_savlibrary_defaultViewers {
       } 
     }
 
-      // Process the fields
+    // Process the fields
     if (is_array($this->savlibrary->queriers->sqlFieldsExport)) {
       foreach ($this->savlibrary->queriers->sqlFieldsExport as $key=>$sqlField) {
         $field = (
@@ -1307,248 +1257,142 @@ class tx_savlibrary_defaultViewers {
         }
       }
     }
-
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 1;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] = (
-      ($nbRows || !$exportOK) ?
-      $this->savlibrary->itemviewers->viewCheckboxEditMode($config) :
-      $this->savlibrary->getLibraryLL('warning.noRecord')
+    $cutters = array('CUT_label' => 1);
+    $markers = array(
+      'Value' => (
+        ($nbRows || !$exportOK) ?
+        $this->savlibrary->itemviewers->viewCheckboxEditMode($config) :
+        $this->savlibrary->getLibraryLL('warning.noRecord')
+      ),
+      'classValue' => (
+        ($nbRows || !$exportOK) ?
+        'class="export"' :
+        'class="error"'
+      ),
     );
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] =
-      (($nbRows || !$exportOK) ? 'class="export"' : 'class="error"');
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
     
     // Display the textarea for the where clause
     $config = array(
       'rows' => 5,
       'cols' => 70,
-      '_field' => 'where',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[where][0]',
       'value' => $extPOSTVars['where'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.whereClause');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
-
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.whereClause'),
+      'Value' => $this->savlibrary->itemviewers->viewTextAreaEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    
     // Display the textarea for the order clause
     $config = array(
       'size' => 70,
-      '_field' => 'order',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[order][0]',
       'value' => $extPOSTVars['order'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.orderClause');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewStringInputEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
- 
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.orderClause'),
+      'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+
     // Display the textinput for additional tables
     $config = array(
       'size' => 70,
-      '_field' => 'additionalTables',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[additionalTables][0]',
       'value' => $extPOSTVars['additionalTables'][0],
     );
     $config1 = array(
-      '_field' => 'additionalTablesValidated',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[additionalTablesValidated][0]',
       'value' => $extPOSTVars['additionalTablesValidated'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.additionalTables');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewStringInputEditMode($config) .
-      $this->savlibrary->itemviewers->viewCheckboxEditMode($config1);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
-
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.additionalTables'),
+      'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config) .
+        $this->savlibrary->itemviewers->viewCheckboxEditMode($config1),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    
     // Display the textinput for additional fields
     $config = array(
       'size' => 70,
-      '_field' => 'additionalFields',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[additionalFields][0]',
       'value' => $extPOSTVars['additionalFields'][0],
     );
-
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.additionalFields');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewStringInputEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.additionalFields'),
+      'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
 
     // Display the checkbox to export all MM records
     $config = array(
-      '_field' => 'exportMM',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[exportMM][0]',
       'value' => $extPOSTVars['exportMM'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 1;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.exportMM');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';    
+    $cutters = array('CUT_fusionEnd' => 1);
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.exportMM'),
+      'Value' => $this->savlibrary->itemviewers->viewCheckboxEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
 
     // Display the textinput for a group clause with MM records
     $config = array(
       'size' => 50,
-      '_field' => 'groupBy',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[groupBy][0]',
       'value' => $extPOSTVars['groupBy'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.groupBy');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewStringInputEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';    
+    $cutters = array('CUT_fusionBegin' => 1);
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.groupBy'),
+      'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
 
     // Display the checkbox to include all fields
     $config = array(
-      '_field' => 'includeAllFields',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[includeAllFields][0]',
       'value' => $extPOSTVars['includeAllFields'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 1;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.includeAllFields');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';  
+    $cutters = array('CUT_fusionEnd' => 1);
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.includeAllFields'),
+      'Value' => $this->savlibrary->itemviewers->viewCheckboxEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
     
     // Display the checkbox to include the field names
     $config = array(
-      '_field' => 'exportFieldNames',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[exportFieldNames][0]',
       'value' => $extPOSTVars['exportFieldNames'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 1;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.exportFieldNames');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewCheckboxEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';  
-
+    $cutters = array('CUT_fusionBegin' => 1);
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.exportFieldNames'),
+      'Value' => $this->savlibrary->itemviewers->viewCheckboxEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    
     // Display the input to order the fields
     $config = array(
       'rows' => 5,
       'cols' => 70,
-      '_field' => 'orderedFieldList',
-      'uid' => 0,
   		'elementControlName' => $this->savlibrary->formName . '[orderedFieldList][0]',
       'value' => $extPOSTVars['orderedFieldList'][0],
     );
-    $key++;
-    $ta['REGIONS']['items'][$key]['TYPE'] = 'item';	
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_label'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_value'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionBegin'] = 0;
-    $ta['REGIONS']['items'][$key]['CUTTERS']['CUT_fusionEnd'] = 0;
-    $ta['REGIONS']['items'][$key]['MARKERS']['Label'] =
-      $this->savlibrary->getLibraryLL('itemviewer.orderedFieldList');
-    $ta['REGIONS']['items'][$key]['MARKERS']['Value'] =
-      $this->savlibrary->itemviewers->viewTextAreaEditMode($config);
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleLabel'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classLabel'] = 'class="label"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['styleValue'] = '';
-    $ta['REGIONS']['items'][$key]['MARKERS']['classValue'] = 'class="export"';
-    $ta['REGIONS']['items'][$key]['MARKERS']['subform'] = '';  
-          
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.orderedFieldList'),
+      'Value' => $this->savlibrary->itemviewers->viewTextAreaEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+
     // Processing for the title
 		if (!isset($ta['MARKERS']['formTitle'])) {
       $ta['MARKERS']['formTitle'] = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']]['config']['title'];
@@ -1744,6 +1588,44 @@ class tx_savlibrary_defaultViewers {
     }   
 	
 		return $ta;
+  }
+
+   /***************************************************************
+    *
+    *   Utils
+    *
+   ***************************************************************/
+
+	/**
+	 * build an item array
+	 *
+	 * @param	$markers array		item array containing the marker configurations
+	 * @param	$cutters array		item array containing the cuuter configurations
+	 * @return	array		Merged arrays
+	 */
+  public function buildItemArray($markers, $cutters) {
+    $cuttersDefault = array(
+      'CUT_label' => 0,
+      'CUT_value' => 0,
+      'CUT_fusionBegin' => 0,
+      'CUT_fusionEnd' => 0,
+    );
+    $markersDefault = array(
+      'Label' => '',
+      'Value' => '',
+      'styleLabel' => '',
+      'classLabel' => 'class="label"',
+      'styleValue' => '',
+      'classValue' => 'class="export"',
+      'subform' => '',
+    );
+
+    // Merged the arrays
+    $item['TYPE'] = 'item';
+    $item['MARKERS'] = array_merge($markersDefault, $markers);
+    $item['CUTTERS'] = array_merge($cuttersDefault, $cutters);
+
+    return $item;
   }
 
 
