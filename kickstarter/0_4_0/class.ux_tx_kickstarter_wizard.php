@@ -78,10 +78,6 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 //--------------------------
 // Begin - Modified 
 //--------------------------
-          // Check if the field shoould be displayed
-          if (is_array($this->sections[$k]['activationField'])) {
-            continue;
-          }
           $style = $this->sections[$k]['styles']['defaultValue'];
           if (isset($this->sections[$k]['styles'])) {
             $style = $this->sections[$k]['styles']['value'][$conf[$this->sections[$k]['styles']['field']]];
