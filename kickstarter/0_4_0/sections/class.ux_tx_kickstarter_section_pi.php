@@ -1213,6 +1213,7 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
 //debug($this->wizard->wizArray,'','','',10);
 //debug($this->wizard->wizArray['save']['overwrite_files'],'','','',10);
 //unset($this->wizard->wizArray['save']['overwrite_files']['flexform_ds_pi1.xml']);
+//unset($this->wizard->wizArray['save']['overwrite_files']['ext_typoscript_editorcfg.txt']);
 //unset($this->wizard->wizArray['save']['overwrite_files']);
 
       // Unset 'pi1/static/editorcfg.txt' if Kickstarter version is greater or equal to 0.4.0

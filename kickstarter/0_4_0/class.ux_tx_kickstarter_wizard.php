@@ -34,6 +34,121 @@ require_once(t3lib_extMgm::extPath('kickstarter') . 'sections/class.tx_kickstart
 
 class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 
+	/**
+	 * Switch between the basic operations. Calls the different modules and puts
+	 * their content into a basic framework.
+	 *
+	 * @return	HTML code for the kickstarter containing the module content
+	 */
+	function mgm_wizard()	{
+		$this->wizard =& $this;
+		$this->initWizArray();
+		$this->sections = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kickstarter']['sections'];
+
+
+		/* HOOK: Place a hook here, so additional things can be done */
+		if(is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kickstarter']['wizard_beforeSectionsHook'])) {
+			foreach($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kickstarter']['wizard_beforeSectionsHook'] as $_funcRef) {
+				$conf = array('pObj' => $this);
+				t3lib_div::callUserFunction($_funcRef, $conf, $this);
+			}
+		}
+
+		foreach($this->sections as $k => $v) {
+			$this->options[$k] = array($v['title'],$v['description']);
+		}
+
+		$saveKey = $this->saveKey = $this->wizArray['save']['extension_key']
+			= substr(
+				strtolower(trim($this->wizArray['save']['extension_key'])),
+				0,
+				30
+			);
+		$this->outputWOP = $this->wizArray['save']['print_wop_comments'] ? 1 : 0;
+
+		if ($saveKey)	{
+			$this->extKey=$saveKey;
+			$this->extKey_nusc=str_replace('_','',$saveKey);
+		}
+
+		if ($this->modData['viewResult'] || $this->modData['updateResult'])	{
+			$this->modData['wizAction']='';
+			$this->modData['wizSubCmd']='';
+			if ($saveKey) {
+				$content = $this->view_result();
+			} else {
+				$content = $this->fw('<strong>Error:</strong> Please enter an extension key first!<br /><br />');
+			}
+		} elseif ($this->modData['WRITE'])	{
+			$this->modData['wizAction']='';
+			$this->modData['wizSubCmd']='';
+			if ($saveKey) {
+				$this->makeFilesArray($this->saveKey);
+				$uploadArray = $this->makeUploadArray($this->saveKey,$this->fileArray);
+				if (t3lib_div::int_from_ver(TYPO3_version) < t3lib_div::int_from_ver('4.0.0')) {
+						// Syntax for TYPO3 3.8 and older
+					$this->pObj->importExtFromRep(0,$this->modData['loc'],0,$uploadArray,0,0,1);
+				} else {
+						// TYPO3 4.0+ syntax
+					$this->pObj->importExtFromRep('','',$this->modData['loc'],0,1,$uploadArray);
+				}
+			} else {
+				$content = $this->fw('<strong>Error:</strong> Please enter an extension key first!<br /><br />');
+			}
+		} elseif ($this->modData['totalForm'])	{
+			$content = $this->totalForm();
+		} elseif ($this->modData['downloadAsFile'])	{
+			if ($saveKey)	{
+				$this->makeFilesArray($this->saveKey);
+				$uploadArray = $this->makeUploadArray($this->saveKey,$this->fileArray);
+				$backUpData = $this->makeUploadDataFromArray($uploadArray);
+				$filename='T3X_'.$saveKey.'-'.str_replace('.','_','0.0.0').'.t3x';
+				$mimeType = 'application/octet-stream';
+				Header('Content-Type: '.$mimeType);
+				Header('Content-Disposition: attachment; filename='.$filename);
+				echo $backUpData;
+				exit;
+			} else {
+				$content = $this->fw('<strong>Error:</strong> Please enter an extension key first!<br /><br />');
+			}
+		} else {
+			$action = explode(':',$this->modData['wizAction']);
+			if ((string)$action[0]=='deleteEl')	{
+				unset($this->wizArray[$action[1]][$action[2]]);
+			}
+
+			$content = $this->getFormContent();
+		}
+		$wasContent = $content?1:0;
+		$content = '
+		<script language="javascript" type="text/javascript">
+			function setFormAnchorPoint(anchor)	{
+				document.'.$this->varPrefix.'_wizard.action = unescape("'.rawurlencode($this->linkThisCmd()).'")+"#"+anchor;
+			}
+		</script>
+		<form action="' . $this->linkThisCmd() . '" method="POST" name="' . $this->varPrefix . '_wizard">
+		  <table border="0" cellpadding="0" cellspacing="0">
+			<tr>
+				<td valign="top">'.$this->sidemenu().'</td>
+				<td>&nbsp;&nbsp;&nbsp;</td>
+				<td valign="top">'.$content.'
+					<input type="hidden" name="'.$this->piFieldName("wizArray_ser").'" value="'.htmlspecialchars(base64_encode(serialize($this->wizArray))).'" /><br />';
+
+		if ((string)$this->modData['wizSubCmd'])	{
+			if ($wasContent)	$content.='<input name="update2" type="submit" value="Update..." /> ';
+		}
+		$content.='
+					<input type="hidden" name="'.$this->piFieldName("wizAction").'" value="'.$this->modData["wizAction"].'" />
+					<input type="hidden" name="'.$this->piFieldName("wizSubCmd").'" value="'.$this->modData["wizSubCmd"].'" />
+					'.$this->cmdHiddenField().'
+				</td>
+			</tr>
+		  </table>
+    </form>' . $this->afterContent;
+
+		return $content;
+	}
+
 
 	/**
 	 * Side menu
