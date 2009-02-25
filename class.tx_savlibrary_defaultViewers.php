@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2008 Yolf <yolf.typo3@orange.fr>
+*  (c) 2009 Yolf (Laurent Foulloy) <yolf.typo3@orange.fr>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -71,7 +71,6 @@ class tx_savlibrary_defaultViewers {
 
 	public function showAll_defaultViewer(&$dataset, &$fields, $errors='') {
 
-
     // If print icon is associated with a related view, call it
     if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
       return $this->printForm_defaultViewer(
@@ -101,8 +100,9 @@ class tx_savlibrary_defaultViewers {
           0
         );
 
-  			// Make some processing to retrieve a simple item type			
-  			$items['MARKERS'] = array();
+  			// Make some processing to retrieve a simple item type
+  			$item = array();
+
   			if ($x['REGIONS']['items']){
     			foreach($x['REGIONS']['items'] as $k => $v) {
     			  // Clear the field value if the cutter is set
@@ -116,11 +116,18 @@ class tx_savlibrary_defaultViewers {
               );
             }
 
-    				// get the name
-            $items['MARKERS'] = array_merge($items['MARKERS'], $v['MARKERS']);
+           // Check if the field already exists in the MARKERS.
+            if(!array_key_exists($v['MARKERS']['field'], $item)) {
+    				  // Add the fied
+    				  $item[$v['MARKERS']['field']] = $v['MARKERS'][$v['MARKERS']['field']];
+            } else {
+              $this->savlibrary->addMessageOnce('message.sameFieldName',
+                '[' . $this->savlibrary->viewName . ' -> ' . $v['MARKERS']['field'] . ']');
+            }
     			}
   			}
-  			$items['TYPE'] = 'item';			
+        $items['MARKERS'] = $item;
+  			$items['TYPE'] = 'item';
 
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
