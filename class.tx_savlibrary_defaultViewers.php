@@ -121,7 +121,7 @@ class tx_savlibrary_defaultViewers {
     				  // Add the fied
     				  $item[$v['MARKERS']['field']] = $v['MARKERS'][$v['MARKERS']['field']];
             } else {
-              $this->savlibrary->addMessageOnce('message.sameFieldName',
+              $this->savlibrary->addErrorOnce('message.sameFieldName',
                 '[' . $this->savlibrary->viewName . ' -> ' . $v['MARKERS']['field'] . ']');
             }
     			}
