@@ -1743,9 +1743,11 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
             } else {
               $configString = var_export($xmlArray, true);
               unset($this->wizard->wizArray['save']['overwrite_files']['pi' . $piId . '/' . $cN . '.xml']);
-              $fileName = t3lib_extMgm::extPath($extKey) .'pi' . $piId . '/' . $cN . '.xml';
-              if (file_exists($fileName)) {
-                unlink($fileName);
+              if (t3lib_extMgm::isLoaded($extKey)) {
+                $fileName = t3lib_extMgm::extPath($extKey) .'pi' . $piId . '/' . $cN . '.xml';
+                if (file_exists($fileName)) {
+                  unlink($fileName);
+                }
               }
             }
             
