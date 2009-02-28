@@ -93,24 +93,24 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 				
 
           // Add the import link
-          $lines[] ='<tr><td colspan="5"><a href="#"               
+          $lines[] = '<tr><td><a href="#"
                 onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'importTable'.'\';
                  setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
       			     document.kickstarter_wizard.submit();
       			     return false;" >Import fields from table as "Only shown in SAV form"</a> '.'</td></tr>';
 
-				  $lines[]='<tr'.$this->bgCol(1).'><td><strong> Fields Overview </strong></td></tr>';
-				  $lines[]='<tr><td></td></tr>';
+				  $lines[] = '<tr' . $this->bgCol(1) . '><td><strong> Fields Overview </strong></td></tr>';
+				  $lines[] = '<tr><td>&nbsp;</td></tr>';
 				
-
-				  $subContent ='<tr '.$this->bgCol(2).'>
-					 <td><strong>Name</strong></td>
-					 <td><strong>Title</strong></td>
-					 <td><strong>Type</strong></td>
-					 <td><strong>Exclude?</strong></td>
-					 <td><strong>Details</strong></td>
-				  </tr>';
-				
+          $tempContent = array();
+          $tempContent[] = '<tr ' . $this->bgCol(2) . '>';
+          $tempContent[] = '<td><strong>Name</strong></td>';
+          $tempContent[] = '<td><strong>Title</strong></td>';
+          $tempContent[] = '<td><strong>Type</strong></td>';
+          $tempContent[] = '<td><strong>Exclude?</strong></td>';
+          $tempContent[] = '<td><strong>Details</strong></td>';
+          $tempContent[] = '</tr>';
+        
           if ($this->wizard->modData["wizId"] == t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]') ) {
             $wizKey = $this->wizard->modData["wizKey"];
           } else {
@@ -226,23 +226,34 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
               $opt_formViews[$key] = $view['title'];
             }
 
-            $subContent .='<tr><td colspan="5">Use fields as in</a> '.$this->renderSelectBox($ffPrefix.'[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews).
-                 '&nbsp;&nbsp;<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'reorderFields'.'\';
-                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();" name="'.$this->piFieldName('reOrder').'" value="Reorder?">'.
-                 '&nbsp;&nbsp;<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'copyFields'.'\';
-                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();" name="'.$this->piFieldName('copy').'" value="Copy?">'.      			     
-                 '&nbsp;&nbsp;<input type="submit" name="'.$this->piFieldName('viewResult').'" value="View result">'.
-                 '&nbsp;&nbsp;<input type="submit" name="'.$this->piFieldName('WRITE').'" value="Write?" onclick="
-                 return confirm(\'If you are not sure, use the View result button\');               
-                 " />'.
-                 '</td></tr>';
+            $tempContent[] = '<tr>';
+            $tempContent[] = '<td colspan="5">';
+            $tempContent[] = 'Use fields as in ' . $this->renderSelectBox($ffPrefix . '[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews);
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('reOrder') . '" value="Reorder?" />';
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'copyFields' . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('copy') . '" value="Copy?" />';
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="submit" name="' . $this->piFieldName('viewResult') . '" value="View result" />';
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="submit" name="' . $this->piFieldName('WRITE') . '" value="Write?" onclick="' .
+              'return confirm(\'If you are not sure, use the View result button\');" />';
+            $tempContent[] = '</td>';
+            $tempContent[] = '</tr>';
           } 
           				  
 				  //  Add the overview
-          $subContent .= '<tr><td colspan="5" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;"><div style="float: left;width: 100%; background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuBorder.gif) repeat-x bottom;"><ul style="margin: 0px;padding: 0px;list-style: none;">';
-                   
+          $tempContent[] = '<tr>';
+          $tempContent[] = '<td colspan="5" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;">';
+          $tempContent[] = '<div style="float: left;width: 100%; background: url(' .
+            $this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library') .
+            'kickstarter/taMenuBorder.gif) repeat-x bottom;">';
+          $tempContent[] = '<ul style="margin: 0px;padding: 0px;list-style: none;">';
+          
           $viewKeys = array();
           if (isset($this->wizard->wizArray['formviews'])) {
             foreach($this->wizard->wizArray['formviews'] as $key => $view) {
@@ -266,20 +277,31 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
               $stylePos = 'border-bottom: 1px solid #84B0C7;';        
               $styleSPAN ='float: left;display: block;background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuLeft.gif) no-repeat left top;padding: 5px 9px;white-space: nowrap;';
             }
-            $subContent .='<li style="display: inline;margin: 0px;padding: 0px;"><a href="#"
-              style="float: left;'.$style.'background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuRight.gif) no-repeat right top; '.$stylePos.'font-size: 10px;font-weight: bold; text-decoration: none;" 
-                onClick="document.kickstarter_wizard[\'kickstarter[wizSubCmd]\'].value=\''.$this->wizard->modData["wizSubCmd"].'\';
-                 document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'changeAllWizKey'.'\';
-      			     document.kickstarter_wizard[\'kickstarter[wizAction]\'].value=\''.$this->wizard->modData["wizAction"].'\';
-      			     document.kickstarter_wizard[\'kickstarter[wizKey]\'].value=\''.$key.'\';
-      			     document.kickstarter_wizard[\'kickstarter[wizId]\'].value=\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\';
-                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();
-      			     return false;" ><span style="'.$styleSPAN.'">'.$view['title'].'</span></a></li>';
+
+            $tempContent[] = '<li style="display: inline;margin: 0px;padding: 0px;">';
+            $tempContent[] = '<a href="#" style="float: left;' . $style .
+              'background: url(' . $this->siteBackPath . t3lib_extMgm::siteRelPath('sav_library') .
+              'kickstarter/taMenuRight.gif) no-repeat right top; ' . $stylePos .
+              'font-size: 10px;font-weight: bold; text-decoration: none;" ' .
+              'onclick="document.kickstarter_wizard[\'kickstarter[wizSubCmd]\'].value=\'' . $this->wizard->modData["wizSubCmd"] . '\';' .
+              'document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'changeAllWizKey' . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizAction]\'].value=\'' . $this->wizard->modData["wizAction"] . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizKey]\'].value=\'' . $key . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizId]\'].value=\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix.'[fieldHeader]') . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard.submit();return false;" >';
+            $tempContent[] = '<span style="' . $styleSPAN . '">' . $view['title'] . '</span>';
+            $tempContent[] = '</a>';
+            $tempContent[] = '</li>';
+                
             }
           }
-          $subContent .= '</td></tr>'; 
-        
+
+          $tempContent[] = '</ul>';
+          $tempContent[] = '</div>';
+          $tempContent[] = '</td>';
+          $tempContent[] = '</tr>';
+          
           // Initialize the showOrder for each view	if necessary
 				  $cpt = 1;
           foreach ($piConf['fields'] as $k => $field) {
@@ -334,9 +356,10 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 				foreach($piConf['fields'] as $k=>$v)	{
 					$c[]=$k;
           $style = ( $v['conf_showFieldDisp'][$wizKey] ? $styleSel : '');
-					$subContent .= $this->renderFieldOverview($ffPrefix.'[fields]['.$k.']',$v,0,$style);
+					$tempContent[] = $this->renderFieldOverview($ffPrefix.'[fields]['.$k.']',$v,0,$style);
 				}
-				$lines[]='<tr'.$this->bgCol(3).'><td><table>'.$this->fw($subContent).'</table></td></tr>';
+				$subContent = implode('', $tempContent);
+				$lines[]='<tr' . $this->bgCol(3) . '><td><table>' . $subContent . '</table></td></tr>';
 	
 			
           unset($optValues);
@@ -356,10 +379,10 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
             $upCP = $this->getOnChangeParts($prefix.'[conf_opt_formViews]');
 
 					 $lines[]='<tr'.$this->bgCol(2).'><td>'.$this->fw('<a name="'.$md5h.'"></a><strong>FIELD:</strong> <em>'.$v['fieldname'].'</em>').
-				    '&nbsp;&nbsp;&nbsp;&nbsp;<input type="image" hspace=2 src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/move_record.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE" onClick="'.$onCP[1].'" title="Move this field after">'.
+				    '&nbsp;&nbsp;&nbsp;&nbsp;<input type="image" src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/move_record.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE" onClick="'.$onCP[1].'" title="Move this field after" />'.
             '&nbsp;&nbsp;'.$this->renderSelectBox($prefix."[conf_moveAfter]",'',$optValues).
 				    '&nbsp;&nbsp;'.'<a href="'.$this->linkThisCmd().'#">'.
-            '<input type="image" hspace=2 width="10" height="10" src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/redup.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE_OVERVIEW" onClick="'.$upCP[1].'" title="Move to the overview">'.          
+            '<input type="image" width="10" height="10" src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/redup.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE_OVERVIEW" onClick="'.$upCP[1].'" title="Move to the overview" />'.
             '</a></td></tr>';
 					 $lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 				  }
@@ -861,6 +884,7 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 //--------------------------
 // Begin - Modified 
 //--------------------------
+    $additionalContent = array();
     if ($this->wizard->wizArray['savext'][1]['generateForm'] && !$dontRemove) {
 			$this->siteBackPath = $this->wizard->siteBackPath;
 
@@ -921,40 +945,69 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 
       $nbLines = substr_count($fConf['conf_showField'][$wizKey], chr(13).chr(10)) + 2;      
       $showField =  $this->renderTextareaBox($prefix.'[conf_showField]['.$wizKey.']',$fConf['conf_showField'][$wizKey],400,($fConf['conf_showFieldExpand'][$wizKey]?$nbLines:5)).$this->renderCheckBox($prefix.'[conf_showFieldExpand]['.$wizKey.']',$fConf['conf_showFieldExpand'][$wizKey]).'<br />';      
-      $additionalContent .= '
-			<input type="hidden" name="'.$this->piFieldName('wizArray_upd').$prefix.'[conf_showFieldWizKey]" value="'.$wizKey.'">
-			<tr><td colspan="2"><table style="background-color:#f1fbfd; border: 1px  #000099 solid;">
-		  <tr><td colspan="2" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;">
-        <div style="float: left;width: 100%; background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuBorder.gif) repeat-x bottom;">
-          <ul style="margin: 0px;padding: 0px;list-style: none;">'.$subContent.'</ul>'.
-          $this->helpIcon($fConf['type']).'
-        </div>
-      </td></tr>
-			<tr><td valign=top>'.$this->fw($this->renderCheckBox($prefix.'[conf_showFieldDisp]['.$wizKey.']',$fConf['conf_showFieldDisp'][$wizKey]).'&nbsp;<b style="'.$styleSel.'">Select:</b><br>').$showFoldersCfg.'</td><td valign=top>'.$this->fw($showField).'</td></tr>
-			</table></tr></td>
-      ';
 
+      $additionalContent[] = '<tr>';
+      $additionalContent[] = '<td colspan="2">';
+      $additionalContent[] = '<input type="hidden" name="' . $this->piFieldName('wizArray_upd') . $prefix . '[conf_showFieldWizKey]" value="' . $wizKey . '" />';
+      $additionalContent[] = '<table style="background-color:#f1fbfd; border: 1px  #000099 solid;">';
+      $additionalContent[] = '<tr>';
+      $additionalContent[] = '<td colspan="2" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;">';
+      $additionalContent[] = '<div style="float: left;width: 100%; background: url(' .
+        $this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library') .
+        'kickstarter/taMenuBorder.gif) repeat-x bottom;">';
+      $additionalContent[] = '<ul style="margin: 0px;padding: 0px;list-style: none;">' . $subContent . '</ul>';
+      $additionalContent[] = $this->helpIcon($fConf['type']);
+      $additionalContent[] = '</div>';
+      $additionalContent[] = '</td>';
+      $additionalContent[] = '</tr>';
+      $additionalContent[] = '<tr>';
+      $additionalContent[] = '<td valign="top">';
+      $additionalContent[] = $this->fw(
+        $this->renderCheckBox(
+          $prefix . '[conf_showFieldDisp][' . $wizKey .']',
+          $fConf['conf_showFieldDisp'][$wizKey]
+        ) . '&nbsp;<strong style="' . $styleSel . '">Select:</strong><br />'
+      ) . $showFoldersCfg;
+      $additionalContent[] = '</td>';
+      $additionalContent[] = '<td valign="top">';
+      $additionalContent[] = $this->fw($showField);
+      $additionalContent[] = '</td>';
+      $additionalContent[] = '</tr>';
+      $additionalContent[] = '</table>';
+      $additionalContent[] = '</td>';
+      $additionalContent[] = '</tr>';
     }	
 
-		$content='<table border="0" cellpadding="0" cellspacing="0">
-			<tr><td valign="top">'.$this->fw('Field name:').'</td><td valign="top">'.$this->fw($fieldName).'</td></tr>
-			<tr><td valign="top">'.$this->fw('Field title:').'</td><td valign="top">'.$this->fw($fieldTitle).'</td></tr>
-			<tr><td valign="top">'.$this->fw('Field type:').'</td><td valign="top">'.$this->fw($typeCfg).'</td></tr>
-			'.$additionalContent.'
-		</table>';
+		$content[] = '<table>';
+		$content[] = '<tr>';
+		$content[] = '<td valign="top">'.$this->fw('Field name:').'</td>';
+		$content[] = '<td valign="top">'.$this->fw($fieldName).'</td>';
+		$content[] = '</tr>';
+		$content[] = '<tr>';
+		$content[] = '<td valign="top">'.$this->fw('Field title:').'</td>';
+		$content[] = '<td valign="top">'.$this->fw($fieldTitle).'</td>';
+		$content[] = '</tr>';
+		$content[] = '<tr>';
+		$content[] = '<td valign="top">'.$this->fw('Field type:').'</td>';
+		$content[] = '<td valign="top">'.$this->fw($typeCfg).'</td>';
+		$content[] = '</tr>';
+		$content[] = implode('', $additionalContent);
+		$content[] = '</table>';
 
-/* Original code
+    /* Original code
 		$content = '<table border="0" cellpadding="0" cellspacing="0">
 			<tr><td valign="top">'.$this->fw('Field name:').'</td><td valign="top">'.$this->fw($fieldName).'</td></tr>
 			<tr><td valign="top">'.$this->fw('Field title:').'</td><td valign="top">'.$this->fw($fieldTitle).'</td></tr>
 			<tr><td valign="top">'.$this->fw('Field type:').'</td><td valign="top">'.$this->fw($typeCfg).'</td></tr>
 		</table>';
-*/
-//--------------------------
-// End - Modified 
-//--------------------------	
-
+		
 		return $content;
+*/
+
+		return implode('', $content);
+//--------------------------
+// End - Modified
+//--------------------------
 	}
 
 
@@ -962,7 +1015,12 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 // Begin - Modified 
 //--------------------------	
   function helpIcon($field){
-    return '<a href="#" style="float:right;" onclick="vHWin=window.open(\''.$this->wizard->siteBackPath.TYPO3_mainDir.'view_help.php?tfID=sav_library.'.$field.'\',\'viewFieldHelp\',\'height=400,width=600,status=0,menubar=0,scrollbars=1\');vHWin.focus();return false;"><img src="'.$this->wizard->siteBackPath.TYPO3_mainDir.'gfx/helpbubble.gif" width="16" height="16" hspace="2" border="0" class="typo3-csh-icon" alt="'.$field.'" /></a>';
+    return '<a href="#" style="float:right;" onclick="vHWin=window.open(\'' .
+      $this->wizard->siteBackPath . TYPO3_mainDir .
+      'view_help.php?tfID=sav_library.' . $field .
+      '\',\'viewFieldHelp\',\'height=400,width=600,status=0,menubar=0,scrollbars=1\');vHWin.focus();return false;">' .
+      '<img src="' . $this->wizard->siteBackPath . TYPO3_mainDir .
+      'gfx/helpbubble.gif" width="16" height="16" hspace="2" border="0" class="typo3-csh-icon" alt="' . $field . '" /></a>';
   }
 //--------------------------
 // End - Modified 

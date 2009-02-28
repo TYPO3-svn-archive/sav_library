@@ -63,15 +63,15 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 
 
 				// Enter title of the table
-			$subContent = '<strong>Tablename:</strong><BR>'.
+			$subContent = '<strong>Tablename:</strong><br />'.
 				$this->returnName($this->wizard->extKey,'tables').'_'.$this->renderStringBox($ffPrefix.'[tablename]',trim($piConf['tablename'])).
-				'<BR><strong>Notice:</strong> Use characters a-z0-9 only. Only lowercase, no spaces.<BR>
+				'<br /><strong>Notice:</strong> Use characters a-z0-9 only. Only lowercase, no spaces.<br />
 				This becomes the table name in the database. ';
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 
 				// Enter title of the table
-			$subContent = '<strong>Title of the table:</strong><BR>'.
+			$subContent = '<strong>Title of the table:</strong><br />'.
 				$this->renderStringBox_lang('title',$ffPrefix,$piConf);
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
@@ -85,19 +85,19 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 
 				// Do it for real...
 				$lines[] = '<tr'.$this->bgCol(1).'><td><strong> Fields Overview </strong></td></tr>';
-				$lines[] = '<tr><td></td></tr>';
-
-				$subContent = '<tr '.$this->bgCol(2).'>
-					<td><strong>Name</strong></td>
-					<td><strong>Title</strong></td>
-					<td><strong>Type</strong></td>
-					<td><strong>Exclude?</strong></td>
-					<td><strong>Details</strong></td>
-				</tr>';
-				
+				$lines[] = '<tr><td>&nbsp;</td></tr>';
 //--------------------------
-// begin - Modified 
-//--------------------------						
+// begin - Modified
+//--------------------------
+        $tempContent = array();
+        $tempContent[] = '<tr ' . $this->bgCol(2) . '>';
+        $tempContent[] = '<td><strong>Name</strong></td>';
+        $tempContent[] = '<td><strong>Title</strong></td>';
+        $tempContent[] = '<td><strong>Type</strong></td>';
+        $tempContent[] = '<td><strong>Exclude?</strong></td>';
+        $tempContent[] = '<td><strong>Details</strong></td>';
+        $tempContent[] = '</tr>';
+        
 				$this->siteBackPath = $this->wizard->siteBackPath;
 				if ($this->wizard->wizArray['savext'][1]['generateForm']) {
 
@@ -156,23 +156,35 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
               $opt_formViews[$key] = $view['title'];
             }
 
-            $subContent .='<tr><td colspan="5">Use fields as in</a> '.$this->renderSelectBox($ffPrefix.'[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews).
-                 '&nbsp;&nbsp;<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'reorderFields'.'\';
-                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();" name="'.$this->piFieldName('reOrder').'" value="Reorder?">'.
-                 '&nbsp;&nbsp;<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'copyFields'.'\';
-                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();" name="'.$this->piFieldName('copy').'" value="Copy?">'.      			     
-                 '&nbsp;&nbsp;<input type="submit" name="'.$this->piFieldName('viewResult').'" value="View result">'.
-                 '&nbsp;&nbsp;<input type="submit" name="'.$this->piFieldName('WRITE').'" value="Write?" onclick="
-                 return confirm(\'If you are not sure, use the View result button\');               
-                 " />'.
-                 '</td></tr>';
+            $tempContent[] = '<tr>';
+            $tempContent[] = '<td colspan="5">';
+            $tempContent[] = 'Use fields as in ' . $this->renderSelectBox($ffPrefix . '[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews);
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('reOrder') . '" value="Reorder?" />';
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'copyFields' . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('copy') . '" value="Copy?" />';
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="submit" name="' . $this->piFieldName('viewResult') . '" value="View result" />';
+            $tempContent[] = '&nbsp;&nbsp;';
+            $tempContent[] = '<input type="submit" name="' . $this->piFieldName('WRITE') . '" value="Write?" onclick="' .
+              'return confirm(\'If you are not sure, use the View result button\');" />';
+            $tempContent[] = '</td>';
+            $tempContent[] = '</tr>';
+
           } 
       			     
 				  //  Add the overview
-          $subContent .= '<tr><td colspan="5" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;"><div style="float: left;width: 100%; background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuBorder.gif) repeat-x bottom;"><ul style="margin: 0px;padding: 0px;list-style: none;">';
-                  
+          $tempContent[] = '<tr>';
+          $tempContent[] = '<td colspan="5" style="padding-left:0px; padding-right:0px; padding-top:0px; padding-bottom:5px;">';
+          $tempContent[] = '<div style="float: left;width: 100%; background: url(' .
+            $this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library') .
+            'kickstarter/taMenuBorder.gif) repeat-x bottom;">';
+          $tempContent[] = '<ul style="margin: 0px;padding: 0px;list-style: none;">';
+
           if (isset($this->wizard->wizArray['formviews'])) {
             $viewKeys = array();
             foreach($this->wizard->wizArray['formviews'] as $key => $view) {
@@ -196,22 +208,31 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
               $stylePos = 'border-bottom: 1px solid #84B0C7;';        
               $styleSPAN ='float: left;display: block;background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuLeft.gif) no-repeat left top;padding: 5px 9px;white-space: nowrap;';
             }
-            $subContent .='<li style="display: inline;margin: 0px;padding: 0px;"><a href="#"
-              style="float: left;'.$style.'background: url('.$this->siteBackPath.t3lib_extMgm::siteRelPath('sav_library').'kickstarter/taMenuRight.gif) no-repeat right top; '.$stylePos.'font-size: 10px;font-weight: bold; text-decoration: none;" 
-                onClick="document.kickstarter_wizard[\'kickstarter[wizSubCmd]\'].value=\''.$this->wizard->modData["wizSubCmd"].'\';
-                 document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\''.'changeAllWizKey'.'\';
-      			     document.kickstarter_wizard[\'kickstarter[wizAction]\'].value=\''.$this->wizard->modData["wizAction"].'\';
-      			     document.kickstarter_wizard[\'kickstarter[wizKey]\'].value=\''.$key.'\';
-      			     document.kickstarter_wizard[\'kickstarter[wizId]\'].value=\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\';
-                 setFormAnchorPoint(\''.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]').'\');
-      			     document.kickstarter_wizard.submit();
-      			     return false;" ><span style="'.$styleSPAN.'">'.$view['title'].'</span></a></li>';
 
+            $tempContent[] = '<li style="display: inline;margin: 0px;padding: 0px;">';
+            $tempContent[] = '<a href="#" style="float: left;' . $style .
+              'background: url(' . $this->siteBackPath . t3lib_extMgm::siteRelPath('sav_library') .
+              'kickstarter/taMenuRight.gif) no-repeat right top; ' . $stylePos .
+              'font-size: 10px;font-weight: bold; text-decoration: none;" ' .
+              'onclick="document.kickstarter_wizard[\'kickstarter[wizSubCmd]\'].value=\'' . $this->wizard->modData["wizSubCmd"] . '\';' .
+              'document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'changeAllWizKey' . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizAction]\'].value=\'' . $this->wizard->modData["wizAction"] . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizKey]\'].value=\'' . $key . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizId]\'].value=\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix.'[fieldHeader]') . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard.submit();return false;" >';
+            $tempContent[] = '<span style="' . $styleSPAN . '">' . $view['title'] . '</span>';
+            $tempContent[] = '</a>';
+            $tempContent[] = '</li>';
 
             }
           }
-          $subContent .= '</td></tr>'; 
-           
+
+          $tempContent[] = '</ul>';
+          $tempContent[] = '</div>';
+          $tempContent[] = '</td>';
+          $tempContent[] = '</tr>';
+
           // Initialize the showOrder for each view	if necessary
 				  $cpt = 1;
  				  if (isset($viewKeys)) {
@@ -262,16 +283,17 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 					$subContent .= $this->renderFieldOverview($ffPrefix.'[fields]['.$k.']',$v);
 */
           $style = ( $v['conf_showFieldDisp'][$wizKey] ? $styleSel : '');
-					$subContent .= $this->renderFieldOverview($ffPrefix.'[fields]['.$k.']',$v,0,$style);
-//--------------------------
-// End - Modified 
-//--------------------------					}
+					$tempContent[] = $this->renderFieldOverview($ffPrefix.'[fields]['.$k.']',$v,0,$style);
 				}
-				$lines[] = '<tr'.$this->bgCol(3).'><td><table>'.$this->fw($subContent).'</table></td></tr>';
+				$subContent = implode('', $tempContent);
+				$lines[] = '<tr'.$this->bgCol(3).'><td><table>' . $subContent . '</table></td></tr>';
+//--------------------------
+// End - Modified
+//--------------------------
 			}
 
 			$lines[] = '<tr'.$this->bgCol(1).'><td><strong> Edit Fields </strong></td></tr>';
-			$lines[] = '<tr><td></td></tr>';
+			$lines[] = '<tr><td>&nbsp;</td></tr>';
 
 			$subContent  = '';
 			$subContent .= $this->renderCheckBox($ffPrefix.'[add_deleted]',$piConf['add_deleted'],1).'Add "Deleted" field '.$this->whatIsThis('Whole system: If a table has a deleted column, records are never really deleted, just "marked deleted" . Thus deleted records can actually be restored by clearing a deleted-flag later.\nNotice that all attached files are also not deleted from the server, so if you expect the table to hold some heavy size uploads, maybe you should not set this...') . '<BR>';
@@ -291,8 +313,8 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			$subContent .= $this->renderCheckBox($ffPrefix.'[localization]',$piConf['localization']).'Enabled localization features'.$this->whatIsThis('If set, the records will have a selector box for language and a reference field which can point back to the original default translation for the record. These features are part of the internal framework for localization.').'<BR>';
 			$subContent .= $this->renderCheckBox($ffPrefix.'[versioning]',$piConf['versioning']).'Enable versioning '.$this->whatIsThis('If set, you will be able to versionize records from this table. Highly recommended if the records are passed around in a workflow.').'<BR>';
 			$subContent .= $this->renderCheckBox($ffPrefix.'[sorting]',$piConf['sorting']).'Manual ordering of records '.$this->whatIsThis('If set, the records can be moved up and down relative to each other in the backend. Just like Content Elements. Otherwise they are sorted automatically by any field you specify').'<BR>';
-			$subContent .= $this->textSetup('','If "Manual ordering" is not set, order the table by this field:<BR>'.
-				$this->renderSelectBox($ffPrefix.'[sorting_field]',$piConf['sorting_field'],$this->currentFields($optValues,$piConf['fields'])).'<BR>'.
+			$subContent .= $this->textSetup('','If "Manual ordering" is not set, order the table by this field:<br />'.
+				$this->renderSelectBox($ffPrefix.'[sorting_field]',$piConf['sorting_field'],$this->currentFields($optValues,$piConf['fields'])).'<br />'.
 				$this->renderCheckBox($ffPrefix.'[sorting_desc]',$piConf['sorting_desc']).' Descending');
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
@@ -300,7 +322,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			$optValues = array(
 				'0' => '[none]',
 			);
-			$subContent = '<strong>"Type-field", if any:<BR></strong>'.
+			$subContent = '<strong>"Type-field", if any:<br /></strong>'.
 					$this->renderSelectBox($ffPrefix.'[type_field]',$piConf['type_field'],$this->currentFields($optValues,$piConf['fields'])).
 					$this->whatIsThis('A "type-field" is the field in the table which determines how the form is rendered in the backend, eg. which fields are shown under which circumstances.\nFor instance the Content Element table "tt_content" has a type-field, CType. The value of this field determines if the editing form shows the bodytext field as is the case when the type is "Text" or if also the image-field should be shown as when the type is "Text w/Image"');
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
@@ -309,7 +331,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			$optValues = array(
 				'0' => '[none]',
 			);
-			$subContent = '<strong>Label-field:<BR></strong>'.
+			$subContent = '<strong>Label-field:<br /></strong>'.
 					$this->renderSelectBox($ffPrefix.'[header_field]',$piConf['header_field'],$this->currentFields($optValues,$piConf['fields'])).
 					$this->whatIsThis('A "label-field" is the field used as record title in the backend.');
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
@@ -330,23 +352,23 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 				// Allowed on pages
-			$subContent = '<strong>Allowed on pages:<BR></strong>'.
+			$subContent = '<strong>Allowed on pages:<br /></strong>'.
 					$this->renderCheckBox($ffPrefix.'[allow_on_pages]',$piConf['allow_on_pages']).' Allow records from this table to be created on regular pages.';
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 				// Allowed in "Insert Records"
-			$subContent = '<strong>Allowed in "Insert Records" field in content elements:<BR></strong>'.
+			$subContent = '<strong>Allowed in "Insert Records" field in content elements:<br /></strong>'.
 					$this->renderCheckBox($ffPrefix.'[allow_ce_insert_records]',$piConf['allow_ce_insert_records']).' Allow records from this table to be linked to by content elements.';
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 				// Add new button
-			$subContent = '<strong>Add "Save and new" button in forms:<BR></strong>'.
+			$subContent = '<strong>Add "Save and new" button in forms:<br /></strong>'.
 					$this->renderCheckBox($ffPrefix.'[save_and_new]',$piConf['save_and_new']).' Will add an additional save-button to forms by which you can save the item and instantly create the next.';
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 
-			$subContent = '<strong>Notice on fieldnames:<BR></strong>'.
-				'Don\'t use fieldnames from this list of reserved names/words: <BR>
+			$subContent = '<strong>Notice on fieldnames:<br /></strong>'.
+				'Don\'t use fieldnames from this list of reserved names/words: <br />
 				<blockquote><em>' . implode(', ', $this->wizard->reservedWords).'</em></blockquote>';
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
@@ -387,10 +409,10 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
           $upCP = $this->getOnChangeParts($prefix.'[conf_opt_formViews]');
 
 					$lines[] = '<tr'.$this->bgCol(2).'><td>'.$this->fw('<a name="'.$md5h.'"></a><strong>FIELD:</strong> <em>'.$v['fieldname'].'</em>').
-				  '&nbsp;&nbsp;&nbsp;&nbsp;<input type="image" hspace=2 src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/move_record.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE" onClick="'.$onCP[1].'" title="Move this field after">'.
+				  '&nbsp;&nbsp;&nbsp;&nbsp;<input type="image" hspace="2" src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/move_record.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE" onClick="'.$onCP[1].'" title="Move this field after" />'.
           '&nbsp;&nbsp;'.$this->renderSelectBox($prefix."[conf_moveAfter]",'',$optValues).
 				  '&nbsp;&nbsp;'.'<a href="'.$this->linkThisCmd().'#">'.
-          '<input type="image" hspace=2 width="10" height="10" src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/redup.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE_OVERVIEW" onClick="'.$upCP[1].'" title="Move to the overview">'.          
+          '<input type="image" hspace="2" width="10" height="10" src="'.$this->siteBackPath.TYPO3_mainDir.'gfx/redup.gif" name="'.$this->varPrefix.'_CMD_'.$fConf['fieldname'].'_MOVE_OVERVIEW" onClick="'.$upCP[1].'" title="Move to the overview" />'.
           '</a></td></tr>';
 					$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 				}
@@ -407,7 +429,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
 
-			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw('<BR><BR>Load preset fields: <BR>'.$selPresetBox).'</td></tr>';
+			$lines[] = '<tr'.$this->bgCol(3).'><td>'.$this->fw('<br /><br />Load preset fields: <br/>'.$selPresetBox).'</td></tr>';
 		}
 
 		/* HOOK: Place a hook here, so additional output can be integrated */
@@ -417,7 +439,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 		  }
 		}
 
-		$content = '<table border=0 cellpadding=2 cellspacing=2>'.implode('',$lines).'</table>';
+		$content = '<table border="0" cellpadding="2" cellspacing="2">'.implode('',$lines).'</table>';
 
 		return $content;
 	}
@@ -531,7 +553,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			$details
 			);
 */
-		return sprintf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td>',
+		return sprintf('<tr><td>%s</td><td>%s</td><td>%s</td><td>%s</td><td>%s</td></tr>',
 			'<a style="'.$style.'" href="'.$this->linkThisCmd().'#'.t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$prefix.'[fieldHeader]').'">'.$fConf['fieldname'].'</a>',
 			$fConf['title'],
 			$optTypes[$fConf['type']],

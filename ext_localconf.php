@@ -18,8 +18,6 @@ if (t3lib_extMgm::isLoaded('kickstarter')) {
   $_EXTKEY = $save_EXTKEY;
   if (file_exists(t3lib_extMgm::extPath($_EXTKEY) . 'kickstarter/' . $kickstarterVersion)) {
     // Extending the kickstarter classes
-    $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kickstarter/modfunc1/class.tx_kickstarter_modfunc1.php'] =
-      t3lib_extMgm::extPath($_EXTKEY) . 'kickstarter/' . $kickstarterVersion . '/modfunc1/class.ux_tx_kickstarter_modfunc1.php';
     $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kickstarter/class.tx_kickstarter_wizard.php'] =
       t3lib_extMgm::extPath($_EXTKEY) . 'kickstarter/' . $kickstarterVersion . '/class.ux_tx_kickstarter_wizard.php';
     $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kickstarter/sections/class.tx_kickstarter_section_tables.php'] =

@@ -130,6 +130,10 @@
         
         &lt;b&gt;fieldAlt = field_name;&lt;/b&gt;
         Sets the "alt" attribute with the content of the field whose name is given by field_name.
+        
+        &lt;b&gt;default = string;&lt;/b&gt;
+        Defines the default image if the content of the field is null otherwise the default image is “unknown.gif” taken in the directory sav_library/res/images.
+
       </label>   
 
       <!-- Forms generator -->
@@ -875,6 +879,10 @@
         
         &lt;b&gt;fieldAlt = field_name;;&lt;/b&gt;
         Définit l'attribut HTML "alt" à partir du contenu du champdont le nom est "field_name".    
+
+        &lt;b&gt;default = string;&lt;/b&gt;
+        Définit l'image par défaut si le contenu du champ est vide, sinon l'image par défaut est “unknown.gif” du répertoire "sav_library/res/images".
+
       </label>   
 
       <!-- Forms generator -->

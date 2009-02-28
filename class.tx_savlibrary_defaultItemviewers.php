@@ -915,12 +915,12 @@ class tx_savlibrary_defaultItemviewers {
         }
         
         // It's an image. Set parameters
-		    if ($file && file_exists($folder.'/'.$file)) {
+		    if ($file && file_exists($folder . '/' . $file)) {
           $params['width'] = $config['width'];
           $params['height'] = $config['height'];
           $params['folder'] = $folder;
           $params['alt'] = $config['alt'];
-          $out = $this->savlibrary->makeImage($file,'',$params);
+          $out = $this->savlibrary->makeImage($file, '', $params);
                  
           if ($config['func']=='makeNewWindowLink') {
             $out = $this->savlibrary->makeNewWindowLink (
@@ -928,7 +928,7 @@ class tx_savlibrary_defaultItemviewers {
               $uid='',
               array('windowurl' => $folder . '/' . $file)
             );
-          } elseif ($config['func']=='makeItemLink') {
+          } elseif ($config['func'] == 'makeItemLink') {
             $out = preg_replace(
               '/(<a[^>]*>)[^<]*(<\/a>)/',
               '$1' . $out . '$2',
@@ -939,16 +939,26 @@ class tx_savlibrary_defaultItemviewers {
         } else {
           $params['width'] = $config['width'];
           $params['height'] = $config['height'];
+          $image = (
+            $config['default'] ?
+            $config['default'] :
+            t3lib_extMgm::siteRelPath('sav_library') . 'res/images/unknown.gif'
+          );
+
           $out = $this->savlibrary->makeImage(
-            t3lib_extMgm::siteRelPath('sav_library').'res/images/unknown.gif',
+            $image,
             '',
             $params
           );
-          $out = preg_replace(
-            '/(<a[^>]*>)[^<]*(<\/a>)/',
-            '$1' . $out . '$2',
-            $config['value']
-          );
+          
+          if ($config['func'] == 'makeItemLink') {
+            $out = preg_replace(
+              '/(<a[^>]*>)[^<]*(<\/a>)/',
+              '$1' . $out . '$2',
+              $config['value']
+            );
+          }
+
           $htmlArray[] = $out;
         }
       } else {
@@ -977,7 +987,7 @@ class tx_savlibrary_defaultItemviewers {
             ) . '&nbsp;&nbsp;';
           }
         }
-      $htmlArray[] = $this->savlibrary->makeLink($config['value'],'',$params);        
+      $htmlArray[] = $this->savlibrary->makeLink($config['value'], '', $params);
     }
     
     return $this->savlibrary->arrayToHTML($htmlArray);
