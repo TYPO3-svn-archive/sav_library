@@ -105,6 +105,7 @@ class tx_savlibrary_defaultViewers {
 
   			if ($x['REGIONS']['items']){
     			foreach($x['REGIONS']['items'] as $k => $v) {
+
     			  // Clear the field value if the cutter is set
     			  if ($v['CUTTERS']['CUT_value']) {
               $v['MARKERS'][$v['MARKERS']['field']] = '';
@@ -120,6 +121,7 @@ class tx_savlibrary_defaultViewers {
             if(!array_key_exists($v['MARKERS']['field'], $item)) {
     				  // Add the fied
     				  $item[$v['MARKERS']['field']] = $v['MARKERS'][$v['MARKERS']['field']];
+    				  $item[$v['MARKERS']['field'] . '_fullFieldName'] = $v['MARKERS'][$v['MARKERS']['field'] . '_fullFieldName'];
             } else {
               $this->savlibrary->addErrorOnce('message.sameFieldName',
                 '[' . $this->savlibrary->viewName . ' -> ' . $v['MARKERS']['field'] . ']');
@@ -128,18 +130,13 @@ class tx_savlibrary_defaultViewers {
   			}
         $items['MARKERS'] = $item;
   			$items['TYPE'] = 'item';
-
+  			
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
             $label = $this->savlibrary->getLL_db(
               'LLL:EXT:' . $this->extKey.'/locallang_db.xml:' .
-              $items['MARKERS'][$matches[1][$keyMatch] . '_FieldName']
-            );
-            $label .= (
-              $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
-              '<span class="required">*</span>' :
-              ''
+              $items['MARKERS'][$matches[1][$keyMatch] . '_fullFieldName']
             );
             if ($label) {
               $tmpl = str_replace($matches[0][$keyMatch], $label, $tmpl);
