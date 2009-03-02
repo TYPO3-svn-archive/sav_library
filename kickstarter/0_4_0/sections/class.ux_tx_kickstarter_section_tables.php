@@ -90,14 +90,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 // begin - Modified
 //--------------------------
         $tempContent = array();
-        $tempContent[] = '<tr ' . $this->bgCol(2) . '>';
-        $tempContent[] = '<td><strong>Name</strong></td>';
-        $tempContent[] = '<td><strong>Title</strong></td>';
-        $tempContent[] = '<td><strong>Type</strong></td>';
-        $tempContent[] = '<td><strong>Exclude?</strong></td>';
-        $tempContent[] = '<td><strong>Details</strong></td>';
-        $tempContent[] = '</tr>';
-        
+       
 				$this->siteBackPath = $this->wizard->siteBackPath;
 				if ($this->wizard->wizArray['savext'][1]['generateForm']) {
 
@@ -160,11 +153,11 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
             $tempContent[] = '<td colspan="5">';
             $tempContent[] = 'Use fields as in ' . $this->renderSelectBox($ffPrefix . '[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews);
             $tempContent[] = '&nbsp;&nbsp;';
-            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
+            $tempContent[] = '<input type="button" onclick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
               'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
       			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('reOrder') . '" value="Reorder?" />';
             $tempContent[] = '&nbsp;&nbsp;';
-            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'copyFields' . '\';' .
+            $tempContent[] = '<input type="button" onclick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'copyFields' . '\';' .
               'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
       			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('copy') . '" value="Copy?" />';
             $tempContent[] = '&nbsp;&nbsp;';
@@ -214,12 +207,12 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
               'background: url(' . $this->siteBackPath . t3lib_extMgm::siteRelPath('sav_library') .
               'kickstarter/taMenuRight.gif) no-repeat right top; ' . $stylePos .
               'font-size: 10px;font-weight: bold; text-decoration: none;" ' .
-              'onclick="document.kickstarter_wizard[\'kickstarter[wizSubCmd]\'].value=\'' . $this->wizard->modData["wizSubCmd"] . '\';' .
+              'onclick="document.kickstarter_wizard[\'kickstarter[wizSubCmd]\'].value=\'' . $this->wizard->modData['wizSubCmd'] . '\';' .
               'document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'changeAllWizKey' . '\';' .
-      			  'document.kickstarter_wizard[\'kickstarter[wizAction]\'].value=\'' . $this->wizard->modData["wizAction"] . '\';' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizAction]\'].value=\'' . $this->wizard->modData['wizAction'] . '\';' .
       			  'document.kickstarter_wizard[\'kickstarter[wizKey]\'].value=\'' . $key . '\';' .
-      			  'document.kickstarter_wizard[\'kickstarter[wizId]\'].value=\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix.'[fieldHeader]') . '\';' .
-              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+      			  'document.kickstarter_wizard[\'kickstarter[wizId]\'].value=\'' . t3lib_div::shortMd5($this->piFieldName('wizArray_upd') . $ffPrefix.'[fieldHeader]') . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName('wizArray_upd') . $ffPrefix . '[fieldHeader]') . '\');' .
       			  'document.kickstarter_wizard.submit();return false;" >';
             $tempContent[] = '<span style="' . $styleSPAN . '">' . $view['title'] . '</span>';
             $tempContent[] = '</a>';
@@ -231,6 +224,15 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
           $tempContent[] = '</ul>';
           $tempContent[] = '</div>';
           $tempContent[] = '</td>';
+          $tempContent[] = '</tr>';
+
+          // Add title
+          $tempContent[] = '<tr ' . $this->bgCol(2) . '>';
+          $tempContent[] = '<td><strong>Name</strong></td>';
+          $tempContent[] = '<td><strong>Title</strong></td>';
+          $tempContent[] = '<td><strong>Type</strong></td>';
+          $tempContent[] = '<td><strong>Exclude?</strong></td>';
+          $tempContent[] = '<td><strong>Details</strong></td>';
           $tempContent[] = '</tr>';
 
           // Initialize the showOrder for each view	if necessary
@@ -584,7 +586,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
   
 	function renderTextareaBox($prefix,$value,$width=600,$rows=10)	{
 		$onCP = $this->getOnChangeParts($prefix);
-		return $this->wopText($prefix).$onCP[0].'<textarea name="'.$this->piFieldName('wizArray_upd').$prefix.'" style="width:'.$width.'px;" rows="'.$rows.'" wrap="OFF" onChange="'.$onCP[1].'" title="'.htmlspecialchars("WOP:".$prefix).'"'.$this->wop($prefix).'>'.t3lib_div::formatForTextarea($value).'</textarea>';
+		return $this->wopText($prefix).$onCP[0].'<textarea name="'.$this->piFieldName('wizArray_upd').$prefix.'" style="width:'.$width.'px;" rows="'.$rows.'" wrap="OFF" onChange="'.$onCP[1].'"'.$this->wop($prefix).'>'.t3lib_div::formatForTextarea($value).'</textarea>';
 	}
   
 }

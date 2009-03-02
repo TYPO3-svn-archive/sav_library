@@ -126,7 +126,7 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 				document.'.$this->varPrefix.'_wizard.action = unescape("'.rawurlencode($this->linkThisCmd()).'")+"#"+anchor;
 			}
 		</script>
-		<form action="' . $this->linkThisCmd() . '" method="POST" name="' . $this->varPrefix . '_wizard">
+		<form action="' . $this->linkThisCmd() . '" method="post" name="' . $this->varPrefix . '_wizard">
 		  <table border="0" cellpadding="0" cellspacing="0">
 			<tr>
 				<td valign="top">'.$this->sidemenu().'</td>

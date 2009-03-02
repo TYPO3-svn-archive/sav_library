@@ -226,11 +226,12 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewCheckbox(&$config) {
-  
+
     $htmlArray = array();
     
     if (is_array($config['items'])) {
-      $cols = ($config['nbcols'] ? $config['nbcols'] : 1);
+      $cols = ($config['cols'] ? $config['cols'] : 1);
+
       $cpt = 0;
       $cptItem = 0;
       $val = $config['value'];
@@ -298,11 +299,11 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewCheckboxEditMode(&$config) {
-  
+
     $htmlArray = array();
     
     if (is_array($config['items'])) {
-      $cols = ($config['nbcols'] ? $config['nbcols'] : 1);
+      $cols = ($config['cols'] ? $config['cols'] : 1);
       $cpt = 0;
       $cptItem = 0;
       $val = $config['value'];

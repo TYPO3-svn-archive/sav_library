@@ -1211,7 +1211,7 @@ class tx_savlibrary_defaultViewers {
   
       // Display the checkboxes
       $config = array(
-        'nbcols' => 2,
+        'cols' => 2,
   		  'elementControlName' => $this->savlibrary->formName.'[fields][0]',
       );
  

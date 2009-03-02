@@ -103,13 +103,6 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 				  $lines[] = '<tr><td>&nbsp;</td></tr>';
 				
           $tempContent = array();
-          $tempContent[] = '<tr ' . $this->bgCol(2) . '>';
-          $tempContent[] = '<td><strong>Name</strong></td>';
-          $tempContent[] = '<td><strong>Title</strong></td>';
-          $tempContent[] = '<td><strong>Type</strong></td>';
-          $tempContent[] = '<td><strong>Exclude?</strong></td>';
-          $tempContent[] = '<td><strong>Details</strong></td>';
-          $tempContent[] = '</tr>';
         
           if ($this->wizard->modData["wizId"] == t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]') ) {
             $wizKey = $this->wizard->modData["wizKey"];
@@ -230,12 +223,12 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
             $tempContent[] = '<td colspan="5">';
             $tempContent[] = 'Use fields as in ' . $this->renderSelectBox($ffPrefix . '[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews);
             $tempContent[] = '&nbsp;&nbsp;';
-            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
-              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+            $tempContent[] = '<input type="button" onclick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName('wizArray_upd') . $ffPrefix . '[fieldHeader]') . '\');' .
       			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('reOrder') . '" value="Reorder?" />';
             $tempContent[] = '&nbsp;&nbsp;';
-            $tempContent[] = '<input type="button" onClick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'copyFields' . '\';' .
-              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
+            $tempContent[] = '<input type="button" onclick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'copyFields' . '\';' .
+              'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName('wizArray_upd') . $ffPrefix . '[fieldHeader]') . '\');' .
       			  'document.kickstarter_wizard.submit();" name="' . $this->piFieldName('copy') . '" value="Copy?" />';
             $tempContent[] = '&nbsp;&nbsp;';
             $tempContent[] = '<input type="submit" name="' . $this->piFieldName('viewResult') . '" value="View result" />';
@@ -300,6 +293,15 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
           $tempContent[] = '</ul>';
           $tempContent[] = '</div>';
           $tempContent[] = '</td>';
+          $tempContent[] = '</tr>';
+          
+          // Add title
+          $tempContent[] = '<tr ' . $this->bgCol(2) . '>';
+          $tempContent[] = '<td><strong>Name</strong></td>';
+          $tempContent[] = '<td><strong>Title</strong></td>';
+          $tempContent[] = '<td><strong>Type</strong></td>';
+          $tempContent[] = '<td><strong>Exclude?</strong></td>';
+          $tempContent[] = '<td><strong>Details</strong></td>';
           $tempContent[] = '</tr>';
           
           // Initialize the showOrder for each view	if necessary
@@ -1863,7 +1865,7 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 	
 	function renderTextareaBox($prefix,$value,$width=600,$rows=10)	{
 		$onCP = $this->getOnChangeParts($prefix);
-		return $this->wopText($prefix).$onCP[0].'<textarea name="'.$this->piFieldName('wizArray_upd').$prefix.'" style="width:'.$width.'px;" rows="'.$rows.'" wrap="OFF" onChange="'.$onCP[1].'" title="'.htmlspecialchars("WOP:".$prefix).'"'.$this->wop($prefix).'>'.t3lib_div::formatForTextarea($value).'</textarea>';
+		return $this->wopText($prefix).$onCP[0].'<textarea name="'.$this->piFieldName('wizArray_upd').$prefix.'" style="width:'.$width.'px;" rows="'.$rows.'" wrap="OFF" onChange="'.$onCP[1].'"'.$this->wop($prefix).'>'.t3lib_div::formatForTextarea($value).'</textarea>';
 	}
 
 	
