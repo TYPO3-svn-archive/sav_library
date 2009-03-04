@@ -1300,7 +1300,7 @@ class tx_savlibrary_defaultQueriers {
       // Check if a query should be executed
       if ($configTable[$keyField]['query']) {
         $fieldQuery = $configTable[$keyField]['query']; 
-        
+
   			foreach($valueField as $key => $value) {
 
           // Check if the use of the query property is allowed
@@ -1310,16 +1310,19 @@ class tx_savlibrary_defaultQueriers {
             continue;
           }
         
-          if (!$configTable[$keyField]['queryonvalue'] || ($configTable[$keyField]['queryonvalue']==$value)) {
+          if (!$configTable[$keyField]['queryonvalue'] || ($configTable[$keyField]['queryonvalue'] == $value)) {
             $mA["###uid###"] = $this->savlibrary->uid;
             $mA["###CURRENT_PID###"] = $GLOBALS['TSFE']->page['uid'];
             $mA["###value###"] = $val;
             $mA["###user###"] = $GLOBALS['TSFE']->fe_user->user['uid'];
             if ($configTable[$keyField]['queryforeach']) {
               // Get the table name and the field
-              if(strpos($configTable[$keyField]['queryforeach'], '.')===false) {
-                $foreachField = $this->savlibrary->tableLocal . '.' . $configTable[$keyField]['queryforeach'];
+              if(strpos($configTable[$keyField]['queryforeach'], '.') === false) {
+                $foreachField = $this->savlibrary->cryptTag(
+                  $this->savlibrary->tableLocal . '.' . $configTable[$keyField]['queryforeach']
+                );
               }
+
               $foreachValues = explode(',', current($regularRow[$foreachField]));
               foreach($foreachValues as $foreachValue) {
                 $mA['###' . $configTable[$keyField]['queryforeach'] . '###'] = $foreachValue;
@@ -1331,6 +1334,7 @@ class tx_savlibrary_defaultQueriers {
                 );
                 $queryStrings = explode(';', $fieldQueryTemp);
                 foreach($queryStrings as $queryString) {
+
                   $res = $GLOBALS['TYPO3_DB']->sql_query($queryString);
                   if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
                     $error = true;

@@ -185,7 +185,8 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 
     // True if there is an inputAdminField configuration and the user is
     // a super admin (* in the TS config)
-     $this->fixture->conf['inputAdminField'] = 'lastname';
+    $this->fixture->conf['inputAdminField'] = '';
+    $this->fixture->conf['inputApplyLimit'] = 0;
     // set a valid user
     $this->userAuth('validSuperUser', 'test');
     $this->assertTrue($this->fixture->userIsAdmin($data[0]));
@@ -225,6 +226,16 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // set a valid user
     $this->userAuth('validUser', 'test');
     $this->assertFalse($this->fixture->userIsAdmin($data[0]));
+    // Also false the user is an admin plus and the limit is applied to him/her
+    $this->fixture->conf['inputApplyLimit'] = 2;
+    $this->userAuth('validAdminPlusUser', 'test');
+    $this->assertFalse($this->fixture->userIsAdmin($data[0], 1));
+    // but true if it is a super admin user
+    $this->fixture->conf['inputApplyLimit'] = 2;
+    $this->userAuth('validSuperUser', 'test');
+    $this->assertTrue($this->fixture->userIsAdmin($data[0]));
+    $this->fixture->conf['inputApplyLimit'] = 3;
+    $this->assertTrue($this->fixture->userIsAdmin($data[0]));
 
     // False if there is an inputAdminField configuration and the user has a
     // correct TS config and the stop date is incorrect
@@ -235,6 +246,15 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // set a valid user
     $this->userAuth('validUser', 'test');
     $this->assertFalse($this->fixture->userIsAdmin($data[0]));
+    $this->fixture->conf['inputApplyLimit'] = 2;
+    $this->userAuth('validAdminPlusUser', 'test');
+    $this->assertFalse($this->fixture->userIsAdmin($data[0], 1));
+    // but true if it is a super admin user
+    $this->fixture->conf['inputApplyLimit'] = 2;
+    $this->userAuth('validSuperUser', 'test');
+    $this->assertTrue($this->fixture->userIsAdmin($data[0]));
+    $this->fixture->conf['inputApplyLimit'] = 3;
+    $this->assertTrue($this->fixture->userIsAdmin($data[0]));
 
     // True if there is an inputAdminField configuration set to cruser_id
     // and the user has a correct TS config and the user created the record.

@@ -2379,8 +2379,16 @@ class tx_savlibrary_defaultItemviewers {
     			'activeLinkWrap' => '<span class="activeLinkWrap">|</span>'
    		);
 
-      $this->savlibrary->extObj->internal['res_count'] = ($nbitem/$maxSubItems) + 1;
-      $this->savlibrary->extObj->internal['results_at_a_time'] = $maxSubItems;
+      $this->savlibrary->extObj->internal['res_count'] = (
+        $maxSubItems ?
+        ($nbitem/$maxSubItems) + 1 :
+        $nbitem
+      );
+      $this->savlibrary->extObj->internal['results_at_a_time'] = (
+        $maxSubItems ?
+        $maxSubItems :
+        1
+      );
       $this->savlibrary->extObj->internal['pagefloat'] = 'center';
       $this->savlibrary->extObj->internal['showFirstLast'] =
         ($config['nofirstlast'] ? false : true);

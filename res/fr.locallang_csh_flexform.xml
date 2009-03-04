@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3locallangExt>
+	<data type="array">
+		<languageKey index="fr" type="array">
+			<label index="helpGeneral.description">Aide pour l'onglet &quot;Général&quot;</label>
+			<label index="helpGeneral.details">&lt;b&gt;Choisir un formulaire&lt;/b&gt;
+         Utiliser ce sélecteur pour choisir le nom du formulaire. Rappelons que &quot;SAV Library&quot; permet de construire plusieurs formulaires associés à la même extension et, aisni, d'avoir des vues différentes des tables.
+
+        &lt;b&gt;Tout montrer si pas de filtre&lt;/b&gt;
+        En sélectionnant cette entrée, tous les items sont affichés quand aucun filtre n'est appliqué comme, par exemple, l'extension &quot;sav_filter_abc&quot;.
+        
+        &lt;b&gt;Si aucune information disponible&lt;/b&gt;
+        Utiliser ce sélecteur pour choisir ce qui doit être affiché quand aucune information n'est disponible.
+        
+        &lt;b&gt;Nombre max d'éléments affichés&lt;/b&gt;
+        Nombre maximum d'items qui seront affichés. Si la valeur 0 est utilisée, tous les items seront affichés.
+        
+        &lt;b&gt;Page d'aide&lt;/b&gt;
+        Utiliser ce sélecteur pour choisir une page de votre site qui sera utilisée comme page d'aide pour votre extension. Dans ce cas, une icône sera affichée dans la barre de titre de l'extension.</label>
+			<label index="helpInput.description">Aide pour l'onglet &quot;Option de saisie&quot;</label>
+			<label index="helpInput.details">&lt;b&gt;Saisie autorisée&lt;/b&gt;
+        En sélectionnant cette option, les entrées Front End sont autorisées.
+        
+        &lt;b&gt;Groupes autorisés&lt;/b&gt;
+        Si vous sélectionnez des groupes d'utilisateurs, l'utilisateur de l'extension doit appartenir à l'un de ces groupes pour être autorisé à entrer des données en Front End.
+        
+        &lt;b&gt;Champ Admin&lt;/b&gt;
+        Mettre dans ce champ une entrée de la forme &quot;NomTable.NomChamp&quot; (si vous utilisez seulement &quot;NomChamp&quot;, la table principale définie dans la requête sera utilisée pour &quot;NomTable),
+        Ceci restreindra les entrées aux utilisateurs qui ont des droits &quot;Admin&quot; dans leur TS Config.
+        Par exemple, si un utilisateur a &quot;extKey_Admin=valeur1,valeur2&quot; dans son TS Config, il sera autorisé à éditer et détruire les items pour lesquels &quot;NomChamp&quot; est égal à &quot;valeur1&quot; ou &quot;valeur2&quot; pour l'extension &quot;extKey&quot;.
+        Les champs ou les onglets pour lesquels &quot;editAdminPlus = 1;&quot; est utilisé pourront être modifé en Front End si l'utilisateur a les droits &quot;Admin+&quot;. Par exemple, si son TS Config est &quot;extKey_Admin=valeur+,valeur2&quot; , l'utilisateur est &quot;Admin+&quot; pour les enregistrements où &quot;nomChamp&quot; est égal à &quot;valeur2&quot; et juste &quot;Admin&quot; pour les champs où &quot;nomChamp&quot; est égal à &quot;valeur2&quot;.
+        Les utilisateurs deviennent &quot;Super Admin&quot; pour l'extension extKey, si leur TS Config est &quot;extKey_Admin=*&quot;&quot;.
+
+        &lt;b&gt;Pas de bouton &quot;Nouveau&quot;&lt;/b&gt;
+        Le bouton &quot;Nouveau&quot; ne sera pas ajouté au formulaire. Cela signifie que la modification d'enregistrements existants est possible mais que la création de nouveaux enregistrements est impossible.
+
+        &lt;b&gt;Pas de bouton &quot;Supprimer&quot;&lt;/b&gt;
+        Un bouton &quot;supprimer&quot; ne sera pas ajouté devant chaque enregistrement dans les vues &quot;Show All&quot;.
+
+        &lt;b&gt;Pas de bouton &quot;Editer&quot;&lt;/b&gt;
+        Un bouton &quot;Editer&quot; ne sera pas ajouté devant chaque enregistrement dans les vues &quot;Show All&quot;.
+
+        &lt;b&gt;Ajouter un  bouton &quot;Supprimer&quot; pour les enregistrements créés par l'utilisateur &lt;/b&gt;
+        Ajoute un bouton &quot;supprimer&quot; seulemet pour les enregistrements créés par l'utilisateur.
+        
+        &lt;b&gt;Date début saisie&lt;/b&gt;
+        Si ce champ est utilisé, les entrées en Front End ne seront pas possibles avant cette date.
+        
+        &lt;b&gt;Date fin saisie&lt;/b&gt;
+        Si ce champ est utilisé, les entrées en Front End ne seront pas possibles après cette date.
+
+        &lt;b&gt;Appliquer la date à&lt;/b&gt;
+        Utiliser ce sélecteur pour choisir &quot;Personne&quot;, &quot;Tous&quot;, &quot;Utilisateurs Admin plus&quot;, &quot;Tous sauf les Super Admin&quot;. La date limite est appliquée en fonction de ce sélecteur.</label>
+			<label index="helpAdvanced.description">Aide pour l'onglet &quot;Avancées&quot;</label>
+			<label index="helpAdvanced.details">&lt;b&gt;Filtre permanent&lt;/b&gt;
+        Vous pouvez utiliser ce champ pour ajouter une clause WHERE qui sera ajoutée à la clause WHERE de la requête associée au formulaire.
+
+        &lt;b&gt;Ajouter un fragment(#content id) aux liens&lt;/b&gt;
+        L'id du contenu sera ajouté comme fragment à l'url des liens.
+        
+        &lt;b&gt;Autoriser l'utilisation de la propriété &quot;query&quot;&lt;/b&gt;
+        La propriété &quot;query&quot; permet d'ecécuter des requêtes dans les formulaires &quot;input&quot; ou &quot;update&quot;.
+        Parce que n'importe quelle requête peut être exécutée, pour des raisons de sécurité, seuls les utilisateurs &quot;admin&quot; peuvent modifier ce champ.
+
+        &lt;b&gt;Page de stockage des enregistrements&lt;/b&gt;
+        Cette option permet de stoker vos enregistrements dans une page spécifique, par exemple un &quot;sysfolder&quot;, sinon ils sont stockés dans la page courante.
+        Quand cette option est utilisée, les enregistrements sont recherchés dans la page de stockage et, le cas échéant, dans les pages sélectionnées comme &quot;point d'entrée&quot;.</label>
+		</languageKey>
+	</data>
+</T3locallangExt>
