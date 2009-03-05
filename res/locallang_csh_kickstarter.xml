@@ -517,7 +517,7 @@
         . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
-        . mailReceiverQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ... 
+        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
         . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value. 
         . mailcc=string; if set the string is used as Cc: for the mail.
@@ -530,7 +530,7 @@
         . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
-        . mailReceiverQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ... 
+        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
         . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.
@@ -543,7 +543,7 @@
         . mailSender=string; mail of the sender. The tag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
-        . mailReceiverQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ... 
+        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
         . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.

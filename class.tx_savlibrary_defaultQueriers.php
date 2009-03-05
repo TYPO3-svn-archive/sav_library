@@ -1556,7 +1556,7 @@ class tx_savlibrary_defaultQueriers {
     );
 
     if ($mailReceiverFromQuery = $config['mailreceiverfromquery']) {
-      $mA["###uid###"] = $this->savlibrary->uid;
+      $this->savlibrary->addSpecialMarkersToArray($mA);
       $mailReceiverFromQuery =
         $this->cObj->substituteMarkerArrayCached(
           $mailReceiverFromQuery,
@@ -1564,7 +1564,7 @@ class tx_savlibrary_defaultQueriers {
           array(),
           array()
         );
-      
+
       // Check if the query is a SELECT query and for errors
       if (!$this->savlibrary->isSelectQuery($mailReceiverFromQuery)) {
         $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
@@ -1639,7 +1639,7 @@ class tx_savlibrary_defaultQueriers {
       '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL'),
       $this->savlibrary->extObj->pi_linkToPage('', $GLOBALS['TSFE']->id)
     );
-   
+
     $mailMessage = $this->cObj->substituteMarkerArrayCached(
       nl2br($mailMessage),
       $mA,
@@ -1687,11 +1687,11 @@ class tx_savlibrary_defaultQueriers {
 
   
 	/**
-	 * Process ###field### tags .
+	 * Process ###field### tags.
 	 *
    * @param $x string (string to process)
 	 * @param $row array (data used to replace the tags)
-	 * @param $rtf boolean (if set, /par is added after line feed)
+	 * @param $config array (configuration array)
  	 *
 	 * @return string (result)
 	 */  
@@ -1704,13 +1704,14 @@ class tx_savlibrary_defaultQueriers {
     foreach($matches[1] as $key => $match) {
 
       $tag = $matches[1][$key];
+
       // Clean the tag 
       $tag = preg_replace('/\\\\[^ ]+ /','' ,$tag);
 
-      // If the tag is in the configuration, get the replacement string.
+      // If the crypted tag is in the configuration, get the replacement string.
       // Otherwise, replace NL by NL+\\par
-      if ($config[$tag]) {
-        $temp = explode('->', $config[$tag]);
+      if ($config[$this->savlibrary->cryptTag($tag)]) {
+        $temp = explode('->', $config[$this->savlibrary->cryptTag($tag)]);
         switch(trim($temp[0])) {
           case 'NL':
             $search = chr(10);
@@ -1725,11 +1726,11 @@ class tx_savlibrary_defaultQueriers {
       }
 
       if ($matches[3][$key]) {
-
         $value = html_entity_decode(
           stripslashes($row[$this->replaceTableNames(trim($tag))]),
           ENT_QUOTES
         );
+
         if ($config['generatertf']) {
           $value = str_replace($search, $replace, $value);
         }
@@ -2006,7 +2007,7 @@ class tx_savlibrary_defaultQueriers {
  	 *
 	 * @return string (the tables with their left join fields )
 	 */  
-  public function buidTableReference(&$query, $addTables='') {
+  public function buidTableReference(&$query, $addTables = '') {
 
     $this->aliasTable = array();
     $tableName = $query['tableLocal'];
@@ -2100,10 +2101,10 @@ class tx_savlibrary_defaultQueriers {
     }
 
     // Check for duplicate table names with addTables
-    $temp = explode(',',$addTables);
+    $temp = explode(',', $addTables);
     $addTablesArray = array();
     foreach ($temp as $key => $table) {
-      if($table && !in_array($table, $addTablesArray) && !preg_match('/ ' . $table . ' /', ' ' . $tableReference)) {
+      if($table && !in_array($table, $addTablesArray) && !preg_match('/ ' . $table . ' /', ' ' . $tableReference . ' ')) {
         $addTablesArray[] = $table;
       }
     }

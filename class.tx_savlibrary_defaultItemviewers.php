@@ -374,14 +374,15 @@ class tx_savlibrary_defaultItemviewers {
         }
       }      	
       // Check if it is associated with a mail		
-      if ($config['mail']) {     
+      if ($config['mail']) {
+
         $htmlArray[] = $this->savlibrary->mailButton(
           $this->savlibrary->formName,
           $config['cryptedFieldName'],
           (
-            $config['value'] ?
-            '' :
-            $config['valueforcheckmail']
+            $config['valueforcheckmail'] ?
+            $config['valueforcheckmail'] :
+            !$config['value']
           ),
           $this->savlibrary->rowItem
           ) . '<div class="separator">&nbsp;</div>';
@@ -2379,11 +2380,7 @@ class tx_savlibrary_defaultItemviewers {
     			'activeLinkWrap' => '<span class="activeLinkWrap">|</span>'
    		);
 
-      $this->savlibrary->extObj->internal['res_count'] = (
-        $maxSubItems ?
-        ($nbitem/$maxSubItems) + 1 :
-        $nbitem
-      );
+      $this->savlibrary->extObj->internal['res_count'] = $nbitem;
       $this->savlibrary->extObj->internal['results_at_a_time'] = (
         $maxSubItems ?
         $maxSubItems :

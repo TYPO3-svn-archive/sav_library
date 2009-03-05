@@ -1806,6 +1806,11 @@ public function main($content,$conf) {
     $params = explode(';', $fieldConf);
 
     foreach ($params as $param) {
+      // Remove comments
+      if (preg_match('/^\/\//', trim($param))) {
+        continue;
+      }
+
 		  if (trim($param)) {
 		    // Replace the temporary tag by ;
 		    $param = str_replace('###!!!!!!###', ';', $param);
@@ -1814,8 +1819,12 @@ public function main($content,$conf) {
   		  if ($pos === false) {
   		    $this->addError('error.missingEqualSign', $param);
         } else {
-          $exp = trim(substr($param, 0, $pos));
-          $config[strtolower($exp)] = ltrim(substr($param, $pos+1));
+          $exp = strtolower(trim(substr($param, 0, $pos)));
+          // If there is a dot, crypt the tag
+          if (strpos($exp, '.') !== false) {
+            $exp = $this->cryptTag($exp);
+          }
+          $config[$exp] = ltrim(substr($param, $pos+1));
         }
       }
     }

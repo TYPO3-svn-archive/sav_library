@@ -491,39 +491,39 @@
         . mailSender=string; Mél de l'envoyeur. Le métatag ###user_email### sera remplacé par le mél de l'utilisateur.
         . mailReceiver=string; Mél du récepteur du message.
         . mailReceiverFromField=field_name; Le champ "field_name" contient le mél de la personne qui doit recevoir le message.
-        . mailReceiverQuery=MySQL_Query; Le mél du récepteur est obtenu à l'aide d'une requête SELECt avec un alias "value" qui sera utilisé comme mél du récepteur. Exemple: SELECT email as value from fe_users where ..... 
+        . mailReceiverFromQuery=MySQL_Query; Le mél du récepteur est obtenu à l'aide d'une requête SELECt avec un alias "value" qui sera utilisé comme mél du récepteur. Exemple: SELECT email as value from fe_users where .....
         . mailSubject=string; Sujet du message. Les métatags ###fieldname### sont autorisés et seront remplacés par leur valeur courante.
         . mailMessage=string, Contenu du message. Les métatags ###fieldname### sont autorisés et seront remplacés par leur valeur courante.
         . mailcc=string; Si cet attribut est utilisé, la chaîne est utilisée comme Cc: dans l'envoi du message.
         Le multilinguisme par l'intermédiaire du fichier locallang.xml peut être utilisé avec la syntaxe $$$tag$$$ qui sera remplacée par sa valeur selon le langage utilisé dans la configuration.
         . mailMessageLanguage=string; Ce paramètre force le langage à la valeur de la chaîne.
-        . mailMessageLanguageFromField=fieldname; TCe paramètre force le langage à la valeur du champ (par exemple un sélecteur).
+        . mailMessageLanguageFromField=fieldname; Ce paramètre force le langage à la valeur du champ (par exemple un sélecteur).
         
         &lt;b&gt;mailAlways = 1;&lt;/b&gt; (l'attribut "mail" doit être à 1)
         Le message sera envoyé lors de la sauvegarde. Les informations relatives au mél sont les suivantes : 
         . mailSender=string; Mél de l'envoyeur. Le métatag ###user_email### sera remplacé par le mél de l'utilisateur.
         . mailReceiver=string; Mél du récepteur du message.
         . mailReceiverFromField=field_name; Le champ "field_name" contient le mél de la personne qui doit recevoir le message.
-        . mailReceiverQuery=MySQL_Query; Le mél du récepteur est obtenu à l'aide d'une requête SELECT avec un alias "value" qui sera utilisé comme mél du récepteur. Exemple: SELECT email as value from fe_users where ..... 
+        . mailReceiverFromQuery=MySQL_Query; Le mél du récepteur est obtenu à l'aide d'une requête SELECT avec un alias "value" qui sera utilisé comme mél du récepteur. Exemple: SELECT email as value from fe_users where .....
         . mailSubject=string; Sujet du message. Les métatags ###fieldname### sont autorisés et seront remplacés par leur valeur courante.
         . mailMessage=string, Contenu du message. Les métatags ###fieldname### sont autorisés et seront remplacés par leur valeur courante.
         . mailcc=string; Si cet attribut est utilisé, la chaîne est utilisée comme Cc: dans l'envoi du message.
         Le multilinguisme par l'intermédiaire du fichier locallang.xml peut être utilisé avec la syntaxe $$$tag$$$ qui sera remplacée par sa valeur selon le langage utilisé dans la configuration.
         . mailMessageLanguage=string; Ce paramètre force le langage à la valeur de la chaîne.
-        . mailMessageLanguageFromField=fieldname; TCe paramètre force le langage à la valeur du champ (par exemple un sélecteur).
+        . mailMessageLanguageFromField=fieldname; Ce paramètre force le langage à la valeur du champ (par exemple un sélecteur).
 
         &lt;b&gt;mailAuto = 1;&lt;/b&gt; (l'attribut "mail" doit être à 1)
         Le message sera envoyé lors de la sauvegarde si le champ n'est pas vide et si au moins un champ du formulaire a été modifié. Les informations relatives au mél sont les suivantes : 
         . mailSender=string; Mél de l'envoyeur. Le métatag ###user_email### sera remplacé par le mél de l'utilisateur.
         . mailReceiver=string; Mél du récepteur du message.
         . mailReceiverFromField=field_name; Le champ "field_name" contient le mél de la personne qui doit recevoir le message.
-        . mailReceiverQuery=MySQL_Query; Le mél du récepteur est obtenu à l'aide d'une requête SELECT avec un alias "value" qui sera utilisé comme mél du récepteur. Exemple: SELECT email as value from fe_users where ..... 
+        . mailReceiverFromQuery=MySQL_Query; Le mél du récepteur est obtenu à l'aide d'une requête SELECT avec un alias "value" qui sera utilisé comme mél du récepteur. Exemple: SELECT email as value from fe_users where .....
         . mailSubject=string; Sujet du message. Les métatags ###fieldname### sont autorisés et seront remplacés par leur valeur courante.
         . mailMessage=string, Contenu du message. Les métatags ###fieldname### sont autorisés et seront remplacés par leur valeur courante.
         . mailcc=string; Si cet attribut est utilisé, la chaîne est utilisée comme Cc: dans l'envoi du message.
         Le multilinguisme par l'intermédiaire du fichier locallang.xml peut être utilisé avec la syntaxe $$$tag$$$ qui sera remplacée par sa valeur selon le langage utilisé dans la configuration.
         . mailMessageLanguage=string; Ce paramètre force le langage à la valeur de la chaîne.
-        . mailMessageLanguageFromField=fieldname; TCe paramètre force le langage à la valeur du champ (par exemple un sélecteur).
+        . mailMessageLanguageFromField=fieldname; Ce paramètre force le langage à la valeur du champ (par exemple un sélecteur).
 
         &lt;b&gt;onLabel = 1;&lt;/b&gt;
         La valeur du champ sera affichée à la place du label. Peut-être cette option n'est pas très utile car le label peut être "coupé", i.e. ne pas être affiché.
