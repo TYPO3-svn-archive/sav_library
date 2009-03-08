@@ -33,6 +33,7 @@ class tx_savlibrary_defaultQueriers {
 
   protected $sqlFields;              // Used in sql_fetch_assoc_with_tablename(). Array of field information.
   protected $aliasTable = array();   // Aliases for tables
+  protected $refTable = array();     // Reference for tables
 
   // Variables in calling classes
   protected $savlibrary;      // Reference to the savlibrary object
@@ -1978,13 +1979,12 @@ class tx_savlibrary_defaultQueriers {
 	 * Build the aliases for tables
 	 *
    * @param $tableName string (table name)
-	 * @param $tableArray array (table array IN/OUT)
  	 *
 	 * @return array (result)
 	 */  
-  public function buidAliasTable($tableName, &$tableArray) {
-    $nbTable = count($tableArray[$tableName]);         
-    $tableArray[$tableName][] = 1;  
+  public function buidAliasTable($tableName) {
+    $nbTable = $this->refTable[$tableName];
+    $this->refTable[$tableName] = $this->refTable[$tableName] + 1;
 
     if ($nbTable) {
       $alias = end($this->aliasTable);
@@ -2011,6 +2011,7 @@ class tx_savlibrary_defaultQueriers {
 
     $this->aliasTable = array();
     $tableName = $query['tableLocal'];
+    $this->buidAliasTable($tableName);
     
 		t3lib_div::loadTCA($tableName);    
     $TCA = $GLOBALS['TCA'][$tableName]['columns'];
@@ -2052,13 +2053,13 @@ class tx_savlibrary_defaultQueriers {
       if ($config['type'] == 'group' && $config['internal_type'] == 'db' && !$config['norelation']) {
         if ($config['MM']) {
           // MM table
-          $alias1 = $this->buidAliasTable($config['MM'], $tableArray);          
-          $alias2 = $this->buidAliasTable($config['allowed'], $tableArray);          
+          $alias1 = $this->buidAliasTable($config['MM']);          
+          $alias2 = $this->buidAliasTable($config['allowed']);          
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
         } else {
-          $alias1 = $this->buidAliasTable($config['allowed'], $tableArray);          
+          $alias1 = $this->buidAliasTable($config['allowed']);          
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
           ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
@@ -2067,13 +2068,13 @@ class tx_savlibrary_defaultQueriers {
       if ($config['type'] == 'select') {
         if ($config['MM']) {
           // MM table
-          $alias1 = $this->buidAliasTable($config['MM'], $tableArray);          
-          $alias2 = $this->buidAliasTable($config['foreign_table'], $tableArray);                    
+          $alias1 = $this->buidAliasTable($config['MM']);          
+          $alias2 = $this->buidAliasTable($config['foreign_table']);                    
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid_local=' . $descr['tableLocal'] . '.uid) LEFT JOIN ' . $alias2['def'] . ' ON (' . $alias1['table'] . '.uid_foreign=' . $alias2['table'] . '.uid)';
         } elseif ($config['foreign_table']) {
-          $alias1 = $this->buidAliasTable($config['foreign_table'], $tableArray);          
+          $alias1 = $this->buidAliasTable($config['foreign_table']);          
 
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
@@ -2081,7 +2082,7 @@ class tx_savlibrary_defaultQueriers {
           // Check if a link is defined
           $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$this->savlibrary->folderTab]['fields'][$this->savlibrary->cryptTag($tableName . '.' . $field)]['config']['setextendlink'];
           if ($extendLink) {
-            $alias2 = $this->buidAliasTable($extendLink, $tableArray);
+            $alias2 = $this->buidAliasTable($extendLink);
             $tableReference .= ' LEFT JOIN ' . $alias2['def'] .
               ' ON (' . $alias1['table'] . '.' . $extendLink . '=' . $alias2['table'] . '.uid)';
           }
@@ -2104,7 +2105,7 @@ class tx_savlibrary_defaultQueriers {
     $temp = explode(',', $addTables);
     $addTablesArray = array();
     foreach ($temp as $key => $table) {
-      if($table && !in_array($table, $addTablesArray) && !preg_match('/ ' . $table . ' /', ' ' . $tableReference . ' ')) {
+      if($table && !in_array($table, $addTablesArray) && !array_key_exists($table, $this->refTable)) {
         $addTablesArray[] = $table;
       }
     }

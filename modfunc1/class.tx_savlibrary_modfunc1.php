@@ -105,16 +105,17 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
     $content[] = '    <li class="xmlTitle">XML Generation</li>';
     $content[] = '    <li class="updateTitle">Update</li>';
     $content[] = '    <li class="version">SAV Library version</li>';
+    $content[] = '    <li class="version">Extension version</li>';
 
     foreach($GLOBALS['TYPO3_LOADED_EXT'] as $extKey => $extInfo) {
       if (file_exists(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat')) {
         $wizardFormFile = t3lib_div::getURL(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat');
         $wizardForm = unserialize($wizardFormFile);
-
         if ($wizardForm['savext'][1]['generateForm']) {
           $extArray[] = array(
             'extKey' => $extKey,
-            'version' => $wizardForm['savext'][1]['savlibraryVersion'],
+            'savlibraryVersion' => $wizardForm['savext'][1]['savlibraryVersion'],
+            'extensionVersion' => $wizardForm['emconf'][1]['version']
           );
         }
       }
@@ -131,8 +132,10 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
       $content[] = '    <li class="xml">' . '<input type="checkbox" name="xml[' . $extKey .']" ' . ($xmlArray[$extKey] || !is_array($updateArray) ? 'checked="checked"' : '') . ' /></li>';
       $content[] = '    <li class="update">' . '<input type="checkbox" name="update[' . $extKey . ']" ' . ($updateArray[$extKey] == 'on' ? 'checked="checked"' : '') . ' /></li>';
       $content[] = '    <li class="version' .
-        ($ext['version'] == $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['version'] ? 'Ok' : 'NotOk') .
-        '">' . ($ext['version'] ? $ext['version'] : $GLOBALS['LANG']->getLL('unknown')) . '</li>';
+        ($ext['savlibraryVersion'] == $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['version'] ? 'Ok' : 'NotOk') .
+        '">' . ($ext['savlibraryVersion'] ? $ext['savlibraryVersion'] : $GLOBALS['LANG']->getLL('unknown')) . '</li>';
+      $content[] = '    <li class="versionNormal">' .
+        $ext['extensionVersion'] . '</li>';
     }
 
     $content[] = '  </ul>';

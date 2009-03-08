@@ -154,24 +154,24 @@ class tx_savlibrary_queriers_testcase extends tx_phpunit_frontend {
     $tableArray = array();
     // If it is the first table in the array, returns the table in def and table fields
     $this->assertEquals(array('def' => 'fe_users', 'table' => 'fe_users'),
-      $this->fixture->queriers->buidAliasTable('fe_users', $tableArray));
+      $this->fixture->queriers->buidAliasTable('fe_users'));
 
     // If the same table is input, an alias is generated in the def field and the
     // table field is this alias. Aliases are letter (A to Z)
     $this->assertEquals(array('def' => 'fe_users AS A', 'table' => 'A'),
-      $this->fixture->queriers->buidAliasTable('fe_users', $tableArray));
+      $this->fixture->queriers->buidAliasTable('fe_users'));
 
     // Same as above, the alias becomes B
     $this->assertEquals(array('def' => 'fe_users AS B', 'table' => 'B'),
-      $this->fixture->queriers->buidAliasTable('fe_users', $tableArray));
+      $this->fixture->queriers->buidAliasTable('fe_users'));
       
     // Add a new table
     $this->assertEquals(array('def' => 'fe_groups', 'table' => 'fe_groups'),
-      $this->fixture->queriers->buidAliasTable('fe_groups', $tableArray));
+      $this->fixture->queriers->buidAliasTable('fe_groups'));
 
     // Add the same table, the alias becomes C
     $this->assertEquals(array('def' => 'fe_groups AS C', 'table' => 'C'),
-      $this->fixture->queriers->buidAliasTable('fe_groups', $tableArray));
+      $this->fixture->queriers->buidAliasTable('fe_groups'));
 
   }
   
