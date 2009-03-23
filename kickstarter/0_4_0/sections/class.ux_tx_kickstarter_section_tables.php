@@ -479,8 +479,9 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 			'files'           => 'Files',
 //--------------------------
 // Begin - Modified 
-//--------------------------			
+//--------------------------
       'ShowOnly'        => '<b>Only shown in SAV form</b>',
+      'graph'           => 'XML JpGraph',
 //--------------------------
 // End - Modified 
 //--------------------------				

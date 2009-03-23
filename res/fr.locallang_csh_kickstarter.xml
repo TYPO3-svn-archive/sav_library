@@ -589,9 +589,19 @@
         
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
         La chaîne sera utilisée pour "wrapper" l'élément. La syntaxe est celle du TypoScript.
-           
-      </label>      
-			
+      </label>
+          
+		  <!-- graph  -->
+			<label index="graph.description">Attributs pour "XML Graph"</label>
+			<label index="graph.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
+			<label index="graph.syntax">
+        &lt;b&gt;graphTemplate = string;&lt;/b&gt;
+        Nom du fichier template XML depuis la racine du site.
+        &lt;b&gt;markers = string;&lt;/b&gt;
+        Liste de définitions séparées par une virgule. Exemple: “marker#begin = ###beginPeriod###” signifie que le “marker” dont l'id est “begin”
+        dans le template sera remplacé par le marqueur “###beginPeriod###”, c'est-à-dire par l'alias “beginPeriod”.
+      </label>
+      
 		  <!-- input -->
       <label index="input.description">Attributs pour "String input"</label>
 			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>

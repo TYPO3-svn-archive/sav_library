@@ -553,6 +553,7 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 // Begin - Modified 
 //--------------------------			
       'ShowOnly'  => 'Not created, only shown in SAV form',
+      'graph' => 'XML JpGraph',
 //--------------------------
 // End - Modified 
 //--------------------------				
@@ -1824,8 +1825,13 @@ class ux_tx_kickstarter_section_fields extends tx_kickstarter_section_fields {
 			break;
 //--------------------------
 // Begin - Modified 
-//--------------------------			
-			case "ShowOnly":
+//--------------------------
+      case 'graph':
+				$configL[]=trim($this->sPS('
+					\'type\' => \'graph\',
+				'));
+				break;
+			case 'ShowOnly':
 			  $this->getSplitLabels_reference($fConf,"title",$table.".".str_replace($this->returnName($extKey,'class','').'_', '', $fConf["fieldname"]));
 			  return;
         break;

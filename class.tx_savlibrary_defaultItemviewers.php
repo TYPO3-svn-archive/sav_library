@@ -62,6 +62,7 @@ class tx_savlibrary_defaultItemviewers {
   /**
  * End variables for the RTE API
  */
+  private $imageCounter = 0;       // image counter for graph
 
   /**
    * Init vars
@@ -2568,6 +2569,104 @@ class tx_savlibrary_defaultItemviewers {
 
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
+  
+ 	/**
+	 * Graph element
+	 *
+	 * @param $config array (Configuration array)
+	 *
+	 * @return string (item to display)
+	 */
+  public function viewGraph(&$config){
+
+    $htmlArray = array();
+    
+    // Check that sav_jpgraph is loaded
+    if (t3lib_extMgm::isLoaded('sav_jpgraph')) {
+    
+      // define the constant LOCALE for the use in the template
+      define(LOCALE, $GLOBALS['TSFE']->config['config']['locale_all']);
+
+      // define the constant CURRENT_PID for the use in the template
+      define(CURRENT_PID, $GLOBALS['TSFE']->page['uid']);
+
+      // define the constant STORAGE_PID for the use in the template
+      $temp = $GLOBALS['TSFE']->getStorageSiterootPids();
+      define(STORAGE_PID, $temp['_STORAGE_PID']);
+
+      // Redefine the constant for TTF directory if necessary
+      $temp = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sav_jpgraph']);
+      if ($temp['plugin.']['sav_jpgraph.']['ttfDir']) {
+        define('TTF_DIR', $temp['plugin.']['sav_jpgraph.']['ttfDir']);
+      }
+    
+      // Define the main directory
+      define('JP_maindir', t3lib_extMgm::extPath('sav_jpgraph') . 'src/');
+
+      // Require the xml class
+      require_once(t3lib_extMgm::extPath('sav_jpgraph'). 'class.typo3.php');
+      require_once(t3lib_extMgm::extPath('sav_jpgraph'). 'class.xmlgraph.php');
+      
+      // Create the xlmgraph
+      $xmlGraph = new xmlGraph();
+      
+      // Set the markers if any
+      if ($config['markers']) {
+        $markers = explode(',', $config['markers']);
+        $temp = array();
+        foreach($markers as $marker) {
+          if (preg_match('/^([0-9A-Za-z_]+)#([0-9A-Za-z_]+)=(.*)$/', trim($marker), $match)) {
+            $xmlGraph->setReferenceArray($match[1], $match[2], $match[3]);
+          }
+        }
+      }
+      
+      // Define the file name for the resulting image
+      if (!is_dir('typo3temp/sav_jpgraph')) {
+        mkdir('typo3temp/sav_jpgraph');
+      }
+      $imageFileName = 'typo3temp/sav_jpgraph/img_' .
+        $this->savlibrary->formName . '_' . $this->imageCounter . '.png';
+      $this->imageCounter++;
+      
+      // Set the file reference
+      $xmlGraph->setReferenceArray(
+        'file',
+        1,
+        $imageFileName
+        );
+
+      // Delete the file if it exists
+      if (file_exists(PATH_site . $imageFileName)) {
+        unlink(PATH_site . $imageFileName);
+      }
+
+      // Process the template
+      $xmlGraph->loadXmlFile($config['graphtemplate']);
+      $xmlGraph->processXmlGraph();
+    }
+    
+    $htmlArray[] = '<img class="jpgraph" src="' . $imageFileName . '" alt="" />';
+    
+    return $this->savlibrary->arrayToHTML($htmlArray);
+  }
+  
+ 	/**
+ 	 *
+	 * Graph element
+	 *
+	 * @param $config array (Configuration array)
+	 *
+	 * @return string (item to display)
+	 */
+  public function viewGraphEditMode(&$config){
+
+    $htmlArray = array();
+
+		$htmlArray[] = $this->viewGraph($config);
+
+    return $this->savlibrary->arrayToHTML($htmlArray);
+  }
 
 }
 

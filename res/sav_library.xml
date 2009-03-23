@@ -137,12 +137,6 @@
         </condition>
       </conditions>
     </viewFile>
-
-    <viewSchedule>
-      <type>schedule</type>
-      <conditions>
-      </conditions>
-    </viewSchedule>
     
     <viewSelectorbox>    
       <type>select</type>
@@ -175,7 +169,20 @@
           <value>db</value>
         </condition>
       </conditions>
-    </viewDbRelationElementBrowser>    
+    </viewDbRelationElementBrowser>
+
+    <viewGraph>
+      <type>graph</type>
+      <conditions>
+      </conditions>
+    </viewGraph>
+
+    <viewSchedule>
+      <type>schedule</type>
+      <conditions>
+      </conditions>
+    </viewSchedule>
+
   </itemviewers>
   
 </sav_library>

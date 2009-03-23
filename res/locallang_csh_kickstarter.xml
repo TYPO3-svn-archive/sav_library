@@ -22,6 +22,7 @@
         sav_library:files
         sav_library:functions
         sav_library:general
+        sav_library:graph
         sav_library:input
         sav_library:link
         sav_library:radio
@@ -616,9 +617,19 @@
         
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
         The string will be used to wrap the item. The syntax in the same as in TypoScript.
+      </label>
+      
+		  <!-- graph  -->
+			<label index="graph.description">Attributes for "XML Graph"</label>
+			<label index="graph.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
+			<label index="graph.syntax">
+        &lt;b&gt;graphTemplate = string;&lt;/b&gt;
+        File name of the XML template from the site root.
+        &lt;b&gt;markers = string;&lt;/b&gt;
+        Comma-separated list of definitions. Example: “marker#begin = ###beginPeriod###” means that the “marker” whose id is “begin”
+        in the template will be replaced by the marker “###beginPeriod###”, that is by the alias “beginPeriod”.
+      </label>
 
-      </label>      
-						
 		  <!-- input -->
       <label index="input.description">Attributes for "String input"</label>
 			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>

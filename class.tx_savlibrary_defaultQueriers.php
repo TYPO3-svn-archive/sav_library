@@ -2091,27 +2091,29 @@ class tx_savlibrary_defaultQueriers {
       }
     }
 
-    // Add the foreign table
-      // Check that the 'tableForeign' start either by LEFT JOIN, INNER JOIN or RIGHT JOIN or a comma
-    if ($query['tableForeign']) {
-      if (!preg_match('/^[\s]*(?i)(,|inner join|left join|right join)[\s]*/', $query['tableForeign'])) {
-        $this->savlibrary->addError('error.incorrectQueryForeignTable');
-      } else {
-        $tableReference .= ' ' . $query['tableForeign'];
-      }
-    }
-
     // Check for duplicate table names with addTables
-    $temp = explode(',', $addTables);
     $addTablesArray = array();
+    $temp = explode(',', $addTables);
     foreach ($temp as $key => $table) {
       if($table && !in_array($table, $addTablesArray) && !array_key_exists($table, $this->refTable)) {
         $addTablesArray[] = $table;
       }
     }
     $addTables = implode(',', $addTablesArray);
-
-    return $tableReference . ($addTables ? ', ' . $addTables : '');
+    
+    // Add the foreign table
+    // Check that the 'tableForeign' start either by LEFT JOIN, INNER JOIN or RIGHT JOIN or a comma
+    if ($query['tableForeign']) {
+      if (!preg_match('/^[\s]*(?i)(,|inner join|left join|right join)\s?([^ ]*)/', $query['tableForeign'], $match)) {
+        $this->savlibrary->addError('error.incorrectQueryForeignTable');
+      } else {
+        if (!in_array(trim($match[2]), $addTablesArray) && !array_key_exists(trim($match[2]), $this->refTable)) {
+          $tableForeign .= ' ' . $query['tableForeign'];
+        }
+      }
+    }
+    
+    return $tableReference . ($addTables ? ', ' . $addTables : '') . $tableForeign;
   }
 
 }
