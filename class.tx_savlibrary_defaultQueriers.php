@@ -2010,6 +2010,7 @@ class tx_savlibrary_defaultQueriers {
   public function buidTableReference(&$query, $addTables = '') {
 
     $this->aliasTable = array();
+    $this->refTable = array();
     $tableName = $query['tableLocal'];
     $this->buidAliasTable($tableName);
     
