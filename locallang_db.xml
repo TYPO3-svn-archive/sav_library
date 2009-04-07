@@ -11,11 +11,9 @@
 			<label index="tx_savlibrary_export_configuration.cid">Content uid</label>
 			<label index="tx_savlibrary_export_configuration.configuration">Configuration</label>
 		</languageKey>
-		<languageKey index="fr" type="array">
-			<label index="tx_savlibrary_export_configuration">SAV Library (Configuration d'exportation)</label>
-			<label index="tx_savlibrary_export_configuration.name">Nom</label>
-			<label index="tx_savlibrary_export_configuration.cid">Content uid</label>
-			<label index="tx_savlibrary_export_configuration.configuration">Configuration</label>
-		</languageKey>
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>

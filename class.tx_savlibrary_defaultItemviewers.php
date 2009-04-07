@@ -2086,7 +2086,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewDbRelationElementBrowser(&$config) {
-  
+
     $htmlArray = array();
     
 		$allowed_table = $config['allowed'];

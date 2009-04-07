@@ -10,8 +10,6 @@
 			<label index=".description">SAV Library</label>
 			<label index=".details">
       </label>
-      
-		  <!-- Also  -->
 			<label index="all.description"></label>
 			<label index="all.seeAlso">
         sav_library:check
@@ -31,17 +29,13 @@
         sav_library:textarea
         sav_library:textarea_rte
       </label>
-      
-		  <!-- checkbox  -->
-			<label index="check.description">Attributes for "checkbox"</label>
+			<label index="check.description">Attributes for &quot;checkbox&quot;</label>
 			<label index="check.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check.syntax">
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Do not display the checkbox value (that is "No") if it is not checked (obviously it does not apply when in edit mode)
+        Do not display the checkbox value (that is &quot;No&quot;) if it is not checked (obviously it does not apply when in edit mode)
       </label>
-      
-		  <!-- checkbox - 4 boxes -->
-			<label index="check_4.description">Attributes for "checkbox - 4 boxes"</label>
+			<label index="check_4.description">Attributes for &quot;checkbox - 4 boxes&quot;</label>
 			<label index="check_4.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_4.syntax">
         &lt;b&gt;cols = integer;&lt;/b&gt;
@@ -53,9 +47,7 @@
         &lt;b&gt;nbItems = integer;&lt;/b&gt;
         Number of items to display.
       </label>
-      			
-		  <!-- checkbox - 10 boxes -->
-			<label index="check_10.description">Attributes for "checkbox - 10 boxes"</label>
+			<label index="check_10.description">Attributes for &quot;checkbox - 10 boxes&quot;</label>
 			<label index="check_10.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check_10.syntax">
         &lt;b&gt;cols = integer;&lt;/b&gt;
@@ -66,34 +58,28 @@
 
         &lt;b&gt;nbItems = integer;&lt;/b&gt;
         Number of items to display.  
-      </label>			
-           
-		  <!-- date -->
-      <label index="date.description">Attributes for "date"</label>
+      </label>
+			<label index="date.description">Attributes for &quot;date&quot;</label>
 			<label index="date.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="date.syntax">
+			<label index="date.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
         Sets a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
         Do not display the default date.
-      </label>  
-      
-		  <!-- datetime -->
-      <label index="datetime.description">Attributes for "datetime"</label>
+      </label>
+			<label index="datetime.description">Attributes for &quot;datetime&quot;</label>
 			<label index="datetime.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="datetime.syntax">
+			<label index="datetime.syntax">
         &lt;b&gt;format = date_format;&lt;/b&gt;
         Sets a format to display the date. The format is the same as in strftime php function, e.g. format = %d/%m/%Y;
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
         Do not display the default date and time.
-      </label>      
-
-		  <!-- files -->
-      <label index="files.description">Attributes for "files"</label>
+      </label>
+			<label index="files.description">Attributes for &quot;files&quot;</label>
 			<label index="files.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="files.syntax">
+			<label index="files.syntax">
         &lt;b&gt;addIcon = 1;&lt;/b&gt;
         Adds an icon in front of the hyperlink associated with the file.
 
@@ -104,9 +90,9 @@
         Adds a subpath to the UploadFolder path.
         
         &lt;b&gt;addToUploadFolderFromField = field_name;&lt;/b&gt;
-        Adds the content of the field whose name is given by "field_name" to the uploadFolder attribute. This information is separated with an underscore.
-        Example : if the field_name is "my_field" and its contents is "123", then
-        AddToUploadFolderFromField = my_field; will add "_123" to the uploadFolder name.
+        Adds the content of the field whose name is given by &quot;field_name&quot; to the uploadFolder attribute. This information is separated with an underscore.
+        Example : if the field_name is &quot;my_field&quot; and its contents is &quot;123&quot;, then
+        AddToUploadFolderFromField = my_field; will add &quot;_123&quot; to the uploadFolder name.
 
         &lt;b&gt;size = integer;&lt;/b&gt;
         Sets the size attribute.  It overwrites  the same attribute in the TCA.
@@ -124,22 +110,20 @@
         If the file is not an image, an hyperlink is created with the string.
         
         &lt;b&gt;fieldMessage = field_name;&lt;/b&gt;
-        Sets the attribute "message" with the content of the field whose name is given by field_name.
+        Sets the attribute &quot;message&quot; with the content of the field whose name is given by field_name.
         
         &lt;b&gt;alt = string;&lt;/b&gt;
         Provides the HTML alt attribute for an image.
         
         &lt;b&gt;fieldAlt = field_name;&lt;/b&gt;
-        Sets the "alt" attribute with the content of the field whose name is given by field_name.
+        Sets the &quot;alt&quot; attribute with the content of the field whose name is given by field_name.
         
         &lt;b&gt;default = string;&lt;/b&gt;
         Defines the default image if the content of the field is null otherwise the default image is “unknown.gif” taken in the directory sav_library/res/images.
 
-      </label>   
-
-      <!-- Forms generator -->
-      <label index="formGen.description">Form generator</label>
-      <label index="formGen.details">
+      </label>
+			<label index="formGen.description">Form generator</label>
+			<label index="formGen.details">
         This section is used to provide general settings.
         
         &lt;b&gt;Generate form&lt;/b&gt;
@@ -154,17 +138,15 @@
         &lt;b&gt;Additional FlexForm code&lt;/b&gt;
         Use this field to add fexform code to the default flexform configuration for the extension.
       </label>
-      
-		  <!-- Form queries -->
-      <label index="formQueries.description">Form queries</label>
-      <label index="formQueries.details">
+			<label index="formQueries.description">Form queries</label>
+			<label index="formQueries.details">
         This section is used to specify the query associated with your form.
         
         &lt;b&gt;Title&lt;/b&gt;
         Sets the name of your query.
         
         &lt;b&gt;Local table&lt;/b&gt; 
-        Sets the main table that your extension will use. By default, it is the first table in your "New Database Tables" section.
+        Sets the main table that your extension will use. By default, it is the first table in your &quot;New Database Tables&quot; section.
         
         &lt;b&gt;Foreign table&lt;/b&gt; 
         Define here the foreign tables (tables from other extension for exemple) that are needed for your extension (MySQL syntax).
@@ -187,8 +169,8 @@
         Existing methods are:
           - isInputMode which returns true the form is in the input mode,
           - isNotInputMode which returns true the form is not in the input mode,
-          - isGroupMember(groupName) which returns true if the user is a member of "groupName",
-          - isNotGroupMember(groupName) which returns true if the user is not a member of "groupName".    
+          - isGroupMember(groupName) which returns true if the user is a member of &quot;groupName&quot;,
+          - isNotGroupMember(groupName) which returns true if the user is not a member of &quot;groupName&quot;.    
               
         Other methods can be added using sav_library_extends.The WHERE_Clause can be any previous cases.
         
@@ -200,49 +182,45 @@
         
         &lt;b&gt;Where tags&lt;/b&gt; 
         Where tags are a special feature that makes it possible to use hyperlinks with a parameter &amp;where=tagname.  
-        The parametre "tagname" should be declared as a php-array with two possibles keys: "where" and "order" defining respectively a WHERE clause and an ORDER clause. Example:
-        'myTag' => array(
-         'where' => 'myTable.myField > 0',
-         'order' => 'myTable.myField desc',
+        The parametre &quot;tagname&quot; should be declared as a php-array with two possibles keys: &quot;where&quot; and &quot;order&quot; defining respectively a WHERE clause and an ORDER clause. Example:
+        'myTag' =&gt; array(
+         'where' =&gt; 'myTable.myField &gt; 0',
+         'order' =&gt; 'myTable.myField desc',
         ),
              
-        In any field, if you need to use a php expression, use the syntax {PHP:php_expression}. For example, {PHP:$GLOBALS['TSFE']->id} will be replaced by the page id.                
+        In any field, if you need to use a php expression, use the syntax {PHP:php_expression}. For example, {PHP:$GLOBALS['TSFE']-&gt;id} will be replaced by the page id.                
       </label>
-      
-      <!-- Forms settings -->
-      <label index="forms.description">Form settings</label>
-      <label index="forms.details">
+			<label index="forms.description">Form settings</label>
+			<label index="forms.details">
         This section is used to specify the settings of your form.
         
         &lt;b&gt;Title&lt;/b&gt;
         Sets the name of your form.
         
         &lt;b&gt;Show all view&lt;/b&gt;
-        Use the selector to set the "Show all" view that should be used with your form (if any).
+        Use the selector to set the &quot;Show all&quot; view that should be used with your form (if any).
         
         &lt;b&gt;Show single view&lt;/b&gt;
-        Use the selector to set the "Show single" view that should be used with your form (if any).
+        Use the selector to set the &quot;Show single&quot; view that should be used with your form (if any).
 
         &lt;b&gt;Input view&lt;/b&gt;
-        Use the selector to set the "Input" view that should be used with your form (if any).
+        Use the selector to set the &quot;Input&quot; view that should be used with your form (if any).
 
         &lt;b&gt;Update view&lt;/b&gt;
-        Use the selector to set the "Update" view that should be used with your form (if any).
+        Use the selector to set the &quot;Update&quot; view that should be used with your form (if any).
 
         &lt;b&gt;Query&lt;/b&gt;
-        Use the selector to set the "query" that should be used with your form (required).
+        Use the selector to set the &quot;query&quot; that should be used with your form (required).
       </label>
-
-		  <!-- Form views -->
-      <label index="formViews.description">Form Views</label>
-      <label index="formViews.details">
+			<label index="formViews.description">Form Views</label>
+			<label index="formViews.details">
         This section is used to specify the views associated with your extension.
         
         &lt;b&gt;Title&lt;/b&gt;
         Set the name of your view.
         
         &lt;b&gt;Type of the view&lt;/b&gt;
-        Use the selector to set either "Show all", "Show single", "Input form".
+        Use the selector to set either &quot;Show all&quot;, &quot;Show single&quot;, &quot;Input form&quot;.
         
         &lt;b&gt;ShowAllTitle, ShowSingleTitle, inputTitle&lt;/b&gt;        
         The content will be displayed as the title of the view. if metatags ###fieldname### are used, they will be replaced by the label associated with the fieldname.
@@ -250,41 +228,41 @@
         The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
         
         &lt;b&gt;ShowAllItemTemplate&lt;/b&gt;        
-        Template for the "Show all", "Update view" or "Print view". The fields to include are defined using metatags ###fieldname###.
+        Template for the &quot;Show all&quot;, &quot;Update view&quot; or &quot;Print view&quot;. The fields to include are defined using metatags ###fieldname###.
         Metatags ###tablename.fieldname### can also be used. In this case, no processing is performed, the metatag is replaced by the value in the selected row.
         
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
         The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
         
-        In the case of a view "Update view" or "Print view", tags ###field[field_name, label]### generate the display of the label (localization can be used with $$$tag$$$ or $$$label[fieldName]$$$), the current value of field "field_name" and an input element for update.
-        Tags  ###newfield[field_name, label]### generate the display of the label and an input element for the field "field_name". In both cases, label and field will be wrapped with default CSS classes 
-        . updateCol1 to updateCol4 for an "Update view" (respectively the label, the previous value, the input value, the checkbox),
-        . printCol1 and printCol2 for a "Print view" (respectively the label, the field).
+        In the case of a view &quot;Update view&quot; or &quot;Print view&quot;, tags ###field[field_name, label]### generate the display of the label (localization can be used with $$$tag$$$ or $$$label[fieldName]$$$), the current value of field &quot;field_name&quot; and an input element for update.
+        Tags  ###newfield[field_name, label]### generate the display of the label and an input element for the field &quot;field_name&quot;. In both cases, label and field will be wrapped with default CSS classes 
+        . updateCol1 to updateCol4 for an &quot;Update view&quot; (respectively the label, the previous value, the input value, the checkbox),
+        . printCol1 and printCol2 for a &quot;Print view&quot; (respectively the label, the field).
         If you do not want this wrapping, just use $$$label[fieldName]$$$ for the label and ###field[fieldName]### for the field. 
         
         &lt;b&gt;ShowAllItemParentTemplate&lt;/b&gt;       
-        This field can be used to change the template of the "Show All" views. The template shoud exist in the template file. By default the predefined template "showAll" is used.
-        Setting the value to "showAllAlt" will used the predefined template "showAllAlt" which allows a direct acces to page instead of using only arrows.
+        This field can be used to change the template of the &quot;Show All&quot; views. The template shoud exist in the template file. By default the predefined template &quot;showAll&quot; is used.
+        Setting the value to &quot;showAllAlt&quot; will used the predefined template &quot;showAllAlt&quot; which allows a direct acces to page instead of using only arrows.
         
         
         &lt;b&gt;Folders&lt;/b&gt;
-        This field is used to define folders associated with the "Show single" and "Show Input" views. Folders are defined by a semi column-separated list. For example:
-        Folder 1; Folder 2; Folder 3; will define three folders respectively named "Folder 1", "Folder 2" and "Folder 3". Parameters can be associated with folders. 
-        If "Folder 1", "Folder 2" or "Folder 3" are defined in the file locallang.xml, they will be translated in the selected language.
+        This field is used to define folders associated with the &quot;Show single&quot; and &quot;Show Input&quot; views. Folders are defined by a semi column-separated list. For example:
+        Folder 1; Folder 2; Folder 3; will define three folders respectively named &quot;Folder 1&quot;, &quot;Folder 2&quot; and &quot;Folder 3&quot;. Parameters can be associated with folders. 
+        If &quot;Folder 1&quot;, &quot;Folder 2&quot; or &quot;Folder 3&quot; are defined in the file locallang.xml, they will be translated in the selected language.
 
         Once the extension was saved, the folder order is fixed. 
         To insert a new folder into existing folders, add ###INSERT### in front of the new folder name. 
         To delete an existing folder, add ###DELETE### in front of the folder name. 
 
         &lt;b&gt;Folder parameters&lt;/b&gt;
-        Folder parameters are introduced after the folder name using a column sign ":" as the separator. Each parameter should be under the format:
+        Folder parameters are introduced after the folder name using a column sign &quot;:&quot; as the separator. Each parameter should be under the format:
         parameter=value;
         
         . editAdminPlus = 1;
-        Make the folder editable in an input form, if the user has the "Admin+" right. To be an "Admin" user, the user's TSConfig must contain a line as follows:
+        Make the folder editable in an input form, if the user has the &quot;Admin+&quot; right. To be an &quot;Admin&quot; user, the user's TSConfig must contain a line as follows:
         extKey_Admin=value 
-        where extKey is the extension key and value is one of the possible value of the "Input Admin Field" defined in the flexform associated with the extension.
-        The user becomes an "Admin+" user, if his TSConfig contains a line as follows:
+        where extKey is the extension key and value is one of the possible value of the &quot;Input Admin Field&quot; defined in the flexform associated with the extension.
+        The user becomes an &quot;Admin+&quot; user, if his TSConfig contains a line as follows:
         extKey_Admin=value+  
         
         . cutIf = fiedname=value;
@@ -304,11 +282,9 @@
 
         &lt;b&gt;Print icon&lt;/b&gt; 
         If set, a print icon is added to the view.        
-      </label>    
-        
-      <!-- Forms wizard -->
-      <label index="formWizard.description">Wizard settings</label>
-      <label index="formWizard.details">
+      </label>
+			<label index="formWizard.description">Wizard settings</label>
+			<label index="formWizard.details">
         
         &lt;b&gt;New Version&lt;/b&gt;
         This wizard can be used to automatically ugrade the version of your extension. If you set z, one unit will be added to the z part.
@@ -329,16 +305,14 @@
 
         &lt;b&gt;Generate a new extension&lt;/b&gt;
         This experimental feature makes it possible to generate a new extension from an existing one. 
-        Give a new extension and &lt;b&gt;click on "Update result" before clicking on "WRITE".&lt;/b&gt;
+        Give a new extension and &lt;b&gt;click on &quot;Update result&quot; before clicking on &quot;WRITE&quot;.&lt;/b&gt;
       </label>
-         
-		  <!-- Functions -->
-      <label index="functions.description">Functions attributes</label>
+			<label index="functions.description">Functions attributes</label>
 			<label index="functions.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="functions.syntax">
+			<label index="functions.syntax">
       
         Functions are applied to the value of the field. It can be also applied to left and right contents.
-        In this case, "Left" or "Right" should be added to the function name and the optional attributes.
+        In this case, &quot;Left&quot; or &quot;Right&quot; should be added to the function name and the optional attributes.
       
         &lt;b&gt;func = makeDateFormat;&lt;/b&gt;
         This function generates a format for a unix time stamp date.
@@ -351,8 +325,8 @@
         . folder = string; (string will be the folder where the file should be).
         . width = integer; (width of the image in pixels).
         . height = integer; (height of the image in pixels);
-        . alt = string; (string will be the "alt" attribute of the image).
-        . fieldAlt = field_name; (the "alt" attribute will be the value of the fieldname for the current record).
+        . alt = string; (string will be the &quot;alt&quot; attribute of the image).
+        . fieldAlt = field_name; (the &quot;alt&quot; attribute will be the value of the fieldname for the current record).
         
         &lt;b&gt;func = makeEmailLink;&lt;/b&gt;
         This function generates an email link associated with the field.
@@ -370,10 +344,10 @@
         . message = string; Message associated with the link.
 
         &lt;b&gt;func = makeItemLink;&lt;/b&gt;
-        This function generates an hyperlink associated with the value of the field. It will open the "showSingle" view associated with the selected item.
+        This function generates an hyperlink associated with the value of the field. It will open the &quot;showSingle&quot; view associated with the selected item.
         Optional attributes can be added:
-        . updateForm = 1; makes it possible to open an "update" view instead of the "Show single" view.
-        . inputForm = 1; makes it possible to open an "Input form" view instead of the "Show single" view.
+        . updateForm = 1; makes it possible to open an &quot;update&quot; view instead of the &quot;Show single&quot; view.
+        . inputForm = 1; makes it possible to open an &quot;Input form&quot; view instead of the &quot;Show single&quot; view.
         . folderTab = string; (string is the folder name, if the extension uses serveral folders).
         . page = string; (same as folderTab but deprecated).
 
@@ -388,8 +362,8 @@
         . valueIsUid = 1; The field value is used as the uid of the page associated with the link.
 
         &lt;b&gt;func = makeExtLink;&lt;/b&gt;
-        This function generates an hyperlink associated with the value of the field. It will open the "showSingle" view associated with the selected item in another extension. The following attributes must be provided:
-        . ext = string; (string is the extension name followedby the form name. Example "myext_intranet").
+        This function generates an hyperlink associated with the value of the field. It will open the &quot;showSingle&quot; view associated with the selected item in another extension. The following attributes must be provided:
+        . ext = string; (string is the extension name followedby the form name. Example &quot;myext_intranet&quot;).
         . pageId = integer; (integer is the page id where the extension is the content element).
         . contentId = integer; (integer is the content id of the extension).
         Optional attributes can be added:
@@ -408,15 +382,13 @@
         &lt;b&gt;func = makeXmlLabel;&lt;/b&gt;
         This function generates the label from a xml language file. It works with the following parameter:
         . xmlLabel = string; the string is the label definition. For example, assume that the value comes from a selectorbox whose label definition is in the file locallang_db.xml
-        in the extension "my_ext". Assume also that the field is "my_field". Then, to obtain the label one has to write xmlLabel = LLL:EXT:my_ext/locallang_db.xml:tx_myext.my_field.I.;
+        in the extension &quot;my_ext&quot;. Assume also that the field is &quot;my_field&quot;. Then, to obtain the label one has to write xmlLabel = LLL:EXT:my_ext/locallang_db.xml:tx_myext.my_field.I.;
       </label>
-      			
-		  <!-- General -->
-      <label index="general.description">General Attributes</label>
+			<label index="general.description">General Attributes</label>
 			<label index="general.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="general.syntax">
+			<label index="general.syntax">
         &lt;b&gt;addEdit = 1;&lt;/b&gt; 
-        When the field is used in an "Update form" view, it will add an input element for update that can be used with the tag ###field_name_Edit### where "field_name" is the name of the field.
+        When the field is used in an &quot;Update form&quot; view, it will add an input element for update that can be used with the tag ###field_name_Edit### where &quot;field_name&quot; is the name of the field.
         See also the help for Form views (showAllItemTemplate) to see how to use tags ###field[field_name, label]###. 
 
         &lt;b&gt;addEditIfNull = 1;&lt;/b&gt; 
@@ -444,8 +416,8 @@
         The displayed value will be provided by the fieldname value for the current record.
         
         &lt;b&gt;Classes and styles&lt;/b&gt;
-        . classLabel = string; The default class "label" associated with the label of the displayed value will be replaced by the string.
-        . classValue = string; The default class "value" associated with the displayed value will be replaced by the string.
+        . classLabel = string; The default class &quot;label&quot; associated with the label of the displayed value will be replaced by the string.
+        . classValue = string; The default class &quot;value&quot; associated with the displayed value will be replaced by the string.
         . classHTMLTag = string; The string will be added as a class to the HTML tag associated with the displayed item (not always available).
         . styleLabel = string; The string will be added as a style attribute associated with the label of the displayed value.
         . styleValue = string; The string will be added as a style attribute associated with the displayed value.
@@ -464,10 +436,10 @@
         The field is cut if the group name is a valid group for the current user. 
                    
         &lt;b&gt;cutIf=###usergroup!=group_name###;&lt;/b&gt;
-        The field is cut if the group "group_name" is not a valid group for the current user.
+        The field is cut if the group &quot;group_name&quot; is not a valid group for the current user.
   
         &lt;b&gt;cutIf=###group=group_name###;&lt;/b&gt;
-        The field is cut if the group "group_name" is a valid group for the current record. It checks the usergroup field in the local table if any.
+        The field is cut if the group &quot;group_name&quot; is a valid group for the current record. It checks the usergroup field in the local table if any.
                    
         &lt;b&gt;cutIf=###group!=group_name###;&lt;/b&gt;
         The field is cut if the group name is not a valid group for the current record. It checks the usergroup field in the local table if any.  
@@ -481,25 +453,25 @@
         Makes the field editable in an input form.
         
         &lt;b&gt;editAdminPlus=1;&lt;/b&gt;
-        Makes the field editable in an input form, if the user has the "Admin+" right. To be an "Admin" user, his/her TSConfig must contain a line as follows:
-        extKey_Admin=value where extKey is the extension key and value is one of the possible value of the "Input Admin Field" defined in the flexform associated with the extension.
-        The user becomes an "Admin+" user, if his/her TSConfig contains a line as follows:
+        Makes the field editable in an input form, if the user has the &quot;Admin+&quot; right. To be an &quot;Admin&quot; user, his/her TSConfig must contain a line as follows:
+        extKey_Admin=value where extKey is the extension key and value is one of the possible value of the &quot;Input Admin Field&quot; defined in the flexform associated with the extension.
+        The user becomes an &quot;Admin+&quot; user, if his/her TSConfig contains a line as follows:
         extKey_Admin=value+
 
         &lt;b&gt;func = function_name;&lt;/b&gt;
         See the help associated with functions.
         
         &lt;b&gt;funcAddLeftIfNotNull = string;&lt;/b&gt;
-        String will be added to the left if the result of the applied function, defined by "func=function_name;" property, is not null.
+        String will be added to the left if the result of the applied function, defined by &quot;func=function_name;&quot; property, is not null.
 
         &lt;b&gt;funcAddLeftIfNull = string;&lt;/b&gt;
-        String will be added to the left if the result of the applied function, defined by "func=function_name;" property, is null.
+        String will be added to the left if the result of the applied function, defined by &quot;func=function_name;&quot; property, is null.
 
         &lt;b&gt;funcAddRightIfNotNull = string;&lt;/b&gt;
-        String will be added to the right if the result of the applied function, defined by "func=function_name;" property, is not null.
+        String will be added to the right if the result of the applied function, defined by &quot;func=function_name;&quot; property, is not null.
 
         &lt;b&gt;funcAddRightIfNull = string;&lt;/b&gt;
-        String will be added to the right if the result of the applied function, defined by "func=function_name;" property, is null.
+        String will be added to the right if the result of the applied function, defined by &quot;func=function_name;&quot; property, is null.
         
         &lt;b&gt;fusion = begin;&lt;/b&gt;
         Starts the fusion of the fields, that is the following fields will be displayed on the same line.
@@ -518,7 +490,7 @@
         . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
-        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
+        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias &quot;value&quot; that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
         . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value. 
         . mailcc=string; if set the string is used as Cc: for the mail.
@@ -531,7 +503,7 @@
         . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
-        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
+        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias &quot;value&quot; that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
         . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.
@@ -544,7 +516,7 @@
         . mailSender=string; mail of the sender. The tag ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
-        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias "value" that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
+        . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias &quot;value&quot; that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
         . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.
@@ -556,16 +528,16 @@
         The value will be displayed in place of the label. Not so useful since the label can be cut.
 
         &lt;b&gt;orderLinkInTitle = 1;&lt;/b&gt;
-        If this parameter is set, it makes it possible to generate an hyperlink in the title bar of the "showAll". The hyperlink is asscoiated with the field if the tag ###fieldname###
-        is used in the "showAllTitle" section. Order clauses have to be defined in the "Where Tags" section of the "Query Form" with "+" and "-" sign added after "fieldname". 
+        If this parameter is set, it makes it possible to generate an hyperlink in the title bar of the &quot;showAll&quot;. The hyperlink is asscoiated with the field if the tag ###fieldname###
+        is used in the &quot;showAllTitle&quot; section. Order clauses have to be defined in the &quot;Where Tags&quot; section of the &quot;Query Form&quot; with &quot;+&quot; and &quot;-&quot; sign added after &quot;fieldname&quot;. 
         Use for example:
-          'fieldmane+' => array('order' => 'tablename.fieldname'),
-          'fieldmane-' => array('order' => 'tablename.fieldname desc'),
+          'fieldmane+' =&gt; array('order' =&gt; 'tablename.fieldname'),
+          'fieldmane-' =&gt; array('order' =&gt; 'tablename.fieldname desc'),
 
         &lt;b&gt;query = SQL statements;&lt;/b&gt;
-        The query will be executed once the input form data have been saved. Therefore, it can only be used with "input" or "update" views.
+        The query will be executed once the input form data have been saved. Therefore, it can only be used with &quot;input&quot; or &quot;update&quot; views.
         Because any query may be executed, for security reason, this property can only be used if an admin user has checked the field “Allow the use of the “query” property” in the advanced folder of the flexform.
-        It may be useful, for example, to update a specific table when the current data are saved. Several queries can be used in the SQL statements. Each query must be separated using "\;".
+        It may be useful, for example, to update a specific table when the current data are saved. Several queries can be used in the SQL statements. Each query must be separated using &quot;\;&quot;.
         Special tags can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###CURRENT_PID### will be replaced by the current page uid.
@@ -578,10 +550,10 @@
 
         &lt;b&gt;queryForEach = field_name;&lt;/b&gt;
         If the field is a true MM relation, the query, as defined above, will be executed for all the record in the relation.
-        The special tag ###field_name###, where "field_name" is the field where the relation is defined, can be used to identify the record. It will be replaced by the uid of the associated record.
+        The special tag ###field_name###, where &quot;field_name&quot; is the field where the relation is defined, can be used to identify the record. It will be replaced by the uid of the associated record.
         
         &lt;b&gt;reqValue = SQL SELECT statement;&lt;/b&gt;
-        SQL SELECT statement must have an alias "value" which will be used as the value to display.
+        SQL SELECT statement must have an alias &quot;value&quot; which will be used as the value to display.
         Special tags can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###uidItem### will be replaced by the uid of the current subform item.
@@ -597,30 +569,28 @@
                 
         &lt;b&gt;stdWrapValue = TS syntax;&lt;/b&gt;
         It defines a conventional TS stdWrap property. You can add here full TS syntax. 
-        Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it "\;"
+        Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it &quot;\;&quot;
 
         &lt;b&gt;verifier = verifier_name;&lt;/b&gt;
         Verifiers can be used to check if a field satisfy a constraint. Each field can have one verifier. Each verifier is associated with a parameter.
         Verifiers can be defined by the user. They must be added in the class tx_savlibrary_verifiers defined in the file: class.tx_savlibrary_verifiers.php.
 
-        The value "verifier_name" can be :
+        The value &quot;verifier_name&quot; can be :
         . isValidPattern
         . isValidLength
         . isValidInterval
  
         &lt;b&gt;verifierParam = expression;&lt;/b&gt;
         The expression can be :
-        . a regular expression for the verifier "isValidPattern".
+        . a regular expression for the verifier &quot;isValidPattern&quot;.
         For example /^[A-Za-z0-9_]*$/ will allow any input which contains letters, numbers or underline characters. 
-        . an integer value for the verifier "isValidLength".
-        . an interval [a, b] where a and b are integers for the verifier "isValidInterval".   
+        . an integer value for the verifier &quot;isValidLength&quot;.
+        . an interval [a, b] where a and b are integers for the verifier &quot;isValidInterval&quot;.   
         
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
         The string will be used to wrap the item. The syntax in the same as in TypoScript.
       </label>
-      
-		  <!-- graph  -->
-			<label index="graph.description">Attributes for "XML Graph"</label>
+			<label index="graph.description">Attributes for &quot;XML Graph&quot;</label>
 			<label index="graph.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="graph.syntax">
         &lt;b&gt;graphTemplate = string;&lt;/b&gt;
@@ -629,42 +599,34 @@
         Comma-separated list of definitions. Example: “marker#begin = ###beginPeriod###” means that the “marker” whose id is “begin”
         in the template will be replaced by the marker “###beginPeriod###”, that is by the alias “beginPeriod”.
       </label>
-
-		  <!-- input -->
-      <label index="input.description">Attributes for "String input"</label>
+			<label index="input.description">Attributes for &quot;String input&quot;</label>
 			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="input.syntax">
+			<label index="input.syntax">
         &lt;b&gt;size = integer;&lt;/b&gt;
         Size of the field.
-      </label>      
-			
-		  <!-- link -->
-      <label index="link.description">Attributes for "Link"</label>
+      </label>
+			<label index="link.description">Attributes for &quot;Link&quot;</label>
 			<label index="link.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="link.syntax">
+			<label index="link.syntax">
         &lt;b&gt;generateRTF=1;&lt;/b&gt;
         Sets the RTF generator.
         &lt;b&gt;templateRTF=filename;&lt;/b&gt;
         Defines the template to be used by the RTF generator. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
         &lt;b&gt;saveFileRTF=filename;&lt;/b&gt;
         Name under which the generated file will be saved. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
-        &lt;b&gt;tableName.fieldName=string1->string2;&lt;/b&gt;
+        &lt;b&gt;tableName.fieldName=string1-&gt;string2;&lt;/b&gt;
         In an rtf document, if the field tag ###tableName.fieldName### exists string1 will be replaced by string2. String1 can be NL (for the ASCII character LF).
         It may be useful when one wants to input data in a textarea and display them in one line with a given separator in the file.
-      </label>   
-      
-      <!-- radio -->
-			<label index="radio.description">Attributes for "radio buttons"</label>
+      </label>
+			<label index="radio.description">Attributes for &quot;radio buttons&quot;</label>
 			<label index="radio.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="radio.syntax">
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.     
-      </label>			
-
-		  <!-- rel -->
-      <label index="rel.description">Attributes for "Database relation"</label>
+      </label>
+			<label index="rel.description">Attributes for &quot;Database relation&quot;</label>
 			<label index="rel.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="rel.syntax">
+			<label index="rel.syntax">
         1) Selectorbox, select global
         
         &lt;b&gt;aliasSelect = field_name;&lt;/b&gt;
@@ -687,7 +649,7 @@
         &lt;b&gt;groupBySelect=string;&lt;/b&gt;
         Defines the GROUP BY clause for the selector.
         &lt;b&gt;content=SQL select statement;&lt;/b&gt;
-        SQL select statement must have an alias "uid" and an alias "label" which will be used as the value to display.
+        SQL select statement must have an alias &quot;uid&quot; and an alias &quot;label&quot; which will be used as the value to display.
         Special tags can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###uidSelected### will be replaced by the selected item.
@@ -721,7 +683,7 @@
         &lt;b&gt;addUpDown = 1;&lt;/b&gt;
         Two buttons (up and down) will be added. They can be used to reorganize the order of the subform items.
         &lt;b&gt;maxSubItems = integer;&lt;/b&gt;
-        Number of items that will be displayed in the subform. All items are displayed if set to 0. If not set, the "maxitems" value in the TCA, that is the "Max number of relations" in the Kickstarter, is used.
+        Number of items that will be displayed in the subform. All items are displayed if set to 0. If not set, the &quot;maxitems&quot; value in the TCA, that is the &quot;Max number of relations&quot; in the Kickstarter, is used.
         &lt;b&gt;keepFieldsInSubForm = comma-separated list of fields;&lt;/b&gt;
         The values of the fields (use tableName.fieldName) from the parent form will be kept in the subform. It can be used to deal with these values in the subform.
         If * is used instead of the comma-separated list of fields, all fields are kept.     
@@ -730,15 +692,13 @@
         &lt;b&gt;labelOnTitle = 1;&lt;/b&gt;
         The label will be displayed in the title of the subform in input mode.
         &lt;b&gt;subFormTemplate = string;&lt;/b&gt;
-        Name of the template (e.g. subFormAlt). By default the template "subForm" is used.
+        Name of the template (e.g. subFormAlt). By default the template &quot;subForm&quot; is used.
         &lt;b&gt;noFirstLast = 1;&lt;/b&gt;
-        First and last buttons in the browser associated with the "subFormAlt" template will not be shown.
+        First and last buttons in the browser associated with the &quot;subFormAlt&quot; template will not be shown.
      </label>
-
-		  <!-- select -->
-      <label index="select.description">Attributes for "selectorbox"</label>
+			<label index="select.description">Attributes for &quot;selectorbox&quot;</label>
 			<label index="select.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="select.syntax">
+			<label index="select.syntax">
         &lt;b&gt;func = function_name;&lt;/b&gt;
         It associates a function with the selectorbox items. The parameter function_name can be:
         . makeItemLink
@@ -750,40 +710,31 @@
 
         &lt;b&gt;separator = character or string;&lt;/b&gt;
         It can be used with selector boxes associated with a MM relation to replace the default &lt; br /&gt; separator between items in showAll or showSingle views.       
-      </label> 
-      
-      <!-- ShowOnly -->
-      <label index="ShowOnly.description">Attributes for "Not created, only shown in savform"</label>
+      </label>
+			<label index="ShowOnly.description">Attributes for &quot;Not created, only shown in savform&quot;</label>
 			<label index="ShowOnly.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-			
-		  <!-- textarea -->
-      <label index="textarea.description">Attributes for "Textarea"</label>
+			<label index="textarea.description">Attributes for &quot;Textarea&quot;</label>
 			<label index="textarea.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="textarea.syntax">
+			<label index="textarea.syntax">
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Defines the number of cols of the textarea. This attribute overwrites the same attribute in the TCA.
         
         &lt;b&gt;rows = integer;&lt;/b&gt;
         Defines the number of rows  of the textarea. This attribute overwrites the same attribute in the TCA.
-      </label> 
-      
-		  <!-- textarea_rte -->
-      <label index="textarea_rte.description">Attributes for "Textarea with RTE"</label>
+      </label>
+			<label index="textarea_rte.description">Attributes for &quot;Textarea with RTE&quot;</label>
 			<label index="textarea_rte.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
-      <label index="textarea_rte.syntax">
+			<label index="textarea_rte.syntax">
         &lt;b&gt;height = integer;&lt;/b&gt;
         Defines the height of the textarea. This attribute overwrites the same attribute in the TCA.
         
         &lt;b&gt;width = integer;&lt;/b&gt;
         Defines the width of the textarea. This attribute overwrites the same attribute in the TCA.
-      </label> 
+      </label>
 		</languageKey>
-
-	 <!-- FRENCH LANGUAGE SECTION -->
-    <languageKey index="fr">EXT:sav_library/res/fr.locallang_csh_kickstarter.xml</languageKey>
-    
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>
-
-
-

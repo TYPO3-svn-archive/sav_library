@@ -1720,7 +1720,11 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
                 foreach ($query as $key => $value) {                
                   if ($value) {
                     if ($key == 'whereTags' ) {
-                      eval('$value=array('.$value.');');
+                      eval('$whereTags=array('.$value.');');
+                      $value = array();
+                      foreach($whereTags as $keyWhereTag => $valueWhereTag) {
+                        $value[$this->cryptTag($keyWhereTag)] = $valueWhereTag;
+                      }
                     } 
                     $xmlArray['queries'][$k][$key] = $value;                    
                   }

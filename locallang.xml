@@ -5,8 +5,7 @@
 		<description>Language labels for &quot;sav_library&quot;</description>
 	</meta>
 	<data type="array">
-		<languageKey index="default" type="array">	
-			<!-- Flexform messages -->
+		<languageKey index="default" type="array">
 			<label index="pi_flexform.sheetTitle.sDEF">General</label>
 			<label index="pi_flexform.formId">Select form</label>
 			<label index="pi_flexform.allowedGroups">Allowed groups</label>
@@ -18,39 +17,33 @@
 			<label index="pi_flexform.inputApplyLimit">Apply date limit to</label>
 			<label index="pi_flexform.inputApplyLimit.I.0">Nobody</label>
 			<label index="pi_flexform.inputApplyLimit.I.1">All</label>
-			<label index="pi_flexform.inputApplyLimit.I.2">"Admin plus" users</label>
-			<label index="pi_flexform.inputApplyLimit.I.3">All excluding "Super Admin"</label>
-			<label index="pi_flexform.showNoAvailableInformation">In no information available</label> 
+			<label index="pi_flexform.inputApplyLimit.I.2">&quot;Admin plus&quot; users</label>
+			<label index="pi_flexform.inputApplyLimit.I.3">All excluding &quot;Super Admin&quot;</label>
+			<label index="pi_flexform.showNoAvailableInformation">In no information available</label>
 			<label index="pi_flexform.showNoAvailableInformation.I.0">Show a message</label>
 			<label index="pi_flexform.showNoAvailableInformation.I.1">Do not show a message</label>
-			<label index="pi_flexform.showNoAvailableInformation.I.2">Do not show the extension</label>      						
+			<label index="pi_flexform.showNoAvailableInformation.I.2">Do not show the extension</label>
 			<label index="pi_flexform.maxItems">Max number of items</label>
 			<label index="pi_flexform.sheetTitle.sInput">Input controls</label>
-			<label index="pi_flexform.noNewButton">No "new" button</label>
-			<label index="pi_flexform.noEditButton">No "edit" button</label>
-			<label index="pi_flexform.noDeleteButton">No "delete" button</label>
-			<label index="pi_flexform.deleteButtonOnlyForCruser">Add a "delete" button only for records created by the user</label>
-			<label index="pi_flexform.submitButton">Add a "submit" button (to be used with a form)</label>
+			<label index="pi_flexform.noNewButton">No &quot;new&quot; button</label>
+			<label index="pi_flexform.noEditButton">No &quot;edit&quot; button</label>
+			<label index="pi_flexform.noDeleteButton">No &quot;delete&quot; button</label>
+			<label index="pi_flexform.deleteButtonOnlyForCruser">Add a &quot;delete&quot; button only for records created by the user</label>
+			<label index="pi_flexform.submitButton">Add a &quot;submit&quot; button (to be used with a form)</label>
 			<label index="pi_flexform.sheetTitle.sAdvanced">Advanced</label>
 			<label index="pi_flexform.permanentFilter">Permanent filter</label>
 			<label index="pi_flexform.addFragment">Add a fragment(#content id) to links</label>
-			<label index="pi_flexform.allowQueryProperty">Allow the use of the "query" property</label>
+			<label index="pi_flexform.allowQueryProperty">Allow the use of the &quot;query&quot; property</label>
 			<label index="pi_flexform.helpPage">Help page</label>
 			<label index="pi_flexform.help">Help</label>
 			<label index="pi_flexform.storagePage">Storage page</label>
-
-		  <!-- Messages -->		
 			<label index="message.clikToUpdate">Clik on the right button at the top or the bottom of the form to validate data.</label>
 			<label index="message.dataSaved">Your data were saved.</label>
 			<label index="message.forTests">Message for tests.</label>
 			<label index="message.sameFieldName">Several fields have the same name in a view (the first one was kept). Please check: </label>
-
-		  <!-- Warning messages -->
 			<label index="warning.delete">Are you sure you want to delete this record?</label>
 			<label index="warning.save">Save this record?</label>
 			<label index="warning.noRecord">No record returned.</label>
-      
-		  <!-- Error messages -->		
 			<label index="error.configurationNeeded">A configuration file is needed and the defaut file was not found. Please contact the WebMaster.</label>
 			<label index="error.extensionNotAllowed">Error: invalid file type</label>
 			<label index="error.fieldRequired">Error: missing required values(s)</label>
@@ -62,28 +55,28 @@
 			<label index="error.incorrectCSS">Error: unknown CSS file.</label>
 			<label index="error.incorrectSession">Error: incorrect session. Close your brower and try again.</label>
 			<label index="error.incorrectPluginConfiguration_1">Incorrect configuration of the plugin: </label>
-			<label index="error.incorrectPluginConfiguration_2">Edit and save the plugin configuration to take the flexform parameters into consideration</label>			
+			<label index="error.incorrectPluginConfiguration_2">Edit and save the plugin configuration to take the flexform parameters into consideration</label>
 			<label index="error.incorrectRTFSaveFileName">Save file name is missing ( saveFileRTF=filename; is missing in the field configuration).</label>
 			<label index="error.incorrectRTFTemplateFileConfig">Incorrect RTF template configuration (templateRTF=filename; is missing in the field configration).</label>
 			<label index="error.incorrectRTFTemplateFileExtension">Incorrect RTF template file extension.</label>
 			<label index="error.incorrectRTFTemplateFileName">Unknown RTF template file. Check the path.</label>
 			<label index="error.incorrectQuery">Error in the query associated with the view:</label>
-			<label index="error.incorrectQueryInsertNew">Error in creating the new record. It may occur if you try to insert a field which does not exist in the table (e.g. field with the type "Shown only in SAV Form").</label>
-			<label index="error.incorrectQueryInReqValue">Error in the query associated with the property "reqValue" in the field: </label>
-			<label index="error.incorrectQueryInQueryProperty">Error in the query associated with the property "query"</label>
-			<label index="error.incorrectQueryInContent">Error in the query associated with the property "content" in the field: </label>
-			<label index="error.incorrectQueryForeignTable">The "foreign table" field in the query must start either by inner join, left join, right join or by a comma.</label>
+			<label index="error.incorrectQueryInsertNew">Error in creating the new record. It may occur if you try to insert a field which does not exist in the table (e.g. field with the type &quot;Shown only in SAV Form&quot;).</label>
+			<label index="error.incorrectQueryInReqValue">Error in the query associated with the property &quot;reqValue&quot; in the field: </label>
+			<label index="error.incorrectQueryInQueryProperty">Error in the query associated with the property &quot;query&quot;</label>
+			<label index="error.incorrectQueryInContent">Error in the query associated with the property &quot;content&quot; in the field: </label>
+			<label index="error.incorrectQueryForeignTable">The &quot;foreign table&quot; field in the query must start either by inner join, left join, right join or by a comma.</label>
 			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library have not the same version. Open the extension with the kickstater and save it.</label>
-			<label index="error.missingDot">Separate the field name from the table name by a dot "." in: </label>  
+			<label index="error.missingDot">Separate the field name from the table name by a dot &quot;.&quot; in: </label>
 			<label index="error.missingEqualSign">The sign = is missing in parameter: </label>
 			<label index="error.missingLabel">Please contact the webMaster. Missing label: </label>
 			<label index="error.mkdirIncorrect">Error: mkdir aborted</label>
 			<label index="error.noFieldSelectedInForm">Please contact the Webmaster. No field was selected in the form. Select at least a field with the kickstarter</label>
 			<label index="error.noFieldSelectedInSubForm">Please contact the Webmaster. No field was selected in the subform. Select at least a field with the kickstarter</label>
-			<label index="error.noFormSelectedInFlexform">Error: no form selected in the flexform of the extension: </label>   
+			<label index="error.noFormSelectedInFlexform">Error: no form selected in the flexform of the extension: </label>
 			<label index="error.notSavedElapsedTime">Your latest changes could not been saved because the allocated time for inputs was over.</label>
 			<label index="error.onlySelectQueryAllowed">Error: only SELECT query is allowed in the field: </label>
-			<label index="error.queryPropertyNotAllowed">Error: the use of the "query" property is not allowed in this extension.</label>
+			<label index="error.queryPropertyNotAllowed">Error: the use of the &quot;query&quot; property is not allowed in this extension.</label>
 			<label index="error.templateNeeded">A template file is needed and the defaut template was not found. Please contact the WebMaster.</label>
 			<label index="error.unauthentified">You must be authentified to save these data</label>
 			<label index="error.underMaintenance">This service is temporarily unavailable due to maintenance - please come back later.</label>
@@ -96,11 +89,8 @@
 			<label index="error.isValidLength">The input has a length greater than the allowed length.</label>
 			<label index="error.isValidInterval">The input is not in the given interval.</label>
 			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
-			
-			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the "Local table" field of the query associated with your form. </label>
+			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form. </label>
 			<label index="fatal.notAuthentified">Fatal error. You must be authentified to save these data.</label>
-
-		  <!-- Buttons -->		
 			<label index="button.edit">Edit</label>
 			<label index="button.save">Save</label>
 			<label index="button.saveandclose">Save and close</label>
@@ -117,24 +107,21 @@
 			<label index="button.backward">Previous</label>
 			<label index="button.forward">Next</label>
 			<label index="button.backwardFirst">First</label>
-			<label index="button.forwardLast">Last</label>			
+			<label index="button.forwardLast">Last</label>
 			<label index="button.up">Up</label>
 			<label index="button.down">Down</label>
 			<label index="button.deleteItem">Delete Item</label>
 			<label index="button.print">Print</label>
 			<label index="button.help">Help</label>
-    	<label index="button.mail">Send the email</label>
-    	<label index="button.submit">Submit the form</label>
-    	<label index="button.saveExportConfiguration">Save export configuration</label>    	
-    	<label index="button.loadExportConfiguration">Load export configuration</label>    	
-			<label index="button.deleteExportConfiguration">Delete export configuration</label> 
-			<label index="button.toggleExportDisplay_1">Display all fields</label> 
-			<label index="button.toggleExportDisplay_0">Display only selected fields</label> 
-      	
-		  <!-- Icons -->		
+			<label index="button.mail">Send the email</label>
+			<label index="button.submit">Submit the form</label>
+			<label index="button.saveExportConfiguration">Save export configuration</label>
+			<label index="button.loadExportConfiguration">Load export configuration</label>
+			<label index="button.deleteExportConfiguration">Delete export configuration</label>
+			<label index="button.toggleExportDisplay_1">Display all fields</label>
+			<label index="button.toggleExportDisplay_0">Display only selected fields</label>
 			<label index="icon.required">Required field</label>
-    
-      <!-- Itemviewer labels -->
+			<label index="icon.new">New</label>
 			<label index="itemviewer.days.0">Monday</label>
 			<label index="itemviewer.days.1">Twesday</label>
 			<label index="itemviewer.days.2">Wednesday</label>
@@ -159,177 +146,13 @@
 			<label index="itemviewer.includeAllFields">Include all fields</label>
 			<label index="itemviewer.exportFieldNames">Export field names</label>
 			<label index="itemviewer.orderedFieldList">Order of the fields</label>
-    
-      <!-- General labels --> 
 			<label index="general.clickHere">Click here</label>
 			<label index="general.noAvailableInformation">No available information</label>
 			<label index="general.new">New</label>
-
-		</languageKey>
-		
-		<languageKey index="fr" type="array">	
-		  <!-- Flexform messages -->
-			<label index="pi_flexform.sheetTitle.sDEF">Général</label>
-			<label index="pi_flexform.formId">Choisir un formulaire</label>
-			<label index="pi_flexform.allowedGroups">Groupes autorisés</label>
-			<label index="pi_flexform.inputAdminField">Champ Admin</label>
-			<label index="pi_flexform.noFilterShowAll">Tout montrer si pas de filtre</label>
-			<label index="pi_flexform.inputOnForm">Saisie autorisée</label>
-			<label index="pi_flexform.inputStartDate">Date début saisie</label>
-			<label index="pi_flexform.inputEndDate">Date fin saisie</label>
-			<label index="pi_flexform.inputApplyLimit">Appliquer la date à</label>
-			<label index="pi_flexform.inputApplyLimit.I.0">Personne</label>
-			<label index="pi_flexform.inputApplyLimit.I.1">Tous</label>
-			<label index="pi_flexform.inputApplyLimit.I.2">Utilisateurs "Admin plus"</label>
-			<label index="pi_flexform.inputApplyLimit.I.3">Tous sauf les "Super Admin"</label>
-			<label index="pi_flexform.showNoAvailableInformation">Si aucune information disponible</label> 
-			<label index="pi_flexform.showNoAvailableInformation.I.0">Afficher un message</label>
-			<label index="pi_flexform.showNoAvailableInformation.I.1">Ne pas afficher de message</label>
-			<label index="pi_flexform.showNoAvailableInformation.I.2">Ne pas afficher l'extension</label>      			
-			<label index="pi_flexform.maxItems">Nombre max d'éléments affichés</label>
-			<label index="pi_flexform.sheetTitle.sInput">Options de saisie</label>
-			<label index="pi_flexform.noNewButton">Pas de bouton "Nouveau"</label>
-			<label index="pi_flexform.noEditButton">Pas de bouton "Editer"</label>
-			<label index="pi_flexform.noDeleteButton">Pas de bouton "Supprimer"</label>
-			<label index="pi_flexform.deleteButtonOnlyForCruser">Ajouter un  bouton "Supprimer" pour les enregistrements créés par l'utilisateur </label>
-			<label index="pi_flexform.submitButton">Ajouter un bouton d'envoi(à utiliser avec un formulaire)</label>
-			<label index="pi_flexform.sheetTitle.sAdvanced">Avancées</label>
-			<label index="pi_flexform.permanentFilter">Filtre permanent</label>
-			<label index="pi_flexform.addFragment">Ajouter un fragment(#content id) aux liens</label>
-			<label index="pi_flexform.allowQueryProperty">Autoriser l'utilisation de la propriété "query"</label>
-			<label index="pi_flexform.helpPage">Page d'aide</label>
-			<label index="pi_flexform.help">Aide</label>
-			<label index="pi_flexform.storagePage">Page de stockage des enregistrements</label>
-
-		  <!-- Messages -->		
-			<label index="message.clikToUpdate">Cliquer sur les boutons à droite en haut ou en bas du formulaire pour valider les données.</label>
-			<label index="message.dataSaved">Vos données ont été enregistrées.</label>
-			<label index="message.forTests">Message pour les tests.</label>
-			<label index="message.sameFieldName">Plusieurs champs ont le même nom dans une vue (le premier a été gardé). Merci de vérifier : </label>
-
-		  <!-- Warning messages -->
-      <label index="warning.delete">Etes-vous sûr de vouloir supprimer cet enregistrement ?</label>
-			<label index="warning.save">Sauvegarder cet enregistrement ?</label>
-			<label index="warning.noRecord">Aucun enregistrement retourné.</label>
-
-		  <!-- Error messages -->		
-			<label index="error.configurationNeeded">Un fichier de configuration est nécessaire et le fichier par défaut n'a pas été trouvé. Merci de contacter le webmestre.</label>
-			<label index="error.extensionNotAllowed">Erreur : chargement de ce type de fichier interdit</label>
-			<label index="error.fieldRequired">Erreur : un ou plusieurs champs requis sont manquants.</label>
-			<label index="error.fieldVoid">Erreur : le champ ne doit pas être vide</label>
-			<label index="error.fieldIncorrectValue">Erreur : valeur incorrecte pour ce champ</label>
-			<label index="error.incorrectAlias">Erreur : alias incorrect :</label>
-			<label index="error.incorrectDateFormat">Erreur: format de date incorrect</label>
-			<label index="error.incorrectDateOption">Erreur: une option % de la date est incorrecte</label>
-			<label index="error.incorrectCSS">Erreur : fichier CSS inconnu.</label>
-			<label index="error.incorrectSession">Erreur : session incorrecte. Fermer toutes les fenêtres de votre navigateur et recommencer.</label>
-			<label index="error.incorrectPluginConfiguration_1">Congiguration incorrecte du plugin: </label>
-			<label index="error.incorrectPluginConfiguration_2">Editer et sauvegarder la configuration pour prendre les paramètres en considération</label>
-			<label index="error.incorrectRTFSaveFileName">Fichier pour la sauvegarde inconnu( saveFileRTF=filename; manque dans la configuration du champ).</label>
-			<label index="error.incorrectRTFTemplateFileConfig">Configuration du template RTF incorrecte (templateRTF=filename; manque dans la configuration du champ).</label>
-			<label index="error.incorrectRTFTemplateFileExtension">Extension incorrecte du template RTF.</label>
-			<label index="error.incorrectRTFTemplateFileName">Template RTF inconnu. Vérifier le chemin.</label>
-			<label index="error.incorrectQuery">Erreur dans la requête associée à la vue: </label>
-			<label index="error.incorrectQueryInsertNew">Erreur dans la création d'un nouvel enregistrement. Cela peut arriver si vous essayez d'insérer un champ qui n'existe pas (e.g. champ de type "Shown only in SAV Form").</label>
-			<label index="error.incorrectQueryInReqValue">Erreur dans la requête associée à la propriété "reqValue" dans le champ : </label>
-			<label index="error.incorrectQueryInContent">Erreur dans la requête associée à la propriété "content" dans le champ : </label>
-			<label index="error.incorrectQueryInQueryProperty">Erreur dans la requête associée la la propriété "query"</label>
-			<label index="error.incorrectQueryForeignTable">Le champ "foreign table" dans la requête doit commencer par inner join, left join, right join ou par une virgule.</label>
-			<label index="error.incorrectVersion">Merci de contacter le webmestre. L'extension et la bibliothèque n'ont pas la même version. Ouvrir l'extension avec le kickstater et la sauver.</label>
-			<label index="error.missingDot">Séparer le champ de la table par un "." dans : </label>
-			<label index="error.missingEqualSign">Le signe = manque dans le paramètre : </label>
-			<label index="error.missingLabel">Merci de contacter le webmestre. Label manquant : </label>
-			<label index="error.mkdirIncorrect">Erreur: création de répertoire non effectuée.</label>
-			<label index="error.noFieldSelectedInForm">Merci de contacter le webmestre. Aucun champ sélectionné dans le formulaire. Sélectionner au moins un champ avec le kickstarter</label>
-			<label index="error.noFieldSelectedInSubForm">Merci de contacter le webmestre. Aucun champ sélectionné dans le sous-formulaire. Sélectionner au moins un champ avec le kickstarter</label>
-			<label index="error.noFormSelectedInFlexform">Erreur: aucun formulaire sélectionné dans le "flexform" associé à l'extension : </label>   
-			<label index="error.notSavedElapsedTime">Vos dernières modifications n'ont pas pu être sauvegardées car vous avez dépassé le temps alloué à cet effet.</label>
-			<label index="error.onlySelectQueryAllowed">Erreur : seule une requête SELECT est autorisée dans le champ : </label>
-			<label index="error.queryPropertyNotAllowed">Erreur : l'utilisation de la propriété "query" n'est pas autorisée pour cette extension.</label>
-			<label index="error.templateNeeded">Un fichier "template" est nécessaire et le fichier par n'a pas été trouvé.</label>
-			<label index="error.unauthentified">Vous devez être authentifié pour sauver ces données</label>
-			<label index="error.underMaintenance">Ce service est temporairement inacessible pour cause de maintenance - merci de revenir ultérieurement.</label>
-			<label index="error.unknownFormName">Merci de contacter le webmestre. Le type de formulaire est inconnu ou non défini : </label>
-			<label index="error.unknownFunctionInWhere">La fonction suivante, utilisée dans une clause WHERE (###func:whereClause###), n'est pas définie : </label>
-			<label index="error.unknownType">Merci de contacter le webmestre. Le type suivant est inconnu : </label>
-			<label index="error.uploadedIncorrect">Erreur : chargement du fichier non effectué</label>
-			<label index="error.verifierUnknown">Erreur de configuration de l'extension : fonction de vérification inconnue.</label>
-			<label index="error.verifierInvalidIntervalParameter">Erreur de configuration de l'extension : intervalle invalide.</label>
-			<label index="error.isValidLength">La longueur de l'information saisie est supérieure à la taille maximale autorisée.</label>
-			<label index="error.isValidInterval">La saisie n'est pas dans l'intervalle attendu.</label>
-			<label index="error.isValidPattern">La saisie ne correspond pas au format attendu.</label>
-
-			<label index="fatal.incorrectTCA">Erreur fatale. la table locale a un TCA incorrect. Vous n'avez peut-être pas utilisé le bon nom dans le champ "Local table" dans la requête associée à votre formulaire.</label>
-			<label index="fatal.notAuthentified">Erreur fatale. Vous devez être authentifié pour sauver ces données.</label>
-
-		  <!-- Buttons -->		
-			<label index="button.edit">Editer</label>
-			<label index="button.save">Enregistrer</label>
-			<label index="button.saveandclose">Enregistrer et sortir</label>
-			<label index="button.close">Sortir</label>
-			<label index="button.export">Exporter en csv</label>
-			<label index="button.new">Nouveau</label>
-			<label index="button.delete">Supprimer</label>
-			<label index="button.inputMode">Entrer en mode saisie</label>
-			<label index="button.toggleMode">Changement de mode</label>
-			<label index="button.search">Lancer la recherche</label>
-			<label index="button.generateRTF">Création du RTF</label>
-			<label index="button.leftArrow">Précédents</label>
-			<label index="button.rightArrow">Suivants</label>
-			<label index="button.backward">Précédent</label>
-			<label index="button.forward">Suivant</label>
-			<label index="button.backwardFirst">Premier</label>
-			<label index="button.forwardLast">Dernier</label>			
-			<label index="button.up">Monter</label>
-			<label index="button.down">Descendre</label>
-			<label index="button.deleteItem">Supprimer l'élément</label>
-			<label index="button.print">Imprimer</label>
-			<label index="button.help">Aide</label>
-			<label index="button.mail">Envoyer le mél</label>
-    	<label index="button.submit">Valider le formulaire</label>
-    	<label index="button.saveExportConfiguration">Sauver la configuration</label>    	
-    	<label index="button.loadExportConfiguration">Charger la configuration</label>    	
-			<label index="button.deleteExportConfiguration">Supprimer la configuration</label> 
-			<label index="button.toggleExportDisplay_1">Afficher tous les champs</label> 
-			<label index="button.toggleExportDisplay_0">Afficher seulement les champs sélectionnés</label> 
-    
-		  <!-- Icons -->		
-			<label index="icon.required">Champ obligatoire</label>
-
-      <!-- Itemviewer labels -->    		
-			<label index="itemviewer.days.0">Lundi</label>
-			<label index="itemviewer.days.1">Mardi</label>
-			<label index="itemviewer.days.2">Mercredi</label>
-			<label index="itemviewer.days.3">Jeudi</label>
-			<label index="itemviewer.days.4">Vendredi</label>
-			<label index="itemviewer.days.5">Samedi</label>
-			<label index="itemviewer.days.6">Dimanche</label>
-			<label index="itemviewer.yes">Oui</label>
-			<label index="itemviewer.no">Non</label>
-			<label index="itemviewer.yesMult">X </label>
-			<label index="itemviewer.noMult">- </label>	
-			<label index="itemviewer.configuration">Configuration</label>
-			<label index="itemviewer.configurationGroup">Groupe</label>
-			<label index="itemviewer.whereClause">Clause Where</label>
-			<label index="itemviewer.orderClause">Clause Order</label>
-			<label index="itemviewer.error">Erreur</label>
-			<label index="itemviewer.warning">Attention</label>
-			<label index="itemviewer.additionalTables">Tables additionnelles</label>
-			<label index="itemviewer.additionalFields">Champs additionnels</label>
-			<label index="itemviewer.exportMM">Exporter les enregistrements MM</label>
-			<label index="itemviewer.groupBy">Clause Group By</label>
-			<label index="itemviewer.includeAllFields">Inclure tous les champs</label>
-			<label index="itemviewer.exportFieldNames">Exporter le nom des champs</label>
-			<label index="itemviewer.orderedFieldList">Ordre des champs</label>
-
-      <!-- General labels --> 
-			<label index="general.clickHere">Cliquer ici</label>
-			<label index="general.noAvailableInformation">Aucune information disponible</label>
-			<label index="general.new">Nouveau</label>
 		</languageKey>
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>
-
-
-
-

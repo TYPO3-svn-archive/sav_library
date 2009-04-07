@@ -73,8 +73,9 @@
         This option makes it possible to store your record in a storage page, for example a &quot;sysfolder&quot;, otherwise records are stored in the current page.
         When this option is used, records are fetched in the storage page and in the pages defined in the &quot;starting point&quot; if any.</label>
 		</languageKey>
-		
-		<languageKey index="fr">EXT:sav_library/res/fr.locallang_csh_flexform.xml</languageKey>
-		
 	</data>
+	<orig_hash type="array">
+	</orig_hash>
+	<orig_text type="array">
+	</orig_text>
 </T3locallang>
