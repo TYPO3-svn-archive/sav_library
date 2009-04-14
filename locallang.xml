@@ -82,6 +82,7 @@
 			<label index="error.underMaintenance">This service is temporarily unavailable due to maintenance - please come back later.</label>
 			<label index="error.unknownFormName">Please contact the Webmaster. The following form type is unknown or undefined:</label>
 			<label index="error.unknownFunctionInWhere">The following function, used in a WHERE clause(###func:whereClause###), is not defined: </label>
+			<label index="error.unknownMarker">The following marker is unknown:</label>
 			<label index="error.unknownType">Please contact the Webmaster. The following type is unknown:</label>
 			<label index="error.uploadedIncorrect">Error: Upload aborted</label>
 			<label index="error.verifierUnknown">Extension configuration error: unknown verifier.</label>

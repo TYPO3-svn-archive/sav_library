@@ -60,6 +60,24 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 		$this->dropDatabase();
 	}
 
+  // Get the Data from the local table
+  public function getDataFromTable($from, $select = '*', $where = '') {
+     // set the tableLocal
+     $this->fixture->tableLocal = $from;
+    // Get the content from the table
+    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+      $select,
+      $from,
+      $where
+    );
+		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
+			$row['uid'] = $row[$this->fixture->tableLocal . '.uid'];
+			$data[] = $row;
+		}
+    $GLOBALS['TYPO3_DB']->sql_free_result($res);
+    return $data;
+  }
+
    /***************************************************************/
    /* Form methods                                                */
    /***************************************************************/
@@ -100,18 +118,110 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     $this->assertEquals('viewDbRelationSelectorGlobal', $this->fixture->getFunc($config));
   }
 
-  public function test_getValue(){
-  
-    // Get the content of the fe_users table as data test
-    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-      '*, substring_index(name, \' \', 1) as firstName',
-      'fe_users',
-      ''
+  public function test_checkCut(){
+
+    // Get the content of the tx_savlibraryexample1_members table as data test
+    $data = $this->getDataFromTable('tx_savlibraryexample1_members');
+
+    // Assert False if no configuration is provided
+    $config = array();
+    $this->assertFalse($this->fixture->checkCut($config, $data[0]));
+    
+    // Check when cutIfNull is used
+    // Assert True if config['value'] is empty
+    $config = array(
+      'cutifnull' => 1,
+      'value' => '');
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    $config = array(
+      'cutifnull' => 1,
+      'value' => 0);
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    // Assert True if config['_value'] is empty
+    $config = array(
+      'cutifnull' => 1,
+      'value' => '');
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    
+    // Check when cutIf is used
+    // Assert True when the condition is satisfied. Local table is assumed.
+    $config = array(
+      'cutif' => 'lastname = DOE'
     );
-		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
-			$data[] = $row;
-		}
-    $GLOBALS['TYPO3_DB']->sql_free_result($res);
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    // Assert True when the condition is satisfied. Full name is assumed.
+    $config = array(
+      'cutif' => 'tx_savlibraryexample1_members.lastname = DOE'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    // Assert True when the condition is not satisfied. Local table is assumed.
+    $config = array(
+      'cutif' => 'lastname != DONE'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    // Test the special value EMPTY
+    $config = array(
+      'cutif' => 'image = EMPTY'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+
+    // Check several conditions
+    // 2 true conditions with a AND (&)
+    $config = array(
+      'cutif' => 'lastname != DONE & lastname != DO'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+
+    // 3 conditions are true with a AND (&) and one OR (|)
+    $config = array(
+      'cutif' => 'lastname != DONE & lastname != DO | lastname = DOE'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    // 3 conditions: First is false (thus Anded conditions are false), the last is false
+    $config = array(
+      'cutif' => 'lastname != DOE & lastname != DO | lastname = DONE'
+    );
+    $this->assertFalse($this->fixture->checkCut($config, $data[0]));
+    
+    // Check ###user### and ###cruser### tags
+    // set a valid user
+    $this->userAuth('validUser', 'test');
+    $config = array(
+      'cutif' => 'cruser_id = ###user###'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    $config = array(
+      'cutif' => 'cruser_id = ###cruser###'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+
+    // Check ###usergroup### tag
+    $config = array(
+      'cutif' => '###usergroup=validGroup###'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    $config = array(
+      'cutif' => '###usergroup!=unvalidGroup###'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+
+    // Check ###group### tag
+    // Get the content of the fe_users table as data test
+    $data = $this->getDataFromTable('fe_users');
+    $config = array(
+      'cutif' => '###group=validGroup###'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+    $config = array(
+      'cutif' => '###group!=unvalidGroup###'
+    );
+    $this->assertTrue($this->fixture->checkCut($config, $data[0]));
+  }
+  
+  public function test_getValue(){
+
+    // Get the content of the fe_users table as data test
+    $data = $this->getDataFromTable('fe_users', '*, substring_index(name, \' \', 1) as firstName');
 
     // Get the name of the first user (Valid User) with only the field name
     $this->assertEquals('Valid User', $this->fixture->getValue('fe_users', 'name', $data[0]));
@@ -129,18 +239,8 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 
   public function test_processTitle() {
 
-     // set the tableLocal
-     $this->fixture->tableLocal = 'tx_savlibraryexample1_members';
     // Get the content of the tx_savlibraryexample1_members table as data test
-    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-      '*',
-      $this->fixture->tableLocal,
-      ''
-    );
-		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
-			$data[] = $row;
-		}
-    $GLOBALS['TYPO3_DB']->sql_free_result($res);
+    $data = $this->getDataFromTable('tx_savlibraryexample1_members');
 
     // If title is not an array return &nbsp;
     $this->assertEquals('&nbsp;', $this->fixture->processTitle('', $data[0]));
@@ -166,19 +266,10 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 	/* Admin methods                                               */
 	/***************************************************************/
   public function test_userIsAdmin() {
-     // set the tableLocal
-     $this->fixture->tableLocal = 'tx_savlibraryexample1_members';
+
     // Get the content of the tx_savlibraryexample1_members table as data test
-    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-      '*',
-      $this->fixture->tableLocal,
-      ''
-    );
-		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
-			$data[] = $row;
-		}
-    $GLOBALS['TYPO3_DB']->sql_free_result($res);
-  
+    $data = $this->getDataFromTable('tx_savlibraryexample1_members');
+
     // True if there is not an inputAdminField configuration
     $this->fixture->conf['inputAdminField'] = '';
     $this->assertTrue($this->fixture->userIsAdmin($data[0]));
@@ -285,18 +376,9 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
   }
   
   public function test_userIsAllowedToInputData() {
-     // set the tableLocal
-     $this->fixture->tableLocal = 'tx_savlibraryexample1_members';
+
     // Get the content of the tx_savlibraryexample1_members table as data test
-    $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-      '*',
-      $this->fixture->tableLocal,
-      ''
-    );
-		while ($row = $this->fixture->queriers->sql_fetch_assoc_with_tablename($res)) {
-			$data[] = $row;
-		}
-    $GLOBALS['TYPO3_DB']->sql_free_result($res);
+    $data = $this->getDataFromTable('tx_savlibraryexample1_members');
 
     // set a valid user
     $this->userAuth('validUser', 'test');
@@ -438,6 +520,41 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
       $this->fixture->processLocalizationTags('$$$back$$$ : Test without a tag : $$$back$$$'));
   }
 
+  public function test_processMarkerTags() {
+  
+    // Set the data
+    $data = array(
+      'tableName.fieldName' => '1',
+      'tableLocal.fieldName' => '2',
+      'alias' => '3',
+    );
+    
+    // set the local table
+    $this->fixture->tableLocal = 'tableLocal';
+    
+    // The marker is a full name
+    $this->assertEquals('1',
+      $this->fixture->processMarkerTags('###tableName.fieldName###', $data));
+
+    // The marker is a short name assuming that the local table is used
+    $this->assertEquals('2',
+      $this->fixture->processMarkerTags('###fieldName###', $data));
+
+    // The marker is an alias
+    $this->assertEquals('3',
+      $this->fixture->processMarkerTags('###alias###', $data));
+      
+    // Two markers are used
+    $this->assertEquals('1 2',
+      $this->fixture->processMarkerTags('###tableName.fieldName### ###fieldName###', $data));
+
+    // The marker does not exist
+    $this->assertEquals('###tableName.unnown###',
+      $this->fixture->processMarkerTags('###tableName.unnown###', $data));
+    $this->assertEquals('error.unknownMarker',
+      $this->fixture->getErrorLabel(0));
+  }
+  
 	/***************************************************************/
 	/* Other methods                                               */
 	/***************************************************************/
@@ -469,13 +586,13 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
   /* Condition methods                                       	   */
   /***************************************************************/
   public function test_isInString() {
-    $this->assertTrue($this->fixture->isInString('test', 'This is a test.'));
-    $this->assertFalse($this->fixture->isInString('test', 'This is a not a bird.'));
+    $this->assertTrue($this->fixture->isInString('This is a test.', 'test'));
+    $this->assertFalse($this->fixture->isInString('This is a not a bird.', 'test'));
   }
   
   public function test_isNotInString() {
-    $this->assertFalse($this->fixture->isNotInString('test', 'This is a test.'));
-    $this->assertTrue($this->fixture->isNotInString('test', 'This is a not a bird.'));
+    $this->assertFalse($this->fixture->isNotInString('This is a test.', 'test'));
+    $this->assertTrue($this->fixture->isNotInString('This is a not a bird.', 'test'));
   }
   
   public function test_isGroupMember() {

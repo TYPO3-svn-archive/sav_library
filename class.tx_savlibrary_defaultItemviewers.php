@@ -90,12 +90,14 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
     
-    $htmlArray[] = (
-      $config['value'] ?
-      nl2br(stripslashes($config['value'])) :
-      ''
-    );
-    
+    if (!$config['value']) {
+      $htmlArray[] = '';
+    } elseif ($config['tsobject']) {
+      $htmlArray[] = $config['value'];
+    } else {
+      $htmlArray[] = nl2br(stripslashes($config['value']));
+    }
+
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
 
@@ -919,6 +921,7 @@ class tx_savlibrary_defaultItemviewers {
         
         // It's an image. Set parameters
 		    if ($file && file_exists($folder . '/' . $file)) {
+          $params['tsproperties'] = $config['tsproperties'];
           $params['width'] = $config['width'];
           $params['height'] = $config['height'];
           $params['folder'] = $folder;
@@ -940,6 +943,7 @@ class tx_savlibrary_defaultItemviewers {
           }
           $htmlArray[] = $out;          
         } else {
+          $params['tsproperties'] = $config['tsproperties'];
           $params['width'] = $config['width'];
           $params['height'] = $config['height'];
           $image = (

@@ -120,6 +120,10 @@
         
         &lt;b&gt;default = string;&lt;/b&gt;
         Defines the default image if the content of the field is null otherwise the default image is “unknown.gif” taken in the directory sav_library/res/images.
+        
+        &lt;b&gt;tsProperties = string;&lt;/b&gt;
+        It makes it possible to use the graphic possibilities of TYPO3. If set, an IMAGE cObject is generated with the given TS properties.
+        Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it &quot;\;&quot;
 
       </label>
 			<label index="formGen.description">Form generator</label>
@@ -428,13 +432,15 @@
         
         &lt;b&gt;cutIf=fieldName=value;&lt;/b&gt;
         Cuts the field if current value of the field is equal to the given value. The tags ###user### or ###cruser### (same as user but should be used if a new record is created) will be replaced by the user id.
+        Use EMPTY for the value to test an empty field.
         
         &lt;b&gt;cutIf=fieldName!=value;&lt;/b&gt;
         Cuts the field if current value of the field is not equal to the given value.
+        Use EMPTY for the value to test an empty field.
 
         &lt;b&gt;cutIf=###usergroup=group_name###;&lt;/b&gt;
         The field is cut if the group name is a valid group for the current user. 
-                   
+
         &lt;b&gt;cutIf=###usergroup!=group_name###;&lt;/b&gt;
         The field is cut if the group &quot;group_name&quot; is not a valid group for the current user.
   
@@ -569,6 +575,15 @@
                 
         &lt;b&gt;stdWrapValue = TS syntax;&lt;/b&gt;
         It defines a conventional TS stdWrap property. You can add here full TS syntax. 
+        Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it &quot;\;&quot;
+
+        &lt;b&gt;tsObject = cObject;&lt;/b&gt;
+        It defines a TS content object (e.g. TEXT, IMAGE, ...)
+
+        &lt;b&gt;tsProperties = string;&lt;/b&gt;
+        It defines the properties of the TS cObject.
+        Markers ###fieldName### can be used. The marker will be replaced by the current value of the field.
+        Localization tags $$$tag$$$ can also be used. The tag will be replaced by its value according to the configuration language.
         Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it &quot;\;&quot;
 
         &lt;b&gt;verifier = verifier_name;&lt;/b&gt;

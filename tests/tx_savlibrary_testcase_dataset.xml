@@ -48,6 +48,7 @@
 	 <street>1, somewhere street</street>
 	 <zipcode>12345</zipcode>
 	 <city>NOWHERE</city>
+	 <image></image>
   </tx_savlibraryexample1_members>
   <tx_savlibraryexample1_members id="2">
 	 <cruser_id ref="fe_users#2" />
@@ -56,6 +57,7 @@
 	 <street>1, somewhere street</street>
 	 <zipcode>12345</zipcode>
 	 <city>NOWHERE</city>
+	 <image></image>
   </tx_savlibraryexample1_members>
   
 </dataset>
