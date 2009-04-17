@@ -583,7 +583,7 @@ class tx_savlibrary_defaultQueriers {
 	public function UPDATE_defaultQuerier(&$query, $uid=0) {
 
  		if (! $GLOBALS['TSFE']->fe_user->user['uid']) {
-			return array('fatal' => 'notAuthentified');
+			return array('fatal' => 'notAuthenticated');
 		}
 
     // Get the view configuration
