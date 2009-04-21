@@ -785,17 +785,31 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewDateTime(&$config){
-  
+
     $htmlArray = array();
     
 		if(!$config['value']) {
       $htmlArray[] = '';
     } else {
-	    $htmlArray[] = $this->savlibrary->makeDateFormat(
-        $config['value'],
-        '',
-        $config
-      );
+      // Check if a makeItemLink func is used
+      if ($config['func'] == 'makeItemLink') {
+        $temp = $this->savlibrary->makeDateFormat(
+          $config['_value'],
+          '',
+          $config
+        );
+        $htmlArray[] = str_replace(
+          $config['_value'],
+          $temp,
+          $config['value']
+        );
+      } else {
+        $htmlArray[] = $this->savlibrary->makeDateFormat(
+          $config['value'],
+          '',
+          $config
+        );
+      }
 	  } 
 	  
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -842,13 +856,27 @@ class tx_savlibrary_defaultItemviewers {
 		if(!$config['value']) {
       $htmlArray[] = '';
     } else {
-	    $htmlArray[] = $this->savlibrary->makeDateFormat(
-        $config['value'],
-        '',
-        $config
-      );
-	  } 
-	  
+      // Check if a makeItemLink func is used
+      if ($config['func'] == 'makeItemLink') {
+        $temp = $this->savlibrary->makeDateFormat(
+          $config['_value'],
+          '',
+          $config
+        );
+        $htmlArray[] = str_replace(
+          $config['_value'],
+          $temp,
+          $config['value']
+        );
+      } else {
+        $htmlArray[] = $this->savlibrary->makeDateFormat(
+          $config['value'],
+          '',
+          $config
+        );
+      }
+	  }
+
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
 
@@ -1396,7 +1424,7 @@ class tx_savlibrary_defaultItemviewers {
   public function viewDbRelationSingleSelectorMultiple(&$config) {
   
     $htmlArray = array();
-    
+
 		if ($config['MM'] || $config['maxitems']>1) {	  
       // get all the fields
   		foreach($config['items'] as $item) {
@@ -1434,7 +1462,7 @@ class tx_savlibrary_defaultItemviewers {
               );
             } else { 
               $temp = $item['label'];
-            }        
+            }
   					$htmlArray[] = (
               $htmlArray ?
               ($config['separator'] ? $config['separator'] . ' ' :'<br />') :
@@ -1598,7 +1626,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  	
  	public function viewDbRelationDoubleWindowSelectorEditMode(&$config) {
-  
+
     $htmlArray = array();
     
     // Initializes the option element array

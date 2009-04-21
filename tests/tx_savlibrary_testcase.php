@@ -507,6 +507,8 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
   public function test_processLocalizationTags() {
 
     $this->loadExt('sav_library_example1');
+    $this->fixture->tableLocal = 'tx_savlibraryexample1_members';
+    
     // The string is not modified if there is no tag
     $this->assertEquals('Test without a tag',
       $this->fixture->processLocalizationTags('Test without a tag'));
@@ -518,6 +520,14 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     // The tag is replaced by its definition. Several tags can be used
     $this->assertEquals('Back : Test without a tag : Back',
       $this->fixture->processLocalizationTags('$$$back$$$ : Test without a tag : $$$back$$$'));
+      
+    // A full field tag name is used
+    $this->assertEquals('First Name',
+      $this->fixture->processLocalizationTags('$$$label[tx_savlibraryexample1_members.firstname]$$$'));
+
+    // A short field tag name is used. The local table is assumed.
+    $this->assertEquals('First Name',
+      $this->fixture->processLocalizationTags('$$$label[firstname]$$$'));
   }
 
   public function test_processMarkerTags() {
