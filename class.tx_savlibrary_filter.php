@@ -119,7 +119,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
       unset($this->sessionFilter[$this->extKeyWithId]);
       unset($this->sessionAuth[$this->extKeyWithId]);
   		header('Location: ' . t3lib_div::locationHeaderUrl($this->pi_getPageLink($GLOBALS['TSFE']->id)));           
-    } elseif ($this->sessionAuth[$this->extKeyWithId]['authentified']) {
+    } elseif ($this->sessionAuth[$this->extKeyWithId]['authenticated']) {
       if ($this->sessionFilter[$this->extKeyWithId]['piVars']) {
         $this->piVars = $this->sessionFilter[$this->extKeyWithId]['piVars'];
       }   
@@ -323,7 +323,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 	 * @return void 
 	 */
 	protected function addError($errorLabel, $addMessage='') {
-    $this->errors[] = $this->pi_getLL($errorLabel) . $addMessage;
+    $this->errors[] = sprintf($this->pi_getLL($errorLabel), $addMessage);
   }
   
 	/**
@@ -352,7 +352,7 @@ abstract class tx_savlibrary_filter extends tslib_pibase {
 	 * @return  (none)
 	 */
   protected function addMessage($messageLabel, $addMessage='', $class='') {
-    $message['text'] = $this->pi_getLL($messageLabel) . $addMessage;
+    $message['text'] = sprintf($this->pi_getLL($messageLabel), $addMessage);
     $message['class'] = $class;
     $this->messages[] = $message;
   }

@@ -744,10 +744,10 @@
 			<label index="textarea_rte.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="textarea_rte.syntax">
         &lt;b&gt;height = integer;&lt;/b&gt;
-        Defines the height of the textarea. This attribute overwrites the same attribute in the TCA.
+        Defines the height of the textarea. The integer value represents the height in pixels (45 pixels are automatically added).
         
         &lt;b&gt;width = integer;&lt;/b&gt;
-        Defines the width of the textarea. This attribute overwrites the same attribute in the TCA.
+        Defines the width of the textarea. The integer value represents the width in pixels.
       </label>
 		</languageKey>
 	</data>

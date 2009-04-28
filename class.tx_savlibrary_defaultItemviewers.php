@@ -243,13 +243,13 @@ class tx_savlibrary_defaultItemviewers {
         $val = $val >> 1;
 
         $messageIfChecked = $this->savlibrary->getLibraryLL(
-          'itemviewer.yesMult') .
+          'itemviewer.yesMult', ' ') .
           stripslashes($this->savlibrary->getLL_db($value[0])
         );
         $messageIfNotChecked = (
           $config['donotdisplayifnotchecked'] ?
           '' :
-          $this->savlibrary->getLibraryLL('itemviewer.noMult') .
+          $this->savlibrary->getLibraryLL('itemviewer.noMult', ' ') .
             stripslashes($this->savlibrary->getLL_db($value[0]))
         );
             
