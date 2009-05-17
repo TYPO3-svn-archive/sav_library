@@ -95,7 +95,11 @@ plugin.sav_library {
     .sav-library IMG.leftArrowButton {float:none; padding-right:2px;margin:0px;}      
     .sav-library IMG.rightArrowButtonSubForm {float:none; padding-left:2px;margin:0px;}
     .sav-library IMG.leftArrowButtonSubForm {float:none; padding-left:2px;margin:0px;}
-           
+    .sav-library DIV.itemIconLeft IMG.deleteItemButton {float:left;padding:1px 0px 1px 0px;margin:0px;}
+    .sav-library DIV.itemIconLeft IMG.upButton {float:left;padding:1px 0px 1px 1px;margin:0px;}
+    .sav-library DIV.itemIconLeft IMG.downButton {float:left;padding:1px 1px 1px 0px;margin:0px;}
+    .sav-library DIV.itemIconLeft INPUT.saveButton {float:left;padding:1px 0px 1px 0px;margin:0px;}
+
         /* Special tags */
     .sav-library DIV.right {
       float:right; 
@@ -799,6 +803,11 @@ plugin.sav_library {
       padding:0px;    
 		  margin:0px;
     }        
+  	.sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner SELECT.multiple {
+      float:left;
+      padding:0px;
+		  margin-right:5px;
+    }
   	.sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner SPAN.checkbox {
       float:left;
       padding:0px 5px 0px 5px;    

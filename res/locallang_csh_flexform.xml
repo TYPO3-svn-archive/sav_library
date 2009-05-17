@@ -23,7 +23,8 @@
         Maximum number of items that will be displayed in a page. If set to 0, all items are displayed.
         
         &lt;b&gt;Help page&lt;/b&gt;
-        Use this selector to choose a page of your site which will be use as an help page for your extension. In this case, an icon is displayed in the title bar of your extension.</label>
+        Use this selector to choose a page of your site which will be use as an help page for your extension. In this case, an icon is displayed in the title bar of your extension.
+      </label>
 			<label index="helpInput.description">Help for Input Tab</label>
 			<label index="helpInput.details">&lt;b&gt;Input on form&lt;/b&gt;
         If set, Front End inputs are allowed.
@@ -57,7 +58,8 @@
         If set, inputs in the Front End will not be possible after this date.
 
         &lt;b&gt;Apply date limit&lt;/b&gt;
-        Use the selector to set either &quot;Nobody&quot;, &quot;All&quot;, &quot;Admin plus users&quot;, &quot;All excludind Super Admin&quot;. The date limit is applied according to this selector.</label>
+        Use the selector to set either &quot;Nobody&quot;, &quot;All&quot;, &quot;Admin plus users&quot;, &quot;All excludind Super Admin&quot;. The date limit is applied according to this selector.
+      </label>
 			<label index="helpAdvanced.description">Help for Advanced Tab</label>
 			<label index="helpAdvanced.details">&lt;b&gt;Permanent filter&lt;/b&gt;
         You can use this field to add a where clause that will be added to the where clause of the form query.
@@ -71,7 +73,18 @@
 
         &lt;b&gt;Storage page&lt;/b&gt;
         This option makes it possible to store your record in a storage page, for example a &quot;sysfolder&quot;, otherwise records are stored in the current page.
-        When this option is used, records are fetched in the storage page and in the pages defined in the &quot;starting point&quot; if any.</label>
+        When this option is used, records are fetched in the storage page and in the pages defined in the &quot;starting point&quot; if any.
+        
+        &lt;b&gt;Apply caching to&lt;/b&gt;
+        When the plugin is running as USER for the form, that is when caching is enabled, these options control the caching for various buttons or links.
+        If an option is set, a cHash will be added to the link.
+        
+        &lt;b&gt;Pages whose cache will be cleared on update in the input form&lt;/b&gt;
+        When the plugin is running as USER for the form, that is when caching is enabled, updating items in the input form will clear the cache for the current page by default.
+        If you need to clear the cache for other pages, select them here.
+        Use also this option when the plugin is running as USER_INT for the form and you need to clear the cache of another page used by a form for which caching is used.
+
+      </label>
 		</languageKey>
 	</data>
 	<orig_hash type="array">

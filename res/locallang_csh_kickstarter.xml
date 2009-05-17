@@ -192,7 +192,6 @@
          'order' =&gt; 'myTable.myField desc',
         ),
              
-        In any field, if you need to use a php expression, use the syntax {PHP:php_expression}. For example, {PHP:$GLOBALS['TSFE']-&gt;id} will be replaced by the page id.                
       </label>
 			<label index="forms.description">Form settings</label>
 			<label index="forms.details">
@@ -215,6 +214,11 @@
 
         &lt;b&gt;Query&lt;/b&gt;
         Use the selector to set the &quot;query&quot; that should be used with your form (required).
+        
+        &lt;b&gt;Allow caching&lt;/b&gt;
+        Select this checkbox if the plugin should behave as USER for this form, that is caching is enabled.
+        By default, the plugin will behave as USER_INT (no caching) for all the forms.
+
       </label>
 			<label index="formViews.description">Form Views</label>
 			<label index="formViews.details">
@@ -700,6 +704,8 @@
         A delete icon will be added in front of each item.
         &lt;b&gt;addUpDown = 1;&lt;/b&gt;
         Two buttons (up and down) will be added. They can be used to reorganize the order of the subform items.
+        &lt;b&gt;addSave = 1;&lt;/b&gt;
+        A save button and an anchor will be added. It simplifies the saving when several items are in the subform and the height of an item is important.
         &lt;b&gt;maxSubItems = integer;&lt;/b&gt;
         Number of items that will be displayed in the subform. All items are displayed if set to 0. If not set, the &quot;maxitems&quot; value in the TCA, that is the &quot;Max number of relations&quot; in the Kickstarter, is used.
         &lt;b&gt;keepFieldsInSubForm = comma-separated list of fields;&lt;/b&gt;

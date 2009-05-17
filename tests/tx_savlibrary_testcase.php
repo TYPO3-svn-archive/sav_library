@@ -483,10 +483,10 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 	/* Language methods                                            */
 	/***************************************************************/
   public function test_getLibraryLL() {
-    $this->assertEquals('Message for tests.',
+    $this->assertEquals('Message for tests: .',
       $this->fixture->getLibraryLL('message.forTests'));
-    $this->assertEquals('Message for tests. Added message.',
-      $this->fixture->getLibraryLL('message.forTests', ' Added message.'));
+    $this->assertEquals('Message for tests: added message.',
+      $this->fixture->getLibraryLL('message.forTests', 'added message'));
     $this->assertEquals('', $this->fixture->getLibraryLL('unknown'));
   }
   
@@ -568,6 +568,51 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
 	/***************************************************************/
 	/* Other methods                                               */
 	/***************************************************************/
+	public function test_compressParams() {
+    $formParams = array(
+      'formAction' => 'showSingle',
+      'uid' => 1,
+    );
+    $this->assertEquals('00121011',
+      $this->fixture->compressParams($formParams));
+      
+    // Test with an unknown form parameter
+    $formParams = array(
+      'test' => 'test',
+    );
+    $this->fixture->compressParams($formParams);
+    $this->assertEquals('error.unknownFormParam',
+      $this->fixture->getErrorLabel(0));
+
+    // Test with an unknown form action
+    $formParams = array(
+      'formAction' => 'test',
+    );
+    $this->fixture->compressParams($formParams);
+    $this->assertEquals('error.unknownFormAction',
+      $this->fixture->getErrorLabel(1));
+  }
+
+	public function test_uncompressParams() {
+    $formParams = array(
+      'formAction' => 'showSingle',
+      'uid' => 1,
+    );
+
+    $this->assertEquals($formParams,
+      $this->fixture->uncompressParams('00121011'));
+    
+    // Test with an unknown form param
+    $this->fixture->uncompressParams('a012');
+    $this->assertEquals('error.unknownFormParam',
+      $this->fixture->getErrorLabel(0));
+
+    // Test with an unknown form action
+    $this->fixture->uncompressParams('00230');
+    $this->assertEquals('error.unknownFormAction',
+      $this->fixture->getErrorLabel(1));
+  }
+
 	public function test_date2timestamp() {
 
     // Use default format '%d/%m/%Y' (date) '%d/%m/%Y %H:%M' (datetime)

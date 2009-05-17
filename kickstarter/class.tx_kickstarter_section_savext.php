@@ -48,7 +48,7 @@ class tx_kickstarter_section_savext extends tx_kickstarter_sectionbase {
       $subContent='<strong>Generate Form:</strong><BR>'.
         $this->renderCheckBox($ffPrefix.'[generateForm]',$piConf['generateForm']);
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
-    	
+
     	// Set the version
       $this->wizard->wizArray['emconf'][1]['version'] = $this->wizard->wizArray[$this->sectionID][1]['version'];
     	// Select if the icono should be displayed below the plugin selector

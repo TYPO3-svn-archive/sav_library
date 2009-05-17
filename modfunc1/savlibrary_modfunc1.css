@@ -1,24 +1,29 @@
 /* CSS Document */
 /* --- --- --- */
 
-ul.update {float:left;clear:left;list-style:none; margin:0px; padding:0px;}
-
+ul.updateTitle {float:left;clear:left;list-style:none; margin:0px 0px 10px 0px; padding:0px;border-bottom:solid 1px black;}
 li.extNameTitle {float:left;clear:left;width:150px;font-weight:bold;margin:0px; padding:10px 0px 10px 0px; }
-li.xmlTitle {float:left;width:100px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
-li.updateTitle {float:left;width:100px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
-li.version {float:left;width:100px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
+li.xmlTitle {float:left;width:80px;margin:0px;font-weight:bold;padding:10px 10px 10px 10px;text-align:center;}
+li.formTitle {float:left;width:150px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
+li.updateTitle {float:left;width:80px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
+li.version {float:left;width:80px;margin:0px;font-weight:bold;padding:10px 0px 10px 0px;text-align:center;}
 
+ul.update {float:left;clear:left;list-style:none; margin:2px 0px 2px 0px; padding:0px;border-bottom:solid 1px #E0E0E0;}
 li.extName {float:left;clear:left;width:150px;margin:0px; padding:0px; }
 li.extName a {color:black;}
 li.extName a:hover {color: #FF8700;}
-li.xml {float:left;width:100px;padding:0px; margin:0px;text-align:center;}
-li.update {float:left;width:100px; text-align:center;}
-li.versionOk {float:left;width:100px; text-align:center;color:green;}
-li.versionNotOk {float:left;width:100px; text-align:center;color:red;}
-li.versionNormal {float:left;width:100px; text-align:center;color:black;}
+li.xml {float:left;width:80px;padding:0px 10px 0px 10px;margin:0px;text-align:center;}
+li.form {float:left;width:150px;padding:0px;margin:0px;text-align:left;}
+li.form .formContainer {float:left;width:150px;}
+li.form .formContainer span.formName {float:left;width:135px;clear:left;padding:1px 0px 1px 0px;}
+li.form .formContainer input.formCheck {float:right;}
+li.update {float:left;width:80px;text-align:center;}
+li.versionOk {float:left;width:80px;text-align:center;color:green;}
+li.versionNotOk {float:left;width:80px;text-align:center;color:red;}
+li.versionNormal {float:left;width:80px;text-align:center;color:black;}
 
-input.submit {float:left; clear:left;}
+input.submit {float:left;clear:left;}
 
-div.extManager {float:left; clear:left;border-top:2px solid black;width:100%;}
+div.extManager {float:left;clear:left;border-top:2px solid black;width:100%;}
 
 

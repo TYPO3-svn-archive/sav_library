@@ -54,6 +54,7 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
     // Check if extensions have to be updated
     $updateArray = t3lib_div::_POST('update');
     $xmlArray = t3lib_div::_POST('xml');
+    $formArray = t3lib_div::_POST('form');
 
     if (is_array($updateArray)) {
 		  $kickstarter = t3lib_div::makeInstance('tx_kickstarter_wizard');
@@ -64,11 +65,28 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
 		  foreach($updateArray as $extKey => $value) {
         if (file_exists(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat')) {
 
-          // Update xml configuration flag
+          // Update the xml configuration and user_int flags
           $wizardFormFile = t3lib_div::getURL(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat');
           $wizardForm = unserialize($wizardFormFile);
 
+          // Set the xml flag
           $wizardForm['savext'][1]['xmlConfiguration'] = ($xmlArray[$extKey] ? 1 : 0);
+
+          // Set the form "userPlugin" flag
+          if ($formArray[$extKey]) {
+            foreach ($formArray[$extKey] as $keyForm => $valueForm) {
+              foreach ($wizardForm['forms'] as $keyWizard => $valueWizard) {
+                $searchKey = array_search($keyForm, $valueWizard);
+                $wizardForm['forms'][$keyWizard]['userPlugin'] =
+                  (($searchKey == 'title') ? 1 : 0);
+              }
+            }
+          } else {
+              foreach ($wizardForm['forms'] as $keyWizard => $valueWizard) {
+                $wizardForm['forms'][$keyWizard]['userPlugin'] = 0;
+              }
+          }
+
           t3lib_div::writeFile(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat', serialize($wizardForm));
 
           // reset the files
@@ -100,15 +118,19 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
 
     $content[] = '<form name="updateForm" action="index.php?id=' . t3lib_div::_GET('id') . '&SET[function]=' . $paramSET['function'] . '" method="post" enctype="multipart/form-data">';
     $content[] = '  <input name="updateButton" type="submit" class="submit" value="Update the extensions" />';
-    $content[] = '  <ul class="update">';
+    $content[] = '  <ul class="updateTitle">';
     $content[] = '    <li class="extNameTitle">Extension name</li>';
     $content[] = '    <li class="xmlTitle">XML Generation</li>';
+    $content[] = '    <li class="formTitle">Form as USER plugin</li>';
     $content[] = '    <li class="updateTitle">Update</li>';
     $content[] = '    <li class="version">SAV Library version</li>';
     $content[] = '    <li class="version">Extension version</li>';
+    $content[] = '  </ul>';
 
     foreach($GLOBALS['TYPO3_LOADED_EXT'] as $extKey => $extInfo) {
       if (file_exists(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat')) {
+        unset($xmlArray[$extKey]);
+        unset($formArray[$extKey]);
         $wizardFormFile = t3lib_div::getURL(t3lib_extMgm::extPath($extKey) . 'doc/wizard_form.dat');
         $wizardForm = unserialize($wizardFormFile);
         if ($wizardForm['savext'][1]['generateForm']) {
@@ -118,6 +140,15 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
             'extensionVersion' => $wizardForm['emconf'][1]['version']
           );
         }
+        // Get the xml flag
+        $xmlArray[$extKey] = ($wizardForm['savext'][1]['xmlConfiguration'] ? 1 : 0);
+        
+        // Get the form "userPlugin" flag
+        if ($wizardForm['forms']) {
+          foreach ($wizardForm['forms'] as $form) {
+            $formArray[$extKey][$form['title']] = ($form['userPlugin'] ? 1 : 0);
+          }
+        }
       }
     }
 
@@ -126,19 +157,31 @@ class tx_savlibrary_modfunc1 extends t3lib_extobjbase {
 
     foreach($extArray as $ext) {
       $extKey = $ext['extKey'];
+      $content[] = '  <ul class="update">';
       $content[] = '    <li class="extName">' .
 				'<a href="' . htmlspecialchars('index.php?CMD[showExt]='.$extKey.'&SET[singleDetails]=tx_kickstarter_modfunc2'). '">' .
         $ext['extKey'] . '</a></li>';
-      $content[] = '    <li class="xml">' . '<input type="checkbox" name="xml[' . $extKey .']" ' . ($xmlArray[$extKey] || !is_array($updateArray) ? 'checked="checked"' : '') . ' /></li>';
+      $content[] = '    <li class="xml">' . '<input type="checkbox" name="xml[' . $extKey .']" ' . ($xmlArray[$extKey] ? 'checked="checked"' : '') . ' /></li>';
+      $content[] = '    <li class="form">';
+      $content[] = '      <div class="formContainer">';
+      if ($formArray[$extKey]) {
+        foreach($formArray[$extKey] as $keyForm => $valueForm) {
+          $content[] = '        <span class="formName">' . $keyForm . '</span>';
+          $content[] = '        <input class="formCheck" type="checkbox" name="form[' . $extKey .']['.$keyForm.']" ' . ($valueForm ? 'checked="checked"' : '') . ' />';
+        }
+      }
+
+      $content[] = '      </div>';
+      $content[] = '    </li>';
       $content[] = '    <li class="update">' . '<input type="checkbox" name="update[' . $extKey . ']" ' . ($updateArray[$extKey] == 'on' ? 'checked="checked"' : '') . ' /></li>';
       $content[] = '    <li class="version' .
         ($ext['savlibraryVersion'] == $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['version'] ? 'Ok' : 'NotOk') .
         '">' . ($ext['savlibraryVersion'] ? $ext['savlibraryVersion'] : $GLOBALS['LANG']->getLL('unknown')) . '</li>';
       $content[] = '    <li class="versionNormal">' .
         $ext['extensionVersion'] . '</li>';
+      $content[] = '  </ul>';
     }
 
-    $content[] = '  </ul>';
     $content[] = '<div class="extManager">';
     $content[] = $DBupdates;
     $content[] = '</div>';

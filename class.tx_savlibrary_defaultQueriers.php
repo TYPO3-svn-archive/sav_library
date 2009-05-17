@@ -146,7 +146,7 @@ class tx_savlibrary_defaultQueriers {
         '',
 			/* LIMIT    */	
 				''
-			);
+		);
 
     // Check for errors
 	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
@@ -586,6 +586,23 @@ class tx_savlibrary_defaultQueriers {
 			return array('fatal' => 'notAuthenticated');
 		}
 
+    // Clear the cache when the data are updated for USER form
+    if ($this->extConfig['forms'][$formId]['userPlugin']) {
+      // Clear the cache for the current page and the pagesToClear configuration
+      if ($this->savlibrary->conf['pagesToClear']) {
+        $pagesToClear = $this->savlibrary->conf['pagesToClear'] .
+          ',' . intval($GLOBALS['TSFE']->id);
+      } else {
+        $pagesToClear = intval($GLOBALS['TSFE']->id);
+      }
+  		$GLOBALS['TYPO3_DB']->exec_DELETEquery('cache_pages', 'page_id IN (' . $pagesToClear . ')');
+    } elseif ($this->savlibrary->conf['pagesToClear']) {
+      // Case where we are running a USER_INT form which changes data
+      // used in another USER form.
+      $pagesToClear = $this->savlibrary->conf['pagesToClear'];
+  		$GLOBALS['TYPO3_DB']->exec_DELETEquery('cache_pages', 'page_id IN (' . $pagesToClear . ')');
+    }
+
     // Get the view configuration
     if ($this->savlibrary->formConfig['updateForm']) {
 			$viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
@@ -611,7 +628,7 @@ class tx_savlibrary_defaultQueriers {
     }   
 
     // Check if the update concerns subform items processing
-    $getVars = t3lib_div::_GET($this->savlibrary->formName);
+    $getVars = $this->savlibrary->uncompressParams(t3lib_div::_GET('sav_library'));
        
     switch ($this->savlibrary->formAction) {
       case 'upBtn':

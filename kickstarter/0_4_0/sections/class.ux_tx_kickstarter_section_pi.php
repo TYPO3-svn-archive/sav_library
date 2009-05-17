@@ -31,7 +31,6 @@
 class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
   var $sectionID = 'pi';
 
-
 	/**
 	 * Renders the extension PHP code; this was
 	 *
@@ -69,9 +68,6 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
 // Begin - Modified 
 //--------------------------	
 		    if ($this->wizard->wizArray['savext'][1]['generateForm']) {
-          // force the plugin to be a USER_INT
-          $this->wizard->wizArray['pi'][$k]['plus_user_obj'] = 1;
-          $config['plus_user_obj'] = 1;
           
           // Keep the SAV Library version
           $this->wizard->wizArray['savext'][1]['savlibraryVersion'] = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['version'];
@@ -1085,9 +1081,6 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
 //--------------------------
 		if ($this->wizard->wizArray['savext'][1]['generateForm']) {		
 		
-      // force the plugin to be a USER_INT
-      $this->wizard->wizArray['pi'][$k]['plus_user_obj'] = 1;
-
 		  $indexRequire = 'require_once(t3lib_extMgm::extPath(\'sav_library\').\'class.tx_savlibrary.php\');';
   		$indexContent = $this->wrapBody('
           			
@@ -1095,7 +1088,8 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
 				public $prefixId = \''.$cN.'\';		// Same as class name
 				public $scriptRelPath = \''.($pathSuffix."class.".$cN.".php").'\';	// Path to this script relative to the extension dir.
 				public $extKey = \''.$extKey.'\';	// The extension key.
-				',$innerMainContent,'
+				'.'public $pi_checkCHash = ' . ($cache ? 'true' : 'false') .';
+        ',$innerMainContent,'
 			}
 		');
     } else {
@@ -1764,7 +1758,7 @@ public function main($content,$conf) {
   // Initialisation
   $this->pi_setPiVarDefaults();
   $this->pi_loadLL();
-  $this->pi_USER_INT_obj=1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it\'s a USER_INT object!
+	' . ($this->wizard->wizArray['pi'][1]['plus_user_obj'] ? '$this->pi_USER_INT_obj = 1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it\'s a USER_INT object!' : '') . '
 
   // Create the savlibrary object and set the reference to the extension object
   $savlibrary = t3lib_div::makeInstance(\'tx_savlibrary\');

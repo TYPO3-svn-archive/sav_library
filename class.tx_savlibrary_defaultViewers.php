@@ -121,7 +121,8 @@ class tx_savlibrary_defaultViewers {
             if(!array_key_exists($v['MARKERS']['field'], $item)) {
     				  // Add the fied
     				  $item[$v['MARKERS']['field']] = $v['MARKERS'][$v['MARKERS']['field']];
-    				  $item[$v['MARKERS']['field'] . '_fullFieldName'] = $v['MARKERS'][$v['MARKERS']['field'] . '_fullFieldName'];
+    				  $item[$v['MARKERS']['field'] . '_fullFieldName'] =
+                $v['MARKERS'][$v['MARKERS']['field'] . '_fullFieldName'];
             } else {
               $this->savlibrary->addErrorOnce('message.sameFieldName',
                 '[' . $this->savlibrary->viewName . ' -> ' . $v['MARKERS']['field'] . ']');
@@ -304,91 +305,30 @@ class tx_savlibrary_defaultViewers {
 			$cutRight = 1;
 		}
 
-		$ta['MARKERS']['arrows'] = $left.$right;
+		$ta['MARKERS']['arrows'] = $left . $right;
 		$ta['CUTTERS']['CUT_arrows'] = (($cutRight && $cutLeft ) ? 1 : 0);
 
     // Items selectors using pi_browseresults
-		$wrapArr = array(
-			'browseBoxWrap' => '|',
-			'showResultsWrap' => '<div class="showResultsWrap">|</div>',
-			'browseLinksWrap' => '<div class="browseLinksWrap">|</div>',
-			'showResultsNumbersWrap' => '<span class="showResultsNumbersWrap">|</span>',
-			'disabledLinkWrap' => '<span class="disabledLinkWrap">|</span>',
-			'inactiveLinkWrap' => '<span class="inactiveLinkWrap">|</span>',
-			'activeLinkWrap' => '<span class="activeLinkWrap">|</span>'
-		);   
+    $conf = array (
+      'pointerName' => 'limit',
+      'res_count' => $nbitem,
+      'results_at_a_time' => $this->savlibrary->conf['maxItems'],
+      'pagefloat' => 'center',
+      'showFirstLast' => true,
+      'cache' => (
+        $this->savlibrary->conf['caching'] & tx_savlibrary::PAGE_BROWSER_IN_FORM ?
+        1 :
+        0
+      ),
+    );
 
-    $this->savlibrary->extObj->internal['res_count'] = $nbitem;
-    $this->savlibrary->extObj->internal['results_at_a_time'] =
-      $this->savlibrary->conf['maxItems'];
-    $this->savlibrary->extObj->internal['pagefloat'] = 'center';
-    $this->savlibrary->extObj->internal['showFirstLast'] = true;
-   
-    // Save variables
-    $prefixId = $this->savlibrary->extObj->prefixId;
-    $pi_moreParams = $this->savlibrary->extObj->pi_moreParams;
-    
-    // Modify variables for the call
-    $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
-    $this->savlibrary->extObj->piVars['limit'] = $this->savlibrary->limit;
-    $this->savlibrary->extObj->pi_moreParams =
-      '&sav_library=1&' . $this->savlibrary->formName . '[formAction]=browse';
-		$ta['MARKERS']['browse'] =
-      $this->savlibrary->extObj->pi_list_browseresults(0, '', $wrapArr, 'limit', false);
-
-		// Replace Next and Previous messages by arrows
-    $ta['MARKERS']['browse'] = str_replace(
-      'Last >>',
-      utils::htmlImgElement(
-        array(
-          utils::htmlAddAttribute('class', 'forwardLastButton'),
-          utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'forwardLast.png'),
-          utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.forwardLast')),
-          utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.forwardLast')),
-        )
-      ),
-      $ta['MARKERS']['browse']);
-      
-    $ta['MARKERS']['browse'] = str_replace(
-      '<< First',
-      utils::htmlImgElement(
-        array(
-          utils::htmlAddAttribute('class', 'backwardFirstButton'),
-          utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'backwardFirst.png'),
-          utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.backwardFirst')),
-          utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.backwardFirst')),
-        )
-      ),
-      $ta['MARKERS']['browse']);
-      
-    $ta['MARKERS']['browse'] = str_replace(
-      'Next >',
-      utils::htmlImgElement(
-        array(
-          utils::htmlAddAttribute('class', 'forwardButton'),
-          utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'forward.png'),
-          utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.forward')),
-          utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.forward')),
-        )
-      ),
-      $ta['MARKERS']['browse']);
-      
-    $ta['MARKERS']['browse'] = str_replace(
-      '< Previous',
-      utils::htmlImgElement(
-        array(
-          utils::htmlAddAttribute('class', 'backwardButton'),
-          utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'backward.png'),
-          utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.backward')),
-          utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.backward')),
-        )
-      ),
-      $ta['MARKERS']['browse']);
-      
-		// Recover the previous values
-		$this->savlibrary->extObj->prefixId = $prefixId;
-    $this->savlibrary->extObj->pi_moreParams = $pi_moreParams;
-
+    // Set the form parameters and call the browser
+    $formParams = array(
+      'formAction' => 'browse',
+      'limit' => $this->savlibrary->limit,
+    );
+		$ta['MARKERS']['browse'] = $this->savlibrary->browseresults($conf, $formParams);
+		
     return $ta;
 	}
 

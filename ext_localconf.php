@@ -17,7 +17,7 @@ if (t3lib_extMgm::isLoaded('kickstarter')) {
   // Recover the _EXTKEY
   $_EXTKEY = $save_EXTKEY;
   if (file_exists(t3lib_extMgm::extPath($_EXTKEY) . 'kickstarter/' . $kickstarterVersion)) {
-    // Extending the kickstarter classes
+    // Extend the kickstarter classes
     $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kickstarter/class.tx_kickstarter_wizard.php'] =
       t3lib_extMgm::extPath($_EXTKEY) . 'kickstarter/' . $kickstarterVersion . '/class.ux_tx_kickstarter_wizard.php';
     $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/kickstarter/sections/class.tx_kickstarter_section_tables.php'] =
@@ -29,6 +29,13 @@ if (t3lib_extMgm::isLoaded('kickstarter')) {
   } else {
     $TYPO3_CONF_VARS['EXTCONF'][$_EXTKEY]['errorKickstarterVersion'] = $EM_CONF[$_EXTKEY]['constraints']['depends']['kickstarter'];
   }
+
+  // Extend the tslib_cObj class if version is lower than 4.3
+  if (t3lib_div::int_from_ver(TYPO3_version) < 4003000) {
+    $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['tslib/class.tslib_content.php'] =
+      t3lib_extMgm::extPath($_EXTKEY) . 'tslib/class.ux_tslib_content.php';
+  }
+
 }
                                
 ?>

@@ -45,7 +45,7 @@ class tx_kickstarter_section_forms extends tx_kickstarter_sectionbase {
 			$ffPrefix='['.$this->sectionID.']['.$action[1].']';
 
 				// Enter title of the form
-      $subContent='<strong>Title:</strong><BR>'.
+      $subContent='<strong>Title:</strong><br />'.
         $this->renderStringBox($ffPrefix.'[title]',$piConf['title']);
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
@@ -82,28 +82,28 @@ class tx_kickstarter_section_forms extends tx_kickstarter_sectionbase {
       if (isset($this->wizard->sections[$this->sectionID]['styles']['value'])) {
         $style = $this->wizard->sections[$this->sectionID]['styles']['value']['showAll'];
       } 
-			$subContent='<strong style="'.$style.'">Show all view</strong><BR>'.
+			$subContent='<strong style="'.$style.'">Show all view</strong><br />'.
 			 $this->renderSelectBox($ffPrefix.'[showAllView]',$piConf['showAllView'],$optShowAll);
 			$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 			
       if (isset($this->wizard->sections[$this->sectionID]['styles']['value'])) {
         $style = $this->wizard->sections[$this->sectionID]['styles']['value']['showSingle'];
       } 
-			$subContent='<strong style="'.$style.'">Show single view</strong><BR>'.
+			$subContent='<strong style="'.$style.'">Show single view</strong><br />'.
 			 $this->renderSelectBox($ffPrefix.'[showSingleView]',$piConf['showSingleView'],$optShowSingle);
 			$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 			
       if (isset($this->wizard->sections[$this->sectionID]['styles']['value'])) {
         $style = $this->wizard->sections[$this->sectionID]['styles']['value']['input'];
       } 
-			$subContent='<strong style="'.$style.'">Input view</strong><BR>'.
+			$subContent='<strong style="'.$style.'">Input view</strong><br />'.
 			 $this->renderSelectBox($ffPrefix.'[inputView]',$piConf['inputView'],$optInput);
 			$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
       if (isset($this->wizard->sections[$this->sectionID]['styles']['value'])) {
         $style = $this->wizard->sections[$this->sectionID]['styles']['value']['alt'];
       } 
-			$subContent='<strong style="'.$style.'">Alt view</strong><BR>'.
+			$subContent='<strong style="'.$style.'">Alt view</strong><br />'.
 			 $this->renderSelectBox($ffPrefix.'[altView]',$piConf['altView'],$optAlt);
 			$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
@@ -114,9 +114,15 @@ class tx_kickstarter_section_forms extends tx_kickstarter_sectionbase {
           $optQuery[$key] = $query['title'];
         }
       }
-			$subContent='<strong style="color:back">Query</strong><BR>'.
+			$subContent='<strong style="color:back">Query</strong><br />'.
 			 $this->renderSelectBox($ffPrefix.'[query]',$piConf['query'],$optQuery);
 			$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
+			
+        // Adds USER checkbox
+      $subContent= '<strong style="color:back">Allow caching</strong><br />'.
+        $this->renderCheckBox($ffPrefix.'[userPlugin]',$piConf['userPlugin']);
+    	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
+
 
 		}
 		

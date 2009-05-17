@@ -37,9 +37,16 @@
 			<label index="pi_flexform.helpPage">Help page</label>
 			<label index="pi_flexform.help">Help</label>
 			<label index="pi_flexform.storagePage">Storage page</label>
+			<label index="pi_flexform.caching">Apply caching to:</label>
+			<label index="pi_flexform.caching.I.0">Close button</label>
+			<label index="pi_flexform.caching.I.1">Arrows in form</label>
+			<label index="pi_flexform.caching.I.2">Arrows in subform</label>
+			<label index="pi_flexform.caching.I.3">Page browser in form</label>
+			<label index="pi_flexform.caching.I.4">Page browser in subform</label>
+			<label index="pi_flexform.pagesToClear">Pages whose cache will be cleared on update of the data</label>
 			<label index="message.clikToUpdate">Clik on the right button at the top or the bottom of the form to validate data.</label>
 			<label index="message.dataSaved">Your data were saved.</label>
-			<label index="message.forTests">Message for tests.</label>
+			<label index="message.forTests">Message for tests: %s.</label>
 			<label index="message.sameFieldName">Several fields have the same name in a view (the first one was kept). Please check: %s.</label>
 			<label index="warning.delete">Are you sure you want to delete this record?</label>
 			<label index="warning.save">Save this record?</label>
@@ -52,6 +59,7 @@
 			<label index="error.incorrectAlias">Error: incorrect alias: %s.</label>
 			<label index="error.incorrectDateFormat">Error: incorrect date format.</label>
 			<label index="error.incorrectDateOption">Error: incorrect date option.</label>
+			<label index="error.incorrectCompressedString">Error: incorrect parameter.</label>
 			<label index="error.incorrectCSS">Error: unknown CSS file.</label>
 			<label index="error.incorrectSession">Error: incorrect session. Close your brower and try again.</label>
 			<label index="error.incorrectPluginConfiguration_1">Incorrect configuration of the plugin: %s.</label>
@@ -80,6 +88,8 @@
 			<label index="error.templateNeeded">A template file is needed and the defaut template was not found. Please contact the WebMaster.</label>
 			<label index="error.underMaintenance">This service is temporarily unavailable due to maintenance - please come back later.</label>
 			<label index="error.unknownFormName">Please contact the Webmaster. The following form type is unknown or undefined: %s.</label>
+			<label index="error.unknownFormAction">The following action is unknown: %s.</label>
+			<label index="error.unknownFormParam">The following parameter is unknown: %s.</label>
 			<label index="error.unknownFunctionInWhere">The following function, used in a WHERE clause(###func:whereClause###), is not defined: %s.</label>
 			<label index="error.unknownMarker">The following marker is unknown: %s.</label>
 			<label index="error.unknownType">Please contact the Webmaster. The following type is unknown: %s.</label>

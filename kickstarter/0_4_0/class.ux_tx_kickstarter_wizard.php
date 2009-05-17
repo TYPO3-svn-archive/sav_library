@@ -328,6 +328,10 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
         }
       }
 
+      // Set XML by default
+      if (!isset($this->wizArray['savext'][$key]['xmlConfiguration'])) {
+        $this->wizArray['savext'][$key]['xmlConfiguration'] = 1;
+      }
       // Updates XML configuration
       if (isset($this->modData['xmlConfiguration'])) {
         $this->wizArray['savext'][$key]['xmlConfiguration'] = $this->modData['xmlConfiguration'];

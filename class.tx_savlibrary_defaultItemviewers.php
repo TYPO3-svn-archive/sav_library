@@ -1689,7 +1689,6 @@ class tx_savlibrary_defaultItemviewers {
       $this->savlibrary->arrayToHTML($htmlOptionArray)
     );
 
-		$htmlArray[] = '&nbsp;&nbsp;';
     // Initializes the option element array
     $htmlOptionArray = array();
 		$htmlOptionArray[] = '';
@@ -2229,7 +2228,11 @@ class tx_savlibrary_defaultItemviewers {
       $subForm['MARKERS']['titleIconLeft'] = (
         !$config['edit'] || ($config['cutnewbuttonifnotsaved'] && !$this->savlibrary->uid) ?
         '' :
-        $this->savlibrary->newButtonSubForm($this->savlibrary->formName, $uid, $config['fullFieldName'])
+        $this->savlibrary->newButtonSubForm(
+          $this->savlibrary->formName,
+          $uid,
+          $config['cryptedFieldName']
+        )
       );
       $subForm['MARKERS']['CLASS_titleIconLeft'] = (
         $this->savlibrary->inputIsAllowedInForm() ?
@@ -2245,7 +2248,7 @@ class tx_savlibrary_defaultItemviewers {
       }
   
  		  // add a new row if the new button has been activated
-      if ($this->savlibrary->newSubForm && $this->savlibrary->subFormName == $config['fullFieldName']) {
+      if ($this->savlibrary->newSubForm && $this->savlibrary->subFormName == $config['cryptedFieldName']) {
     		  $this->savlibrary->rowItem = 0;
     		  $row = array();
               		  
@@ -2304,7 +2307,7 @@ class tx_savlibrary_defaultItemviewers {
           }
  		    
   		    // Process the field
-    		  $this->savlibrary->rowItem = $row[$allowed_table.'.uid'];
+    		  $this->savlibrary->rowItem = $row[$allowed_table . '.uid'];
     		  
           // Check fields are set in the subform
           if (!isset($config[$this->savlibrary->cryptTag('0')])) {
@@ -2325,8 +2328,8 @@ class tx_savlibrary_defaultItemviewers {
           );
           $x['TYPE'] = 'subFormItem';          
 
-          // add the up and down icon
-          if ($config['addupdown'] || $config['adddelete']) {
+          // Set the class
+          if ($config['addupdown'] || $config['adddelete'] || $config['addsave']) {
             $iconClass = 'itemIconLeft';
           } else {
             $iconClass = 'itemIconLeftVoid';
@@ -2336,8 +2339,10 @@ class tx_savlibrary_defaultItemviewers {
             $x['REGIONS']['items'][$key]['MARKERS']['CLASS_iconLeft'] = $iconClass;
           }
 
+          $controlIcons = '';
+          // Add the up and down icons if required
           if ($config['addupdown']) {
-            $x['REGIONS']['items'][0]['MARKERS']['icon'] .=
+            $controlIcons .=
               $this->savlibrary->downButton(
                 $this->savlibrary->formName,
                 $uid,
@@ -2350,11 +2355,11 @@ class tx_savlibrary_defaultItemviewers {
                 $this->savlibrary->rowItem,
                 $config['cryptedFieldName']
               );
-            $cpt++;
           }
+          
+          // Add the delete button if required
           if ($config['adddelete']){
-            $x['REGIONS']['items'][0]['MARKERS']['icon'] .=
-              ($x['REGIONS']['items'][0]['MARKERS']['icon'] ? '<br />' : '') .
+            $controlIcons .=
               $this->savlibrary->deleteItemButton(
                 $this->savlibrary->formName,
                 $uid,
@@ -2362,6 +2367,25 @@ class tx_savlibrary_defaultItemviewers {
                 $config['cryptedFieldName']
               );
           }
+          
+          // Add the save button with an anchor if required
+          if ($config['addsave']){
+            // build an id for the anchor
+            $id = 'a_' . $this->cObj->data['uid'] . '_' . $cpt++;
+
+            $controlIcons =
+              '<a id="' . $id . '"></a>' .
+              $controlIcons .
+              $this->savlibrary->saveButton(
+                $this->savlibrary->formName,
+                $uid,
+                'document.' . $this->savlibrary->formName . '.action=\'#' . $id .'\';'
+              );
+          }
+
+          // Set the icons
+          $x['REGIONS']['items'][0]['MARKERS']['icon'] = $controlIcons;
+          
           $value .= $this->savlibrary->replaceTemplate($x);
         }  		  
 		  
@@ -2372,7 +2396,6 @@ class tx_savlibrary_defaultItemviewers {
    		    $cutLeft = 1;
   		    $cutRight = 1;
         }
-
   		  if ($this->savlibrary->limitSub[$config['cryptedFieldName']] > 0) {
           $left = $this->savlibrary->leftArrowButtonSubForm(
             $this->savlibrary->formName,
@@ -2398,107 +2421,33 @@ class tx_savlibrary_defaultItemviewers {
     		}
     	}
 
-    	$subForm['MARKERS']['arrows'] = $left.$right;
+    	$subForm['MARKERS']['arrows'] = $left . $right;
     	$subForm['CUTTERS']['CUT_arrows'] = ($cutRight && $cutLeft ) ? 1 : 0;
     	
 
       // Items selectors using pi_browseresults
-  		$wrapArr = array(
-    			'browseBoxWrap' => '|',
-    			'showResultsWrap' => '<div class="showResultsWrap">|</div>',
-    			'browseLinksWrap' => '<div class="browseLinksWrap">|</div>',
-    			'showResultsNumbersWrap' => '<span class="showResultsNumbersWrap">|</span>',
-    			'disabledLinkWrap' => '<span class="disabledLinkWrap">|</span>',
-    			'inactiveLinkWrap' => '<span class="inactiveLinkWrap">|</span>',
-    			'activeLinkWrap' => '<span class="activeLinkWrap">|</span>'
-   		);
-
-      $this->savlibrary->extObj->internal['res_count'] = $nbitem;
-      $this->savlibrary->extObj->internal['results_at_a_time'] = (
-        $maxSubItems ?
-        $maxSubItems :
-        1
-      );
-      $this->savlibrary->extObj->internal['pagefloat'] = 'center';
-      $this->savlibrary->extObj->internal['showFirstLast'] =
-        ($config['nofirstlast'] ? false : true);
-
-      // Save variables
-      $prefixId = $this->savlibrary->extObj->prefixId;
-      $pi_moreParams = $this->savlibrary->extObj->pi_moreParams;
-
-      // Modify variables for the call
-      $this->savlibrary->extObj->prefixId = $this->savlibrary->formName;
-      $this->savlibrary->extObj->piVars['limitSub'] =
-        $this->savlibrary->limitSub[$config['cryptedFieldName']];
-      $this->savlibrary->extObj->pi_moreParams = '&sav_library=1&' .
-        $this->savlibrary->formName . '[formAction]=browseSubForm' . '&' .
-        $this->savlibrary->formName . '[uid]=' . $config['uid'] . '&' .
-        $this->savlibrary->formName . '[field]=' . $config['cryptedFieldName'];
-  		$subForm['MARKERS']['browse'] =
-        $this->savlibrary->extObj->pi_list_browseresults(
-          0,
-          '',
-          $wrapArr,
-          'limitSub',
-          false
-        );
-
-  		// Replace Next and Previous messages by arrows
-      $subForm['MARKERS']['browse'] = str_replace(
-        'Last >>',
-        utils::htmlImgElement(
-          array(
-            utils::htmlAddAttribute('class', 'forwardLastButton'),
-            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'forwardLast.png'),
-            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.forwardLast')),
-            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.forwardLast')),
-          )
-        ),
-        $subForm['MARKERS']['browse']
-      );
-      $subForm['MARKERS']['browse'] = str_replace(
-        '<< First',
-        utils::htmlImgElement(
-          array(
-            utils::htmlAddAttribute('class', 'backwardFirstButton'),
-            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'backwardFirst.png'),
-            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.backwardFirst')),
-            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.backwardFirst')),
-          )
-        ),
-        $subForm['MARKERS']['browse']
-      );
-      
-      $subForm['MARKERS']['browse'] = str_replace(
-        'Next >',
-        utils::htmlImgElement(
-          array(
-            utils::htmlAddAttribute('class', 'forwardButton'),
-            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'forward.png'),
-            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.forward')),
-            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.forward')),
-          )
-        ),
-        $subForm['MARKERS']['browse']
-      );
-      $subForm['MARKERS']['browse'] = str_replace(
-        '< Previous',
-        utils::htmlImgElement(
-          array(
-            utils::htmlAddAttribute('class', 'backwardButton'),
-            utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'backward.png'),
-            utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('button.backward')),
-            utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('button.backward')),
-          )
-        ),
-        $subForm['MARKERS']['browse']
+      $conf = array (
+        'pointerName' => 'limitSub',
+        'res_count' => $nbitem,
+        'results_at_a_time' => ($maxSubItems ? $maxSubItems : 1),
+        'pagefloat' => 'center',
+        'showFirstLast' => ($config['nofirstlast'] ? false : true),
+        'cache' => (
+          $this->savlibrary->conf['caching'] & tx_savlibrary::PAGE_BROWSER_IN_SUBFORM ?
+          1 :
+          0
+         ),
       );
 
-  		// Recover the previous values
-  		$this->savlibrary->extObj->prefixId = $prefixId;
-      $this->savlibrary->extObj->pi_moreParams = $pi_moreParams;
-    	
+      // Set the form parameters and call the browser
+      $formParams = array(
+        'formAction' => 'browseSubForm',
+        'uid' => $config['uid'],
+        'field' => $config['cryptedFieldName'],
+        'limitSub' => $this->savlibrary->limitSub[$config['cryptedFieldName']],
+      );
+  		$subForm['MARKERS']['browse'] = $this->savlibrary->browseresults($conf, $formParams);
+
   		$subForm['MARKERS']['Value'] = $value;
       $htmlArray[] = $this->savlibrary->replaceTemplate($subForm);  
       
