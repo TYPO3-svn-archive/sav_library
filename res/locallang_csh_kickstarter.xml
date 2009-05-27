@@ -440,7 +440,7 @@
         
         &lt;b&gt;cutIf=fieldName!=value;&lt;/b&gt;
         Cuts the field if current value of the field is not equal to the given value.
-        Use EMPTY for the value to test an empty field.
+        Same markers as above can be used.
 
         &lt;b&gt;cutIf=###usergroup=group_name###;&lt;/b&gt;
         The field is cut if the group name is a valid group for the current user. 

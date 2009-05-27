@@ -314,7 +314,7 @@ class tx_savlibrary_defaultViewers {
       'res_count' => $nbitem,
       'results_at_a_time' => $this->savlibrary->conf['maxItems'],
       'pagefloat' => 'center',
-      'showFirstLast' => true,
+      'showFirstLast' => ($config['nofirstlast'] ? false : true),
       'cache' => (
         $this->savlibrary->conf['caching'] & tx_savlibrary::PAGE_BROWSER_IN_FORM ?
         1 :
