@@ -135,7 +135,7 @@ class tx_savlibrary_defaultItemviewers {
         utils::htmlAddAttribute('onchange', 'document.changed=1;'),
         utils::htmlAddAttributeIfNotNull('ondblclick', $ondblclick),
       )
-     );
+    );
     
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
@@ -915,7 +915,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewFile(&$config){
-  
+
     $htmlArray = array();
     
     $folder = $config['uploadfolder'] .
@@ -942,59 +942,62 @@ class tx_savlibrary_defaultItemviewers {
       
         //
         if ($config['func'] == 'makeItemLink') {
-          $file = $config['_value'];
+          $fileArray = explode(',', $config['_value']);
         } else {
-          $file = $config['value'];
+          $fileArray = explode(',', $config['value']);
         }
         
-        // It's an image. Set parameters
-		    if ($file && file_exists($folder . '/' . $file)) {
-          $params['tsproperties'] = $config['tsproperties'];
-          $params['width'] = $config['width'];
-          $params['height'] = $config['height'];
-          $params['folder'] = $folder;
-          $params['alt'] = $config['alt'];
-          $out = $this->savlibrary->makeImage($file, '', $params);
+        // One or several images to display. Set parameters
+        foreach($fileArray as $file) {
+        
+  		    if ($file && file_exists($folder . '/' . $file)) {
+            $params['tsproperties'] = $config['tsproperties'];
+            $params['width'] = $config['width'];
+            $params['height'] = $config['height'];
+            $params['folder'] = $folder;
+            $params['alt'] = $config['alt'];
+            $out = $this->savlibrary->makeImage($file, '', $params);
                  
-          if ($config['func']=='makeNewWindowLink') {
-            $out = $this->savlibrary->makeNewWindowLink (
-              $out,
-              $uid='',
-              array('windowurl' => $folder . '/' . $file)
+            if ($config['func']=='makeNewWindowLink') {
+              $out = $this->savlibrary->makeNewWindowLink (
+                $out,
+                $uid='',
+                array('windowurl' => $folder . '/' . $file)
+              );
+            } elseif ($config['func'] == 'makeItemLink') {
+              $out = preg_replace(
+                '/(<a[^>]*>)[^<]*(<\/a>)/',
+                '$1' . $out . '$2',
+                $config['value']
+              );
+            }
+            $htmlArray[] = $out;
+          } else {
+            $params['tsproperties'] = $config['tsproperties'];
+            $params['width'] = $config['width'];
+            $params['height'] = $config['height'];
+            $image = (
+              $config['default'] ?
+              $config['default'] :
+              t3lib_extMgm::siteRelPath('sav_library') . 'res/images/unknown.gif'
             );
-          } elseif ($config['func'] == 'makeItemLink') {
-            $out = preg_replace(
-              '/(<a[^>]*>)[^<]*(<\/a>)/',
-              '$1' . $out . '$2',
-              $config['value']
-            );
-          }
-          $htmlArray[] = $out;          
-        } else {
-          $params['tsproperties'] = $config['tsproperties'];
-          $params['width'] = $config['width'];
-          $params['height'] = $config['height'];
-          $image = (
-            $config['default'] ?
-            $config['default'] :
-            t3lib_extMgm::siteRelPath('sav_library') . 'res/images/unknown.gif'
-          );
 
-          $out = $this->savlibrary->makeImage(
-            $image,
-            '',
-            $params
-          );
+            $out = $this->savlibrary->makeImage(
+              $image,
+              '',
+              $params
+            );
           
-          if ($config['func'] == 'makeItemLink') {
-            $out = preg_replace(
-              '/(<a[^>]*>)[^<]*(<\/a>)/',
-              '$1' . $out . '$2',
-              $config['value']
-            );
-          }
+            if ($config['func'] == 'makeItemLink') {
+              $out = preg_replace(
+                '/(<a[^>]*>)[^<]*(<\/a>)/',
+                '$1' . $out . '$2',
+                $config['value']
+              );
+            }
 
-          $htmlArray[] = $out;
+            $htmlArray[] = $out;
+          }
         }
       } else {
         // It's a file. Make an hyperlink
@@ -1731,6 +1734,115 @@ class tx_savlibrary_defaultItemviewers {
 	}
 
 
+ 	/**
+	 * db relation checkboxes viewer
+	 *
+	 * @param $config array (Configuration array)
+	 *
+	 * @return string (item to display)
+	 */
+ 	public function viewDbRelationCheckboxes(&$config) {
+
+    $htmlArray = array();
+
+    $htmlArray[] = $this->viewDbRelationSingleSelectorMultiple($config);
+
+		return $this->savlibrary->arrayToHTML($htmlArray);
+  }
+
+
+
+ 	/**
+	 * db relation checkboxes viewer in edit mode
+	 *
+	 * @param $config array (Configuration array)
+	 *
+	 * @return string (item to display)
+	 */
+ 	public function viewDbRelationCheckboxesEditMode(&$config) {
+
+    $htmlArray = array();
+
+    // Initializes the option element array
+    $htmlOptionArray = array();
+		$htmlOptionArray[] = '';
+
+		$elementControlName = $this->savlibrary->formName . '[' .
+      $config['cryptedFieldName'] . ']' .
+      (
+        isset($this->savlibrary->rowItem) ?
+        '[' . $this->savlibrary->rowItem . ']' :
+        '[' . (
+          $config['mm_uid_local'] ?
+          $config['mm_uid_local'] :
+          $config['uid']
+          ) . ']'
+      );
+
+		$class = (
+      $config['classhtmltag'] ?
+      $config['classhtmltag'] :
+      'multiple'
+    );
+
+
+    $fieldName = $config['field'] . (
+      isset($this->savlibrary->rowItem) ?
+      '[' . $this->savlibrary->rowItem . ']' :
+      ''
+    );
+    $sort = ($config['orderselect'] ? 1 : 0);
+
+		foreach($config['items'] as $key => $item) {
+			if($item['selected']) {
+        $checked = 'checked';
+			} else {
+        $checked = '';
+      }
+			
+      // Add the hidden input element
+      $htmlArray[] = utils::htmlInputHiddenElement(
+        array(
+          utils::htmlAddAttribute(
+            'name',
+            $config['elementControlName'] . '[' . $key . ']'
+          ),
+          utils::htmlAddAttribute('value', '0'),
+        )
+      );
+
+      // Add the checkbox input element
+      $htmlArray[] = utils::htmlInputCheckBoxElement(
+        array(
+          utils::htmlAddAttribute(
+            'name',
+            $config['elementControlName'] . '[' . $key . ']'
+          ),
+          utils::htmlAddAttribute('value', $item['uid']),
+          utils::htmlAddAttributeIfNotNull('checked', $checked),
+          utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+        )
+      );
+
+      // Add the span element
+      $htmlArray[] = utils::htmlSpanElement(
+        array(
+          utils::htmlAddAttribute('class', 'checkbox'),
+          $value['addattributes'],
+        ),
+        stripslashes($item['label'])
+      );
+
+      // Add the br element
+      $htmlArray[] = utils::htmlBrElement(
+        array(
+          utils::htmlAddAttribute('class', 'checkbox'),
+        )
+      );
+		}
+
+		return $this->savlibrary->arrayToHTML($htmlArray);
+	}
 
 
  	/**
@@ -1741,7 +1853,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDbRelationSelectorGlobal(&$config) {
-  
+
     $htmlArray = array();
     
     $query = $this->savlibrary->extObj->extConfig['queries'][$this->savlibrary->formConfig['query']];
@@ -1774,6 +1886,19 @@ class tx_savlibrary_defaultItemviewers {
 
         // The record exits, just read it.
 
+        // Build a part of the WHERE clause depending on the relation
+        if ($config['MM']) {
+          // case of a true MM relation
+          $wherePart = ' AND ' . $MM_table . '.uid_local=' . $table . '.' . $MM_field .
+  					' AND ' . $MM_table . '.uid_foreign=' . $foreign_table . '.uid';
+        } elseif (!$config['MM'] && $config['maxitems']>1) {
+          // Case of a non true MM relation
+          $wherePart = ' AND ' . $foreign_table . '.uid IN (' . $config['_value'] . ')';
+        } else {
+          // Usual case
+          $wherePart = ' AND ' . $table . '.' . $config['field'] . '=' . $foreign_table . '.uid';
+        }
+
   		  $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   				  /* SELECT   */	'*' .
                 (
@@ -1790,12 +1915,7 @@ class tx_savlibrary_defaultItemviewers {
                 ) .
   						  '',
   	 			  /* WHERE    */	'1' .
-                (
-                  $MM_table ?
-                  ' AND ' . $MM_table . '.uid_local=' . $table . '.' . $MM_field .
-  						    ' AND ' . $MM_table . '.uid_foreign=' . $foreign_table . '.uid' :
-                  ' AND ' . $table . '.' . $config['field'] . '=' . $foreign_table . '.uid'
-                ).
+                $wherePart .
   						  ' AND ' . $table . '.uid=' . intval($uid) .
   			        (
                   $config['overrideenablefields'] ?
@@ -1827,7 +1947,6 @@ class tx_savlibrary_defaultItemviewers {
 
   		  // get all selected fields
   		  while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
-
           $config['mm_uid_local'] = $rows['mm_uid_local'];
           if (!$config['MM'] && $config['maxitems']>1) {
             $temp = explode(',', $rows[$config['field']]);
@@ -2021,8 +2140,8 @@ class tx_savlibrary_defaultItemviewers {
 
         // get the field from a query. The uid marker is replaced by the selected value
         $query = $config['content']; 
-        $mA["###uid###"] = intval($config['uid']);
-        $mA["###uidSelected###"] = key($selected);
+        $mA['###uid###'] = intval($config['uid']);
+        $mA['###uidSelected###'] = key($selected);
         $mA['###cruser###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
         $query = $this->savlibrary->extObj->cObj->substituteMarkerArrayCached(
@@ -2063,7 +2182,13 @@ class tx_savlibrary_defaultItemviewers {
       } 
 
       if ($config['foreign_table'] && $config['maxitems']>1) {
-        if ($config['singlewindow']) {
+        if ($config['displayascheckboxes']) {
+		      $viewItem = (
+            $config['edit'] ?
+            'viewDbRelationCheckboxesEditMode' :
+            'viewDbRelationCheckboxes'
+          );
+        } elseif ($config['singlewindow']) {
 		      $viewItem = (
             $config['edit'] ?
             'viewDbRelationSingleSelectorMultipleEditMode' :

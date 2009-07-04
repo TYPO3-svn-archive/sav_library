@@ -36,6 +36,9 @@ if (t3lib_extMgm::isLoaded('kickstarter')) {
       t3lib_extMgm::extPath($_EXTKEY) . 'tslib/class.ux_tslib_content.php';
   }
 
+  // Performance debug
+//  $TYPO3_CONF_VARS['EXTCONF'][$_EXTKEY]['performanceDebug'] = 1;
+
 }
                                
 ?>

@@ -1205,10 +1205,6 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
 
   function add_1_tx_kickstarter_section_pi($cN, $k) {
 //debug($this->wizard->wizArray,'','','',10);
-//debug($this->wizard->wizArray['save']['overwrite_files'],'','','',10);
-//unset($this->wizard->wizArray['save']['overwrite_files']['flexform_ds_pi1.xml']);
-//unset($this->wizard->wizArray['save']['overwrite_files']['ext_typoscript_editorcfg.txt']);
-//unset($this->wizard->wizArray['save']['overwrite_files']);
 
       // Unset 'pi1/static/editorcfg.txt' if Kickstarter version is greater or equal to 0.4.0
       if (t3lib_extMgm::isLoaded('kickstarter')) {
@@ -1527,10 +1523,10 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
                             $showFolders[$field['conf_showFolders'][$k ]][] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'tables', 'tableName' => $tableName);
                           } else {
                             $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'tables', 'tableName' => $tableName);   
-                            $this->wizard->wizArray['tables'][$keyTable]['fields'][$key]['conf_showFolders'][$k] = 0;                                                               
-                          }               
+                            $this->wizard->wizArray['tables'][$keyTable]['fields'][$key]['conf_showFolders'][$k] = 0;
+                          }
                         } else {
-                          $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'tables', 'tableName' => $tableName);                                        
+                          $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'tables', 'tableName' => $tableName);
                         }
                       }
                     }
@@ -1582,11 +1578,11 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
                           if ($view['showFolders']) {
                             $showFolders[$field['conf_showFolders'][$k ]][] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'fields', 'tableName' => $tableName);  
                           } else {
-                            $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'fields', 'tableName' => $tableName);                                        
+                            $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'fields', 'tableName' => $tableName);
                             $this->wizard->wizArray['fields'][$keyTable]['fields'][$key]['conf_showFolders'][$k] = 0;                                                               
                           }            
                         } else {
-                          $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'fields', 'tableName' => $tableName);                                        
+                          $showFields[] = array('table' => $keyTable, 'field' => $key, 'wizArray' => 'fields', 'tableName' => $tableName);
                         }
                       }
                     }
@@ -1752,27 +1748,81 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
             // Add debug
             $innerMainContent = '
 public $extConfig;   // Extension configuration
-  			
+            ';
+  
+  
+            $innerMainContent .= '
 public function main($content,$conf) {
   			
   // Initialisation
   $this->pi_setPiVarDefaults();
   $this->pi_loadLL();
 	' . ($this->wizard->wizArray['pi'][1]['plus_user_obj'] ? '$this->pi_USER_INT_obj = 1;	// Configuring so caching is not expected. This value means that no cHash params are ever set. We do this, because it\'s a USER_INT object!' : '') . '
-
+          ';
+  
+          // Start the global and local performance counters in debug mode
+          if ($this->wizard->wizArray['savext'][1]['debug'] == 2) {
+            $innerMainContent .= '
+  // Start the performance yimer in debug mode
+  utils::startTimer($this->extKey, __FUNCTION__);
+            ';
+          }
+  
+          $innerMainContent .= '
+  // Initialize the configuration
+  $this->initExtConfig();
   // Create the savlibrary object and set the reference to the extension object
   $savlibrary = t3lib_div::makeInstance(\'tx_savlibrary\');
   $savlibrary->initVars($this);
-              
-  // Initialize the the configuration
-  $this->initExtConfig();
-							
+
   // Set the debug variable. Use debug ONLY for development
   $savlibrary->debug = ' . $this->wizard->wizArray['savext'][1]['debug'] . ';
+          ';
+  
+          // Get the performance for the load configuration
+          if ($this->wizard->wizArray['savext'][1]['debug'] == 2) {
+            $innerMainContent .= '
+  // Get the performance for the load configuration
+  utils::stopTimer($this->extKey, __FUNCTION__);
+  $timerIntermediateValue = utils::getTimer($this->extKey, __FUNCTION__);
+  t3lib_div::devlog(
+    sprintf(\'%6.4f: %s in %s\',
+      $timerIntermediateValue, \'Load config\', __FUNCTION__
+    ),
+    $this->extKey
+  );
+  utils::restartTimer($this->extKey, __FUNCTION__);
+            ';
+          }
+  
+          $innerMainContent .= '
 							
   // Generate the form
   $out = $savlibrary->generateForm($conf);
-  return $out;
+          ';
+  
+          // Get the performance for the GenerateForm and global configuration
+          if ($this->wizard->wizArray['savext'][1]['debug'] == 2) {
+            $innerMainContent .= '
+  // Get the performance for the GenerateForm and global configuration
+  $timerEndValue = utils::getTimer($this->extKey, __FUNCTION__);
+  t3lib_div::devlog(
+    sprintf(\'%6.4f: %s in %s\',
+      $timerEndValue - $timerIntermediateValue, \'GenerateForm\', __FUNCTION__
+    ),
+    $this->extKey
+  );
+  t3lib_div::devlog(
+    sprintf(\'<span style="color:red;">%6.4f: %s for %s[%s] in %s</span>\',
+      $timerEndValue, \'Total\', $this->savlibrary->formConfig[\'title\'], $savlibrary->viewName, __FUNCTION__
+    ),
+    $this->extKey
+  );
+            ';
+          }
+  
+          $innerMainContent .= '
+    return $out;
   }
       			
   /**
@@ -1780,7 +1830,7 @@ public function main($content,$conf) {
   * 
   * @return none                  			
   **/
-  function initExtConfig() {
+  public function initExtConfig() {
     $this->extConfig = ' . $configString . ';
   } 
       			
@@ -1788,8 +1838,8 @@ public function main($content,$conf) {
   * Additional methods
   **/ 
   		
-  ' . $conf_additionalCode . '
-  ';
+            ' . $conf_additionalCode . '
+            ';
 
             return $this->sPS($innerMainContent);   
   }

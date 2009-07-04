@@ -43,28 +43,46 @@ class tx_kickstarter_section_savext extends tx_kickstarter_sectionbase {
 			$lines = $this->catHeaderLines($lines,$this->sectionID,$this->wizard->options[$this->sectionID],'&nbsp;',$action[1]);
 			$piConf = $this->wizard->wizArray[$this->sectionID][$action[1]];
 			$ffPrefix='['.$this->sectionID.']['.$action[1].']';
-
+			
 			// Enter generateForm flag
-      $subContent='<strong>Generate Form:</strong><BR>'.
+      $subContent='<strong>Generate Form:</strong><br />'.
         $this->renderCheckBox($ffPrefix.'[generateForm]',$piConf['generateForm']);
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 
     	// Set the version
       $this->wizard->wizArray['emconf'][1]['version'] = $this->wizard->wizArray[$this->sectionID][1]['version'];
-    	// Select if the icono should be displayed below the plugin selector
-      $subContent='<strong>Display the icon below the plugin selector:</strong><BR>'.
+      
+    	// Select if the icon should be displayed below the plugin selector
+      $subContent='<strong>Display the icon below the plugin selector:</strong><br />'.
         $this->renderCheckBox($ffPrefix.'[displayIconBelowPluginSelector]',$piConf['displayIconBelowPluginSelector']);
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
-      
+    	
+    	// Clear MD5 file error
+      $subContent='<strong>File to remove:</strong><br />'.
+        $this->renderStringBox($ffPrefix.'[removeFile]',$piConf['removeFile']);
+    	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
+    	
+    	if ($piConf['removeFile']) {
+        if (isset($this->wizard->wizArray['save']['overwrite_files'][$piConf['removeFile']])) {
+          unset($this->wizard->wizArray['save']['overwrite_files'][$piConf['removeFile']]);
+          $subContent='<strong>Removed</strong><br />';
+          unset($this->wizard->wizArray[$this->sectionID][$action[1]]['removeFile']);
+        } else {
+          $subContent='<strong>Unknown: ' . $piConf['removeFile'] . '</strong><br />';
+          unset($this->wizard->wizArray[$this->sectionID][$action[1]]['removeFile']);
+        }
+        $lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
+      } 
+
   		// Enter additionalCode
   		$nbLines = substr_count($piConf['additionalCode'], chr(13).chr(10)) + 2;      
-    	$subContent="<strong>Additional Code:</strong><BR>".
+    	$subContent="<strong>Additional Code:</strong><br />".
     		$this->renderTextareaBox($ffPrefix.'[additionalCode]',$piConf['additionalCode'], 500, max(10, $nbLines));
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
     	
   		// Enter additionalFlexFormCode
   		$nbLines = substr_count($piConf['additionalFlexFormCode'], chr(13).chr(10)) + 2;      
-    	$subContent="<strong>Additional FlexForm Code:</strong><BR>".
+    	$subContent="<strong>Additional FlexForm Code:</strong><br />".
     		$this->renderTextareaBox($ffPrefix.'[additionalFlexFormCode]',$piConf['additionalFlexFormCode'], 500, max(10, $nbLines));
     	$lines[]='<tr'.$this->bgCol(3).'><td>'.$this->fw($subContent).'</td></tr>';
 		}

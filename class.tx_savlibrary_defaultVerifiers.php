@@ -59,7 +59,7 @@ class tx_savlibrary_defaultVerifiers {
    *       
 	 * @return error message
 	 */
-	public function isValidPattern($value, $param='') {
+	public function isValidPattern($value, $param = '', $uid = 0) {
     if (!preg_match($param, $value)) {
       return ('error.isValidPattern');
     } else {
@@ -75,7 +75,7 @@ class tx_savlibrary_defaultVerifiers {
 	 *
 	 * @return error message
 	 */
-  public function isValidLength($value, $param='') {
+  public function isValidLength($value, $param = '', $uid = 0) {
     if (strlen($value) > $param) {
       return ('error.isValidLength');
     } else {
@@ -91,7 +91,7 @@ class tx_savlibrary_defaultVerifiers {
 	 *
 	 * @return error message
 	 */
-  public function isValidInterval($value, $param='') {
+  public function isValidInterval($value, $param = '', $uid = 0) {
     if (!preg_match('/\[([\d]+),[ ]*([\d]+)\]/', $param, $matches)) {
       return ('error.verifierInvalidIntervalParameter');    
     }
@@ -100,6 +100,35 @@ class tx_savlibrary_defaultVerifiers {
       return ('error.isValidInterval');
     } else {
       return '';
+    }
+  }
+
+	/**
+	 * Check if the input is in a given interval.
+	 *
+	 * @param  $value       Value to process
+	 * @param  $param       Parameter (Interval [a,b])
+	 *
+	 * @return error message
+	 */
+  public function isValidQuery($value, $param = '', $uid = 0) {
+  
+    // get the field from a query. The value marker is replaced by the selected value
+    $query = str_replace('###value###', $value, $param);
+    $query = str_replace('###uid###', $uid, $query);
+
+    // Check if the query is a SELECT query and for errors
+    if (!$this->savlibrary->isSelectQuery($query)) {
+      return 'error.onlySelectQueryAllowed';
+    } elseif (!($res = $GLOBALS['TYPO3_DB']->sql_query($query))) {
+      return 'error.incorrectQueryInContent';
+    } else {
+      $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
+      if (!current($row)) {
+        return ('error.isValidQuery');
+      } else {
+        return '';
+      }
     }
   }
 }

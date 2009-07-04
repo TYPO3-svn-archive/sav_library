@@ -32,7 +32,74 @@
 
 final class utils {
 
+  /**
+   * Timer methods
+   *
+   */
+   
+	/**
+   * Start a timer
+	 *
+	 * @param $extKey string (extension key)
+	 * @param $index string (timer index)
+	 *
+	 * @return none
+	 */
+  public function startTimer($extKey, $index) {
+    $timer = &$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['timer'];
+    $timer[$index]['start'] = microtime(true);
+    $timer[$index]['stop'] = 0;
+  }
 
+  /**
+	 * Restart a timer
+   *
+	 * @param $extKey string (extension key)
+	 * @param $index string (timer index)
+	 *
+	 * @return none
+	 */
+  public function restartTimer($extKey, $index) {
+    $timer = &$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['timer'];
+    if ($timer[$index]['stop']) {
+      $timer[$index]['start'] = $timer[$index]['start'] +
+        (microtime(true) - $timer[$index]['stop']);
+      $timer[$index]['stop'] = 0;
+    }
+  }
+
+	/**
+	 * Stop a timer
+	 *
+	 * @param $extKey string (extension key)
+	 * @param $index string (timer index)
+	 *
+	 * @return none
+	 */
+  public function stopTimer($extKey, $index) {
+    $timer = &$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['timer'];
+    $timer[$index]['stop'] = microtime(true);
+  }
+    
+  /**
+	 * Get a timer value
+	 *
+	 * @param $extKey string (extension key)
+	 * @param $index string (timer index)
+	 *
+	 * @return float (timer value)
+	 */
+  public function getTimer($extKey, $index) {
+    $timer = &$GLOBALS['TYPO3_CONF_VARS']['EXTCONF'][$extKey]['timer'];
+      
+    return (microtime(true) - $timer[$index]['start']);
+  }
+    
+  /**
+   * HTML methods
+   *
+   */
+    
 	/**
 	 * Adds a HTML attribute
 	 *
@@ -72,7 +139,7 @@ final class utils {
 	 */
   public function htmlCleanAttributesArray($attributes) {
 
-    return array_diff($attributes,array(''));
+    return array_diff($attributes, array(''));
   }
 
 	/**

@@ -103,7 +103,7 @@ class tx_savlibrary_defaultViewers {
   			// Make some processing to retrieve a simple item type
   			$item = array();
 
-  			if ($x['REGIONS']['items']){
+  			if ($x['REGIONS']['items']) {
     			foreach($x['REGIONS']['items'] as $k => $v) {
 
     			  // Clear the field value if the cutter is set

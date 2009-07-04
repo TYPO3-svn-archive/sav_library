@@ -394,7 +394,7 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
 // begin - Modified
 //--------------------------
     // Change the icon
-    if (isset($this->sections['savext'])) {
+    if ($this->wizArray['savext'][1]['generateForm']) {
 		  $iconPath = t3lib_div::getUrl(t3lib_extMgm::extPath('sav_library').'kickstarter/ext_icon.gif');
   		$this->addFileToFileArray("ext_icon.gif",$iconPath);   
     }   
@@ -528,9 +528,13 @@ class ux_tx_kickstarter_wizard extends tx_kickstarter_wizard {
         ';
 
         // Adds debug checkbox
-        $content.= '<br /><br /><strong>Debug Query:</strong>
-        <input type="checkbox" name="' . $this->piFieldName('debug') . '[1]" value="1" /> 
-        ';
+        $content .= '<br /><br /><strong>Debug Query:</strong>
+        <input type="checkbox" name="' . $this->piFieldName('debug') . '[1]" value="1" />';
+        if ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['sav_library']['performanceDebug']) {
+          $content .= '<strong> Performance:</strong>
+          <input type="checkbox" name="' . $this->piFieldName('debug') . '[2]" value="1" />
+          ';
+        }
 
         // Adds maintenance checkbox
         $content.= '<br /><br /><strong>Add maintenance :</strong> 

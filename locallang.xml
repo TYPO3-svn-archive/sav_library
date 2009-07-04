@@ -99,6 +99,7 @@
 			<label index="error.isValidLength">The input has a length greater than the allowed length.</label>
 			<label index="error.isValidInterval">The input is not in the given interval.</label>
 			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
+			<label index="error.isValidQuery">The input does not verify the query verifier.</label>
 			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form.</label>
 			<label index="fatal.notAuthenticated">Fatal error. You must be authenticated to save these data.</label>
 			<label index="button.edit">Edit</label>

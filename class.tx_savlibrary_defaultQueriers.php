@@ -67,13 +67,8 @@ class tx_savlibrary_defaultQueriers {
 
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' .
-      str_replace(
-        '_',
-        '',
-        $this->extKey
-      ) .
-      '.'][$this->savlibrary->formConfig['title'] . '.']['showAll.']['query.'];
+    $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
+      [$this->savlibrary->formConfig['title'] . '.']['showAll.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -221,7 +216,8 @@ class tx_savlibrary_defaultQueriers {
 
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' . str_replace('_', '', $this->extKey) . '.'][$this->savlibrary->formConfig['title'] . '.']['showSingle.']['query.'];
+    $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
+      [$this->savlibrary->formConfig['title'] . '.']['showSingle.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -277,12 +273,8 @@ class tx_savlibrary_defaultQueriers {
 	
 	  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' .
-      str_replace(
-        '_',
-        '',
-        $this->extKey
-      ) . '.'][$this->savlibrary->formConfig['title'] . '.']['inputForm.']['query.'];
+    $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
+      [$this->savlibrary->formConfig['title'] . '.']['inputForm.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -340,12 +332,8 @@ class tx_savlibrary_defaultQueriers {
 	
 		  // Add or replace the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
-    $fieldTSConfig = $pageTSConfig['tx_' .
-      str_replace(
-        '_',
-        '',
-        $this->extKey
-      ) . '.'][$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
+    $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
+      [$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
     if(is_array($fieldTSConfig)) {
       foreach($fieldTSConfig as $key=>$value) {
         $query[$key] = $value;
@@ -896,12 +884,40 @@ class tx_savlibrary_defaultQueriers {
    
         // Check if verifier is used
         $func = $config['verifier'];
+
         if ($func) {
           if (method_exists($this->savlibrary->verifiers, $func)) {
-            $temp = $this->savlibrary->verifiers->$func($value, $config['verifierparam']);
-            if (!$errorForm[$field] && $temp) {
-              $errorForm[$field][$key] = $temp;
-              $error_field = true;
+            // Process value
+            if (is_array($value)) {
+              foreach($value as $keySimpleValue => $simpleValue) {
+                $temp = $this->savlibrary->verifiers->$func($simpleValue, $config['verifierparam'], $uid);
+                if (!$errorForm[$field] && $temp) {
+                  $errorForm[$field][$key] = $temp;
+                  
+                  // Check if warning is set
+                  if ($config['verifiersetwarning']) {
+                    unset($regularRow[$field][$key][$keySimpleValue]);
+                    unset($value[$keySimpleValue]);
+                    $warning = true;
+                  } else {
+                    $error_field = true;
+                  }
+                }
+              }
+            } else {
+              $temp = $this->savlibrary->verifiers->$func($value, $config['verifierparam']);
+              if (!$errorForm[$field] && $temp) {
+                $errorForm[$field][$key] = $temp;
+                
+                // Check if warning is set
+                if ($config['verifiersetwarning']) {
+                  unset($regularRow[$field][$key]);
+                  unset($value);
+                  $warning = true;
+                } else {
+                  $error_field = true;
+                }
+              }
             }
           } else {
             $error_field = true;
@@ -1516,7 +1532,9 @@ class tx_savlibrary_defaultQueriers {
 		if($error) {
 			$this->savlibrary->errorInForm = true;
 			return $errorForm;
-		} else {
+		} elseif ($warning) {
+			return $errorForm;
+    } else {
 			return false;
 		}	
 	}
@@ -2098,7 +2116,14 @@ class tx_savlibrary_defaultQueriers {
             ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
           
           // Check if a link is defined
-          $extendLink = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]][$this->savlibrary->folderTab]['fields'][$this->savlibrary->cryptTag($tableName . '.' . $field)]['config']['setextendlink'];
+          $view = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
+          if ($this->savlibrary->folderTab == $this->savlibrary->cryptTag('0')) {
+            reset($view);
+            $folderTab = key($view);
+          } else {
+            $folderTab = $this->savlibrary->folderTab;
+          }
+          $extendLink = $view[$folderTab]['fields'][$this->savlibrary->cryptTag($tableName . '.' . $field)]['config']['setextendlink'];
           if ($extendLink) {
             $alias2 = $this->buidAliasTable($extendLink);
             $tableReference .= ' LEFT JOIN ' . $alias2['def'] .
@@ -2130,7 +2155,7 @@ class tx_savlibrary_defaultQueriers {
         }
       }
     }
-    
+
     return $tableReference . ($addTables ? ', ' . $addTables : '') . $tableForeign;
   }
 

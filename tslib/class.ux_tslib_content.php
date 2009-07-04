@@ -26,6 +26,13 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+/**
+ * This code is taken from an idea of Dmitry Dulepov for TYPO3 V4.3
+ * See the TYPO3 bugtracker #0008985
+ * The class overloading by XCLASS is done for version below 4.3.
+ * The code may be changed depending of the final version in TYPO3 V4.3 to
+ * preserve compatibility.
+ */
 
 
 class ux_tslib_cObj extends tslib_cObj {

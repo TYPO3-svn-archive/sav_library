@@ -340,7 +340,8 @@
         This function generates an email link associated with the field.
         Optional attributes can be added:
         . message = string; Message associated with the link.
-        
+        . fieldMessage = fieldName; Sets the attribute &quot;message&quot; with the content of the field whose name is given by fieldName.
+
         &lt;b&gt;func = makeNewWindowLink;&lt;/b&gt;
         This function generates an hyperlink associated with the value of the field which opens a new window. Paramaters are :
         . windowUrl = string; string is the url. The tag ###special[fieldname]### from selectors can be used. This parameter is not necessary if the field is an image.
@@ -350,6 +351,7 @@
         since the semi-colon is use to split field attributes, and do not forget to end your definition by a semi-colon
         Example: windowBodyStyle = fontweight:bold\;font-color:blue\;;
         . message = string; Message associated with the link.
+        . fieldMessage = fieldName; Sets the attribute &quot;message&quot; with the content of the field whose name is given by fieldName.
 
         &lt;b&gt;func = makeItemLink;&lt;/b&gt;
         This function generates an hyperlink associated with the value of the field. It will open the &quot;showSingle&quot; view associated with the selected item.
@@ -366,6 +368,7 @@
         . target = string; The string defines the target parameter.
         . class = string; Name of the class associated with the link.
         . message = string; Message associated with the link.
+        . fieldMessage = fieldName; Sets the attribute &quot;message&quot; with the content of the field whose name is given by fieldName.
         . setUid = integer; the integer defines the page uid associated with the link.
         . valueIsUid = 1; The field value is used as the uid of the page associated with the link.
 
@@ -384,8 +387,10 @@
         &lt;b&gt;func = makeUrlLink;&lt;/b&gt;
         This function generates a link for an external url.
         Optional attributes can be added:
-        . link = string; The string will be used as the link instead of the field value.
+        . link = string; The string will be used for the link instead of the field value.
+        . fieldLink = fieldName; Sets the attribute &quot;link&quot; with the content of the field whose name is given by fieldName.
         . message = string; Message associated with the link.
+        . fieldMessage = fieldName; Sets the attribute &quot;message&quot; with the content of the field whose name is given by fieldName.
 
         &lt;b&gt;func = makeXmlLabel;&lt;/b&gt;
         This function generates the label from a xml language file. It works with the following parameter:
@@ -598,14 +603,24 @@
         . isValidPattern
         . isValidLength
         . isValidInterval
+        . isValidQuery
  
+        &lt;b&gt;verifierMessage = string;&lt;/b&gt;
+        It replaces the default message.
+        Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
+        The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
+
         &lt;b&gt;verifierParam = expression;&lt;/b&gt;
         The expression can be :
         . a regular expression for the verifier &quot;isValidPattern&quot;.
         For example /^[A-Za-z0-9_]*$/ will allow any input which contains letters, numbers or underline characters. 
         . an integer value for the verifier &quot;isValidLength&quot;.
-        . an interval [a, b] where a and b are integers for the verifier &quot;isValidInterval&quot;.   
-        
+        . an interval [a, b] where a and b are integers for the verifier &quot;isValidInterval&quot;.
+        . a SELECT query for &quot;isValidQuery&quot;. The marker ###value### in the query will be replaced by the value of the field. The marker ###uid### will be replaced by the uid of the current record.
+
+        &lt;b&gt;verifierSetWarning = boolean;&lt;/b&gt;
+        If set an error detected by the verifier becomes a warning. In that case, the field content is written in the database (which is not the case for errors) and a message is displayed.
+
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
         The string will be used to wrap the item. The syntax in the same as in TypoScript.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
@@ -639,6 +654,14 @@
         &lt;b&gt;tableName.fieldName=string1-&gt;string2;&lt;/b&gt;
         In an rtf document, if the field tag ###tableName.fieldName### exists string1 will be replaced by string2. String1 can be NL (for the ASCII character LF).
         It may be useful when one wants to input data in a textarea and display them in one line with a given separator in the file.
+        &lt;b&gt;link = string;&lt;/b&gt;
+        The string will be used for the link instead of the field value.
+        &lt;b&gt;fieldLink = fieldName;&lt;/b&gt;
+        Sets the attribute &quot;link&quot; with the content of the field whose name is given by fieldName.
+        &lt;b&gt;message = string;&lt;/b&gt;
+        Message associated with the link.
+        &lt;b&gt;fieldMessage = fieldName;&lt;/b&gt;
+        Sets the attribute &quot;message&quot; with the content of the field whose name is given by fieldName.
       </label>
 			<label index="radio.description">Attributes for &quot;radio buttons&quot;</label>
 			<label index="radio.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
