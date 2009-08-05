@@ -508,7 +508,7 @@ class tx_savlibrary_defaultQueriers {
     $addTables = $query['addTables'];
     
     $tableReference = $this->buidTableReference($query, $addTables);
-    
+
     $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = true;
 
     $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -2117,7 +2117,7 @@ class tx_savlibrary_defaultQueriers {
           
           // Check if a link is defined
           $view = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
-          if ($this->savlibrary->folderTab == $this->savlibrary->cryptTag('0')) {
+          if (is_array($view) && $this->savlibrary->folderTab == $this->savlibrary->cryptTag('0')) {
             reset($view);
             $folderTab = key($view);
           } else {

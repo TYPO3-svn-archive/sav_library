@@ -56,6 +56,7 @@ class tx_savlibrary_defaultVerifiers {
 	 *
 	 * @param  $value       Value to process
 	 * @param  $param       Parameter (pattern) 
+	 * @param  $uid         $uid of the current reccord
    *       
 	 * @return error message
 	 */
@@ -72,6 +73,7 @@ class tx_savlibrary_defaultVerifiers {
 	 *
 	 * @param  $value       Value to process
 	 * @param  $param       Parameter (Length)
+	 * @param  $uid         $uid of the current reccord
 	 *
 	 * @return error message
 	 */
@@ -88,6 +90,7 @@ class tx_savlibrary_defaultVerifiers {
 	 *
 	 * @param  $value       Value to process
 	 * @param  $param       Parameter (Interval [a,b])
+	 * @param  $uid         $uid of the current reccord
 	 *
 	 * @return error message
 	 */
@@ -108,6 +111,7 @@ class tx_savlibrary_defaultVerifiers {
 	 *
 	 * @param  $value       Value to process
 	 * @param  $param       Parameter (Interval [a,b])
+	 * @param  $uid         $uid of the current reccord
 	 *
 	 * @return error message
 	 */

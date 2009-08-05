@@ -364,6 +364,18 @@ class tx_savlibrary_testcase extends tx_phpunit_frontend {
     $this->assertFalse($this->fixture->userIsAdmin($data[1]));
   }
 
+  public function test_userIsSuperAdmin() {
+
+    // Get the content of the tx_savlibraryexample1_members table as data test
+    $data = $this->getDataFromTable('tx_savlibraryexample1_members');
+
+    $this->userAuth('validSuperUser', 'test');
+    $this->assertTrue($this->fixture->userIsSuperAdmin());
+    
+    $this->userAuth('validUser', 'test');
+    $this->assertFalse($this->fixture->userIsSuperAdmin());
+  }
+
   public function test_userIsAllowedToExportData() {
     // Assert true if the user is allowed to export data for an extension
     $this->userAuth('validUser', 'test');

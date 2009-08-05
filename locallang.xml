@@ -56,6 +56,10 @@
 			<label index="error.fieldRequired">Error: missing required values(s).</label>
 			<label index="error.fieldVoid">Error: the field must not be empty.</label>
 			<label index="error.fieldIncorrectValue">Error: incorrect value for this field.</label>
+			<label index="error.fileDoesNotExist">File does not exist: %s.</label>
+			<label index="error.fileOpenError">File open error: %s.</label>
+			<label index="error.fileReadError">File read error: %s.</label>
+			<label index="error.fileWriteError">File write error: %s.</label>
 			<label index="error.incorrectAlias">Error: incorrect alias: %s.</label>
 			<label index="error.incorrectDateFormat">Error: incorrect date format.</label>
 			<label index="error.incorrectDateOption">Error: incorrect date option.</label>
@@ -75,6 +79,14 @@
 			<label index="error.incorrectQueryInContent">Error in the query associated with the property &quot;content&quot; in the field: %s.</label>
 			<label index="error.incorrectQueryForeignTable">The &quot;foreign table&quot; field in the query must start either by inner join, left join, right join or by a comma.</label>
 			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library have not the same version. Open the extension with the kickstater and save it.</label>
+			<label index="error.incorrectXmlFile">The XML file contains syntax errors: %s.</label>
+			<label index="error.incorrectXmlProducedFile">The XML file produced during the export contains syntax errors. It may come from your template xml file.</label>
+			<label index="error.incorrectXsltFile">The XSL tranformation file contains syntax errors: %s.</label>
+			<label index="error.incorrectXsltProcess">The XSL tranformation failed.</label>
+			<label index="error.isValidLength">The input has a length greater than the allowed length.</label>
+			<label index="error.isValidInterval">The input is not in the given interval.</label>
+			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
+			<label index="error.isValidQuery">The input does not verify the query verifier.</label>
 			<label index="error.missingDot">Separate the field name from the table name by a dot &quot;.&quot; in: %s.</label>
 			<label index="error.missingEqualSign">The sign = is missing in parameter: %s.</label>
 			<label index="error.missingLabel">Please contact the webMaster. Missing label: %s.</label>
@@ -96,10 +108,7 @@
 			<label index="error.uploadedIncorrect">Error: Upload aborted.</label>
 			<label index="error.verifierUnknown">Extension configuration error: unknown verifier.</label>
 			<label index="error.verifierInvalidIntervalParameter">Extension configuration error: invalid interval.</label>
-			<label index="error.isValidLength">The input has a length greater than the allowed length.</label>
-			<label index="error.isValidInterval">The input is not in the given interval.</label>
-			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
-			<label index="error.isValidQuery">The input does not verify the query verifier.</label>
+			<label index="error.xmlIdMissing">An xml &quot;sav_id&quot; attribute must be used with the following &quot;sav_type&quot; attribute: %s.</label>
 			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form.</label>
 			<label index="fatal.notAuthenticated">Fatal error. You must be authenticated to save these data.</label>
 			<label index="button.edit">Edit</label>
@@ -126,6 +135,8 @@
 			<label index="button.help">Help</label>
 			<label index="button.mail">Send the email</label>
 			<label index="button.submit">Submit the form</label>
+			<label index="button.orderAsc">Sort by ascending order</label>
+			<label index="button.orderDesc">Sort by descending order</label>
 			<label index="button.saveExportConfiguration">Save export configuration</label>
 			<label index="button.loadExportConfiguration">Load export configuration</label>
 			<label index="button.deleteExportConfiguration">Delete export configuration</label>
@@ -140,12 +151,18 @@
 			<label index="itemviewer.days.4">Friday</label>
 			<label index="itemviewer.days.5">Saturday</label>
 			<label index="itemviewer.days.6">Sunday</label>
+			<label index="itemviewer.checkboxSelected">Selected</label>
+			<label index="itemviewer.checkboxNotSelected">Not selected</label>
+			<label index="itemviewer.radioSelected">Selected</label>
+			<label index="itemviewer.radioNotSelected">Not selected</label>
 			<label index="itemviewer.yes">Yes</label>
 			<label index="itemviewer.no">No</label>
 			<label index="itemviewer.yesMult">X</label>
 			<label index="itemviewer.noMult">-</label>
 			<label index="itemviewer.configuration">Configuration</label>
 			<label index="itemviewer.configurationGroup">Group</label>
+			<label index="itemviewer.xmlFile">XML file</label>
+			<label index="itemviewer.xsltFile">XSLT file</label>
 			<label index="itemviewer.whereClause">Where clause</label>
 			<label index="itemviewer.orderClause">Order clause</label>
 			<label index="itemviewer.error">Error</label>

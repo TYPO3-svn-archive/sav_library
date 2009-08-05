@@ -241,24 +241,74 @@ class tx_savlibrary_defaultItemviewers {
       foreach ($config['items'] as $key => $value) {
         $checked = ($val&0x01 ? 'checked' : '');
         $val = $val >> 1;
-
-        $messageIfChecked = $this->savlibrary->getLibraryLL(
-          'itemviewer.yesMult', ' ') .
-          stripslashes($this->savlibrary->getLL_db($value[0])
-        );
-        $messageIfNotChecked = (
-          $config['donotdisplayifnotchecked'] ?
-          '' :
-          $this->savlibrary->getLibraryLL('itemviewer.noMult', ' ') .
-            stripslashes($this->savlibrary->getLL_db($value[0]))
-        );
-            
-        $htmlArray[] = utils::htmlSpanElement(
+        
+        $messageValue = utils::htmlSpanElement(
           array(
-            utils::htmlAddAttribute('class', 'checkbox'),
+            utils::htmlAddAttribute('class', 'checkboxMessage'),
           ),
-          ($checked ? $messageIfChecked : $messageIfNotChecked)
+          stripslashes($this->savlibrary->getLL_db($value[0]))
         );
+          
+        if ($config['displayasimage']) {
+
+          $messageIfChecked = utils::htmlDivElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkbox item' . $key),
+            ),
+            utils::htmlImgElement(
+              array(
+                utils::htmlAddAttribute('class', 'checkboxSelected'),
+                utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'checkboxSelected.gif'),
+                utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('itemviewer.checkboxSelected')),
+                utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('itemviewer.checkboxSelected')),
+              )
+            ) . $messageValue
+          );
+          $messageIfNotChecked = utils::htmlDivElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkbox item' . $key),
+            ),
+            utils::htmlImgElement(
+              array(
+                utils::htmlAddAttribute('class', 'checkboxNotSelected'),
+                utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'checkboxNotSelected.gif'),
+                utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('itemviewer.checkboxNotSelected')),
+                utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('itemviewer.checkboxNotSelected')),
+              )
+            ) . $messageValue
+          );
+
+        } else {
+          $messageIfChecked = utils::htmlDivElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkbox item' . $key),
+            ),
+            utils::htmlSpanElement(
+              array(
+                utils::htmlAddAttribute('class', 'checkboxSelected'),
+              ),
+              $this->savlibrary->getLibraryLL('itemviewer.yesMult', ' ')
+            ) . $messageValue
+          );
+          $messageIfNotChecked = utils::htmlDivElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkbox item' . $key),
+            ),
+            utils::htmlSpanElement(
+              array(
+                utils::htmlAddAttribute('class', 'checkboxNotSelected'),
+              ),
+              $this->savlibrary->getLibraryLL('itemviewer.noMult', ' ')
+            ) . $messageValue
+          );
+        }
+
+        // Check if donotdisplayifnotchecked is set
+        if ($config['donotdisplayifnotchecked']) {
+          $messageIfNotChecked = '';
+        }
+            
+        $htmlArray[] = ($checked ? $messageIfChecked : $messageIfNotChecked);
         
         $cpt++;  
         $cptItem++;
@@ -278,12 +328,44 @@ class tx_savlibrary_defaultItemviewers {
         }    
       }
     } else {
-      $messageIfChecked = $this->savlibrary->getLibraryLL('itemviewer.yes');
-      $messageIfNotChecked = (
-        $config['donotdisplayifnotchecked'] ?
-        '' :
-        $this->savlibrary->getLibraryLL('itemviewer.no')
-      );
+    
+      if ($config['displayasimage']) {
+
+        $messageIfChecked = utils::htmlDivElement(
+          array(
+            utils::htmlAddAttribute('class', 'checkbox' . $key),
+          ),
+          utils::htmlImgElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkboxSelected'),
+              utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'checkboxSelected.gif'),
+              utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('itemviewer.radioSelected')),
+              utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('itemviewer.radioSelected')),
+            )
+          )
+        );
+        $messageIfNotChecked = utils::htmlDivElement(
+          array(
+            utils::htmlAddAttribute('class', 'checkbox' . $key),
+          ),
+          utils::htmlImgElement(
+            array(
+              utils::htmlAddAttribute('class', 'checkboxNotSelected'),
+              utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'checkboxNotSelected.gif'),
+              utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('itemviewer.radioNotSelected')),
+              utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('itemviewer.radioNotSelected')),
+            )
+          )
+        );
+      } else {
+        $messageIfChecked = $this->savlibrary->getLibraryLL('itemviewer.yes');
+        $messageIfNotChecked = (
+          $config['donotdisplayifnotchecked'] ?
+          '' :
+          $this->savlibrary->getLibraryLL('itemviewer.no')
+        );
+      }
+
       $htmlArray[] = (
         $config['value'] ?
         $messageIfChecked :
@@ -453,13 +535,43 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewRadio(&$config) {
-  
+
     $htmlArray = array();
     
     if (is_array($config['items'])) {
       $val = $config['value'];
       foreach ($config['items'] as $key => $value) {
-        if ($val == $value[1]) {
+        if ($config['displayasimage']) {
+          if ($val == $value[1]) {
+            $htmlArray[] = utils::htmlDivElement(
+              array(
+                utils::htmlAddAttribute('class', 'radio item' . $key),
+              ),
+              utils::htmlImgElement(
+                array(
+                  utils::htmlAddAttribute('class', 'radioSelected'),
+                  utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'radioSelected.gif'),
+                  utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('itemviewer.radioSelected')),
+                  utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('itemviewer.radioSelected')),
+                )
+              )
+            );
+          } else {
+            $htmlArray[] = utils::htmlDivElement(
+              array(
+                utils::htmlAddAttribute('class', 'radio item' . $key),
+              ),
+              utils::htmlImgElement(
+                array(
+                  utils::htmlAddAttribute('class', 'radioNotSelected'),
+                  utils::htmlAddAttribute('src', $this->savlibrary->iconsDir . 'radioNotSelected.gif'),
+                  utils::htmlAddAttribute('title', $this->savlibrary->getLibraryLL('itemviewer.radioNotSelected')),
+                  utils::htmlAddAttribute('alt', $this->savlibrary->getLibraryLL('itemviewer.radioNotSelected')),
+                )
+              )
+            );
+          }
+        } elseif ($val == $value[1]) {
           $htmlArray[] = stripslashes($this->savlibrary->getLL_db($value[0]));
         }
       }
@@ -956,7 +1068,12 @@ class tx_savlibrary_defaultItemviewers {
             $params['height'] = $config['height'];
             $params['folder'] = $folder;
             $params['alt'] = $config['alt'];
-            $out = $this->savlibrary->makeImage($file, '', $params);
+            
+            if ($config['onlyfilename']) {
+              $out = $folder . '/' . $file;
+            } else {
+              $out = $this->savlibrary->makeImage($file, '', $params);
+            }
                  
             if ($config['func']=='makeNewWindowLink') {
               $out = $this->savlibrary->makeNewWindowLink (
@@ -2326,7 +2443,7 @@ class tx_savlibrary_defaultItemviewers {
 				/* ORDER BY */
           (
             $config['addupdown'] ?
-            'sorting' :
+            $config['MM'] . '.sorting' :
             ($config['order'] ? $config['order'] : $order)
           ),
 				/* LIMIT    */
@@ -2336,7 +2453,6 @@ class tx_savlibrary_defaultItemviewers {
             ''
           )
 		  );
-
 		  $fields = $config['fullFieldName'];
       $value = '';
       
@@ -2349,7 +2465,12 @@ class tx_savlibrary_defaultItemviewers {
       );
       
       // add the new button
-      $subForm['CUTTERS']['CUT_title'] = ($this->savlibrary->inputIsAllowedInForm() || (!$config['edit'] && $config['labelontitle']) ? 0 : 1);
+      $subForm['CUTTERS']['CUT_title'] = (
+        $this->savlibrary->inputIsAllowedInForm() ||
+          (!$config['edit'] &&
+            ($config['labelontitle'] || $config['subformtitle'])
+          ) ? 0 : 1
+      );
       $subForm['MARKERS']['titleIconLeft'] = (
         !$config['edit'] || ($config['cutnewbuttonifnotsaved'] && !$this->savlibrary->uid) ?
         '' :
@@ -2361,8 +2482,8 @@ class tx_savlibrary_defaultItemviewers {
       );
       $subForm['MARKERS']['CLASS_titleIconLeft'] = (
         $this->savlibrary->inputIsAllowedInForm() ?
-        'subitemTitleIconLeft' :
-        'subItemtitleIconLeftVoid'
+        'titleIconLeft' :
+        'titleIconLeftVoid'
       );
       if ($config['labelontitle']) {     
   		  $subForm['MARKERS']['formTitle'] = $this->savlibrary->getLL_db(

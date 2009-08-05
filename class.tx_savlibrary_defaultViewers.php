@@ -41,6 +41,10 @@ class tx_savlibrary_defaultViewers {
   protected $extConfig;       // Reference to the extension configuration
   protected $extKey;          // Extension Key
 
+  protected $xmlReferenceArray = array();
+  protected $replaceDistinctArray = array();
+  protected $previousMarkerArray = array();
+
   /**
    * Init vars
    *
@@ -117,7 +121,12 @@ class tx_savlibrary_defaultViewers {
               );
             }
 
-           // Check if the field already exists in the MARKERS.
+            // Check if the classItem is set
+            if ($v['MARKERS']['classItem']) {
+
+              $item['classItem'] = $v['MARKERS']['classItem'];
+            }
+            // Check if the field already exists in the MARKERS.
             if(!array_key_exists($v['MARKERS']['field'], $item)) {
     				  // Add the fied
     				  $item[$v['MARKERS']['field']] = $v['MARKERS'][$v['MARKERS']['field']];
@@ -129,6 +138,7 @@ class tx_savlibrary_defaultViewers {
             }
     			}
   			}
+
         $items['MARKERS'] = $item;
   			$items['TYPE'] = 'item';
   			
@@ -166,6 +176,7 @@ class tx_savlibrary_defaultViewers {
   			
   			$ta['REGIONS']['items'][$key]['TYPE'] = 'item';
   			$ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $value;
+  			$ta['REGIONS']['items'][$key]['MARKERS']['classItem'] = $items['MARKERS']['classItem'];
 
   			// Set the icons
   			if ($this->savlibrary->userIsAdmin($row)) {
@@ -179,7 +190,7 @@ class tx_savlibrary_defaultViewers {
               );
             }
   				  // Add the delete button if allowed
-            if (!$this->savlibrary->conf['noDeleteButton'] && !($this->savlibrary->conf['deleteButtonOnlyForCruser'] && $row['cruser_id']!=$GLOBALS['TSFE']->fe_user->user['uid'])) {
+            if ($this->savlibrary->userIsSuperAdmin() || (!$this->savlibrary->conf['noDeleteButton'] && !($this->savlibrary->conf['deleteButtonOnlyForCruser'] && $row['cruser_id']!=$GLOBALS['TSFE']->fe_user->user['uid']))) {
   				    $content .= ($content ? '<br />' : '') .
               $this->savlibrary->deleteButton(
                 $this->savlibrary->formName,
@@ -215,7 +226,7 @@ class tx_savlibrary_defaultViewers {
 
 		// Show the new button if newButton is allowed
 		if ($this->savlibrary->inputIsAllowedInForm()) {
-      if ($this->savlibrary->conf['noNewButton']) {
+      if (!$this->savlibrary->userIsSuperAdmin() && $this->savlibrary->conf['noNewButton']) {
 			 $content = '&nbsp;';
 			 $ta['MARKERS']['CLASS_titleIconLeft'] = 'titleIconLeftVoid';
 		  } else {
@@ -328,7 +339,7 @@ class tx_savlibrary_defaultViewers {
       'limit' => $this->savlibrary->limit,
     );
 		$ta['MARKERS']['browse'] = $this->savlibrary->browseresults($conf, $formParams);
-		
+
     return $ta;
 	}
 
@@ -462,8 +473,8 @@ class tx_savlibrary_defaultViewers {
     $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['updateForm']];
 
 		// Prepare the template
-		$tmpl = '<!-- ###item### begin -->'.
-				$showAllTemplate['itemTmpl'].'
+		$tmpl = '<!-- ###item### begin -->' .
+				$showAllTemplate['itemTmpl'] . '
 			<!-- ###item### end -->';
 			     
 		// Process the dataset
@@ -716,13 +727,13 @@ class tx_savlibrary_defaultViewers {
       $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['altForm']];
     
 		// Prepare the template
-		$tmpl = '<!-- ###item### begin -->'.
-				$showAllTemplate['itemTmpl'].'
+		$tmpl = '<!-- ###item### begin -->' .
+				$showAllTemplate['itemTmpl'] . '
 			<!-- ###item### end -->';
 			     
 		// Process the dataset
     if (is_array($dataset)) {
-  		$ta['REGIONS']['items']='';
+  		$ta['REGIONS']['items'] = '';
   		$cpt = 0;
   		$firstPageProcessed = 0;
   		
@@ -874,10 +885,14 @@ class tx_savlibrary_defaultViewers {
 
     // Define the exclude list of fields
     $excludeFields = array (
-      'uid','pid','crdate','tstamp','hidden','deleted','cruser_id','disable',
+      'pid','crdate','tstamp','hidden','deleted','cruser_id','disable',
       'starttime','endtime','password','lockToDomain','is_online','lastlogin',
       'TSconfig',
     );
+    if (!$extPOSTVars['xmlFile'][0]) {
+      // Keep the uid field when there is a XML file
+      $excludeFields = array_merge(array('uid'), $excludeFields);
+    }
 
     // Get the ressource id of the query    
     $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['export']);
@@ -931,7 +946,7 @@ class tx_savlibrary_defaultViewers {
           $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   				  /* SELECT   */	'*',
   				  /* FROM   */	$table,
-  				  /* WHERE   */	$table.'.uid='.intval($extPOSTVars['configuration'][0])
+  				  /* WHERE   */	$table . '.uid=' . intval($extPOSTVars['configuration'][0])
           );                
           $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);       
         }
@@ -950,7 +965,7 @@ class tx_savlibrary_defaultViewers {
   			
         $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
   				/* TABLE   */	$table,		
-  				/* WHERE   */	$table.'.uid='.intval($extPOSTVars['configuration'][0]),  		
+  				/* WHERE   */	$table . '.uid=' . intval($extPOSTVars['configuration'][0]),
   				/* FIELDS  */	$fields
         );                
         $exportOK = 0;
@@ -972,9 +987,9 @@ class tx_savlibrary_defaultViewers {
           $showSelectedFieldsOnly = 1;
         } else {
           // Clear data
-          foreach($extPOSTVars as $k=>$v) {
+          foreach($extPOSTVars as $k => $v) {
             if (is_array($v[0])) {
-              foreach($v[0] as $k1=>$v1) {
+              foreach($v[0] as $k1 => $v1) {
                 $extPOSTVars[$k][0][$k1] = '';
               }
             } else {
@@ -998,7 +1013,7 @@ class tx_savlibrary_defaultViewers {
           implode(',', $fields);
       }
       $query['fields'] = (
-        $extPOSTVars['includeAllFields'][0] ?
+        $extPOSTVars['includeAllFields'][0] || $extPOSTVars['xmlFile'][0] ?
         '*' :
         $query['fields']
       );
@@ -1108,6 +1123,7 @@ class tx_savlibrary_defaultViewers {
         ),
     );
     $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    
     // Add the group of the fe_user
     $config = array(
       'emptyitem' => 1,
@@ -1130,7 +1146,34 @@ class tx_savlibrary_defaultViewers {
       'Value' => $this->savlibrary->itemviewers->viewDbRelationSingleSelectorEditMode($config),
     );
     $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
-      
+
+    // Display the field for the XML template
+    $config = array(
+      'size' => 80,
+  		'elementControlName' => $this->savlibrary->formName . '[xmlFile][0]',
+      'value' => $extPOSTVars['xmlFile'][0],
+    );
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.xmlFile'),
+      'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    
+    // Display the filed for the XLST file
+    $config = array(
+      'size' => 80,
+  		'elementControlName' => $this->savlibrary->formName . '[xsltFile][0]',
+      'value' => $extPOSTVars['xsltFile'][0],
+    );
+    $cutters = array();
+    $markers = array(
+      'Label' => $this->savlibrary->getLibraryLL('itemviewer.xsltFile'),
+      'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config),
+    );
+    $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    
+
     // Display the error if any
     if (isset($res['ERROR'])) {
       $config = array(
@@ -1148,7 +1191,7 @@ class tx_savlibrary_defaultViewers {
  
     } else {    
       $nbRows = $GLOBALS['TYPO3_DB']->sql_num_rows($res);
-  
+
       // Display the checkboxes
       $config = array(
         'cols' => 2,
@@ -1180,7 +1223,7 @@ class tx_savlibrary_defaultViewers {
 
     // Process the fields
     if (is_array($this->savlibrary->queriers->sqlFieldsExport)) {
-      foreach ($this->savlibrary->queriers->sqlFieldsExport as $key=>$sqlField) {
+      foreach ($this->savlibrary->queriers->sqlFieldsExport as $key => $sqlField) {
         $field = (
           $sqlField->table ?
           $sqlField->table . '.' . $sqlField->name :
@@ -1360,15 +1403,66 @@ class tx_savlibrary_defaultViewers {
     );
 
     // Export the fields in csv
-    if ($exportOK && is_array($extPOSTVars['fields']) && in_array(1, $extPOSTVars['fields'][0]) && $nbRows > 0 && !isset($res['ERROR'])) { 
-      $fileName = $this->savlibrary->formName.date('_Y_m_d_H_i').'.csv';
-		  $strFilepath = PATH_site . 'typo3temp/'.$fileName;
-		  t3lib_div::unlink_tempfile($strFilepath);
-		  
-		  if ($fileHandle = fopen($strFilepath,'ab')) {
+    if ($exportOK && ((is_array($extPOSTVars['fields']) && in_array(1, $extPOSTVars['fields'][0])) || $extPOSTVars['xmlFile'][0]) && $nbRows > 0 && !isset($res['ERROR'])) {
 
-		    // Export the field names
-        if ($extPOSTVars['exportFieldNames'][0]) {	    
+      // Create the directory in typo3temp if it does not exist
+      if (!is_dir('typo3temp/' . $this->extKey)) {
+        mkdir('typo3temp/' . $this->extKey);
+      }
+      
+      // Set the path for the files
+		  $filePath = PATH_site . 'typo3temp/' . $this->extKey . '/';
+
+      // Check if a XML file is set
+      if ($extPOSTVars['xmlFile'][0]) {
+        if (file_exists($extPOSTVars['xmlFile'][0])) {
+
+          // Load and process the xml file
+          $xml = @simplexml_load_file($extPOSTVars['xmlFile'][0]);
+          if ($xml === false) {
+            $this->savlibrary->addError(
+              'error.incorrectXmlFile',
+              $extPOSTVars['xmlFile'][0]
+            );
+            return $ta;
+          }
+          if (!$this->processXML($xml)) {
+            return $ta;
+          }
+
+          // Set the parent field
+          foreach ($this->xmlReferenceArray as $key => $value) {
+            if(preg_match_all('/###(REF_[^#]+)###/', $value['template'], $matches)) {
+              foreach ($matches[0] as $keyMatch => $valueMatch) {
+                $this->xmlReferenceArray[$matches[1][$keyMatch]]['parent'] = $key;
+              }
+            }
+          }
+
+          // Clear all reference files
+          foreach ($this->xmlReferenceArray as $keyReference => $valueReference) {
+		        $fileName = $keyReference . '.xml';
+		        if (file_exists($filePath . $fileName)) {
+              $arrError['unlink'] = unlink($filePath . $fileName);
+            }
+          }
+        } else {
+          $this->savlibrary->addError(
+            'error.fileDoesNotExist',
+            $extPOSTVars['xmlFile'][0]
+          );
+          return $ta;
+        }
+      }
+
+      // Set the ouput file
+      $fileName = $this->savlibrary->formName . date('_Y_m_d_H_i') . '.csv';
+      t3lib_div::unlink_tempfile($filePath . $fileName);
+		  
+		  if ($fileHandle = fopen($filePath . $fileName, 'ab')) {
+
+		    // Export the field names if XML file is not set
+        if ($extPOSTVars['exportFieldNames'][0] && !$extPOSTVars['xmlFile'][0]) {
   		    $arrValues = array();
   	 	    if ($extPOSTVars['fields'][0]) {
 
@@ -1388,149 +1482,117 @@ class tx_savlibrary_defaultViewers {
                 $arrValues[] = $field;
               }
             }
-            fwrite($fileHandle, $this->csvValues( $arrValues,';') . chr(10));
+            $arrError['fwrite'] = fwrite($fileHandle, $this->csvValues($arrValues, ';') . chr(10));
           }
         }
 
-		    // Export the fields        
+		    // Process the fields
         $cpt = 0;
-    		while ($row = $this->savlibrary->queriers->sql_fetch_assoc_with_tablename($res, $cpt++)) {		  
+    		while ($row = $this->savlibrary->queriers->sql_fetch_assoc_with_tablename($res, $cpt++)) {
 
-		      $arrValues = array();
-		      if ($extPOSTVars['fields'][0]) {
+          // Process the row
+          $markerArray = $this->processRow($row, $extPOSTVars, $query, $aliasFields);
+          
+          // Check if a XML file is set
+          if ($extPOSTVars['xmlFile'][0]) {
+            if (!$this->processXmlReferenceArray($row, $markerArray)) {
+              return $ta;
+            }
+          } else {
+            // Write the content to the output file
+            $arrError['fwrite'] = fwrite($fileHandle, $this->csvValues($markerArray, ';') . chr(10));
+          }
+        }
 
-            $orderedFieldList = explode(
-              ';',
-              preg_replace('/[\n\r]/', '', $extPOSTVars['orderedFieldList'][0])
-            );
-            $fields = array_keys($extPOSTVars['fields'][0]);
-            $fieldList = array_merge(
-              $orderedFieldList,
-              array_diff($fields, $orderedFieldList)
-            );
+        // Post process the XML file if any
+        if ($extPOSTVars['xmlFile'][0]) {
+            // process last markers
+            if(!$this->postprocessXmlReferenceArray($row, $markerArray)) {
+              return $ta;
+            }
+        }
 
-            foreach ($fieldList as $key => $field) {
+        // Check if a XLST file is set
+        if ($extPOSTVars['xsltFile'][0]) {
+          if (file_exists($extPOSTVars['xsltFile'][0])) {
+          
+            // Get the xml file name from the last item in the reference array
+            end($this->xmlReferenceArray);
+            $xmlfileName = key($this->xmlReferenceArray) . '.xml';
 
-              if ($extPOSTVars['fields'][0][$field]) {
-
-                if (array_key_exists($field, $aliasFields)) {
-
-                  $config = $this->savlibrary->getConfig($aliasFields[$field]);                 
-           			  $config['type'] = (
-                    $config['type'] ?
-                    $config['type'] :
-                    'input'
-                  );
-       				
-           				// Process the query
-                  $queryReqValue = $config['reqvalue'];
-                  $table = $config['table'];
-                  if (preg_match_all('/###row\[([^\]]+)\]###/', $queryReqValue, $matches)) {
-                    foreach ($matches[0] as $k => $match) {
-                      $mA[$matches[0][$k]] = $this->savlibrary->getValue(
-                        $table,
-                        $matches[1][$k],
-                        $row
-                      );
-                    }
-                  }
-
-                  $mA['###uid###'] = $row[$config['table'] . '.uid'];
-                  $mA['###uidParent###'] = $row[$query['tableLocal'] . '.uid'];
-                  $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
-                  $queryReqValue = $this->cObj->substituteMarkerArrayCached(
-                    $queryReqValue,
-                    $mA,
-                    array(),
-                    array()
-                  );
-
-                  // Check if the query is a SELECT query and for errors
-                  if (!$this->savlibrary->isSelectQuery($queryReqValue)) {
-                    $this->savlibrary->addError(
-                      'error.onlySelectQueryAllowed',
-                      $config['field']
-                    );
-                    $arrError['reqValue'] = false;
-                    continue;
-                  } elseif (!($resLocal = $GLOBALS['TYPO3_DB']->sql_query($queryReqValue))) {
-                    $this->savlibrary->addError(
-                      'error.incorrectQueryInReqValue',
-                      $config['field']
-                    );
-                    $arrError['reqValue'] = false;
-                    continue;
-                  }
-
-                  // Process the query
-		              $value='';
-		              while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resLocal)) {
-		                if (array_key_exists('value',$rows)) {
-                      $config['value'] = stripslashes($rows['value']);
-                    }
-		              }   
-         				
-                } else {
-                  $config = $this->savlibrary->getConfig($field, 1);
-                 
-                  // Special processing for exclude fields
-                  switch ($config['field']) {
-                    case 'tstamp':
-                    case 'crdate':
-                      $config['eval'] = 'datetime';
-                      break;
-                  }            
-           			  $config['type'] = ($config['type'] ? $config['type'] : 'input');
-                  $config['_value'] = stripslashes($row[$field]);
-                  $config['value'] = stripslashes($row[$field]);
-                }
-
-                if (($func = $this->savlibrary->getFunc($config))) {
-                
-                  // Special preprocessing according to the type
-                  switch ($config['type']) {
-                    case 'select':
-                      $config['separator'] = ',';
-                      $config['nohtmlprefix'] = true;
-                      break;
-                  }
-
-                  $value = html_entity_decode($this->savlibrary->itemviewers->$func($config));
-                
-                  // Special postprocessing according to the type
-                  switch ($config['type']) {
-                    case 'text':
-                      $value = preg_replace('/<br \/>/','', $value);
-                      $value = str_replace(chr(13), '', $value); 
-                      break;
-                  }                      
-                } else {
-                  $value = $config['value'];                
-                }              
-                $arrValues[] = $value;
-              } elseif (preg_match('/ (as|AS) ' . $field . '/', $extPOSTVars['additionalFields'][0])) {
-                $arrValues[] = stripslashes($row[$field]);
-              }
+            // Load the XML source
+            $xml = new DOMDocument;
+            if (@$xml->load($filePath . $xmlfileName) === false) {
+              $this->savlibrary->addError(
+                'error.incorrectXmlProducedFile'
+              );
+              return $ta;
             }
 
-            fwrite($fileHandle, $this->csvValues( $arrValues,';') . chr(10));
+            $xsl = new DOMDocument;
+            if (@$xsl->load($extPOSTVars['xsltFile'][0]) === false) {
+              $this->savlibrary->addError(
+                'error.incorrectXsltFile',
+                $extPOSTVars['xsltFile'][0]
+              );
+              return $ta;
+            }
+
+            // Configure the transformer
+            $proc = new XSLTProcessor;
+            $proc->importStyleSheet($xsl); // attach the xsl rules
+
+            // Write the result directly
+            $arrError['close'] = fclose($fileHandle);
+            $bytes = @$proc->transformToURI($xml, 'file://' . $filePath . $fileName);
+
+            if ($bytes === false) {
+              $this->savlibrary->addError(
+                'error.incorrectXsltResult'
+              );
+              return $ta;
+            }
+            
+            $arrError['unlink'] = unlink($filePath . $xmlfileName);
+
+          } else {
+            $this->savlibrary->addError(
+              'error.fileDoesNotExist',
+              $extPOSTVars['xsltFile'][0]
+            );
+            return $ta;
           }
-        }       
+        } elseif ($extPOSTVars['xmlFile'][0]) {
+          // Get the xml file name from the last item in the reference array
+          end($this->xmlReferenceArray);
+          if (key($this->xmlReferenceArray)) {
+            $arrError['close'] = fclose($fileHandle);
+            $xmlfileName = key($this->xmlReferenceArray) . '.xml';
+            $xmlfilePath = $filePath;
+             // Copy and delete the temp file
+            $arrError['copy'] = copy($xmlfilePath . $xmlfileName, $filePath . $fileName);
+            $arrError['unlink'] = unlink($xmlfilePath . $xmlfileName);
+          } else {
+            $arrError['close'] = fclose($fileHandle);
+
+            $xmlfileName = $extPOSTVars['xmlFile'][0];
+            $xmlfilePath = PATH_site;
+            // Copy the file
+            $arrError['copy'] = copy($xmlfilePath . $xmlfileName, $filePath . $fileName);
+          }
+        }
+        clearstatcache();
+			  t3lib_div::fixPermissions($filePath . $fileName);
+
+		    if (!in_array(FALSE, $arrError)) {
+          header('Content-Disposition: attachment; filename=' . $fileName);
+				  header('Content-type: x-application/octet-stream');
+				  header('Content-Transfer-Encoding: binary');
+				  header('Content-length:' . filesize($filePath . $fileName));
+				  readfile($filePath . $fileName);
+        }
       }
-
-			$arrError['close'] = fclose($fileHandle);
-			t3lib_div::fixPermissions($strFilepath);
-
-		  if (!in_array(FALSE,$arrError)) {
-			 	header('Content-Disposition: attachment; filename=' . $fileName.'');
-				header('Content-type: x-application/octet-stream');
-				header('Content-Transfer-Encoding: binary');
-				header('Content-length:' . filesize($strFilepath).'');
-				readfile($strFilepath);
-      }
-
-    }   
-	
+    }
 		return $ta;
   }
 
@@ -1539,6 +1601,641 @@ class tx_savlibrary_defaultViewers {
     *   Utils
     *
    ***************************************************************/
+
+ 	/**
+	 * Process a row
+	 *
+	 * @param	$row array		row of data
+	 * @param $extPOSTVars  array POST array
+	 * @param $query array  Query
+	 * @param $aliasFields array Aliases
+	 *
+	 * @return	array field array
+	 */
+  function processRow(&$row, &$extPOSTVars, $query, $aliasFields) {
+
+		$arrValues = array();
+		if ($extPOSTVars['fields'][0]) {
+
+      $orderedFieldList = explode(
+        ';',
+        preg_replace('/[\n\r]/', '', $extPOSTVars['orderedFieldList'][0])
+      );
+      $fields = array_keys($extPOSTVars['fields'][0]);
+      $fieldList = array_merge(
+        $orderedFieldList,
+        array_diff($fields, $orderedFieldList)
+      );
+
+      foreach ($fieldList as $key => $field) {
+        if ($extPOSTVars['fields'][0][$field]) {
+          if (array_key_exists($field, $aliasFields)) {
+            $config = $this->savlibrary->getConfig($aliasFields[$field]);
+           	$config['type'] = (
+              $config['type'] ?
+              $config['type'] :
+              'input'
+            );
+
+           	// Process the query
+            $queryReqValue = $config['reqvalue'];
+            $table = $config['table'];
+            if (preg_match_all('/###row\[([^\]]+)\]###/', $queryReqValue, $matches)) {
+              foreach ($matches[0] as $k => $match) {
+                $mA[$matches[0][$k]] = $this->savlibrary->getValue(
+                  $table,
+                  $matches[1][$k],
+                  $row
+                );
+              }
+            }
+
+            $mA['###uid###'] = $row[$config['table'] . '.uid'];
+            $mA['###uidParent###'] = $row[$query['tableLocal'] . '.uid'];
+            $mA['###user###'] = $GLOBALS['TSFE']->fe_user->user['uid'];
+            $queryReqValue = $this->cObj->substituteMarkerArrayCached(
+              $queryReqValue,
+                $mA,
+                array(),
+                array()
+            );
+
+            // Check if the query is a SELECT query and for errors
+            if (!$this->savlibrary->isSelectQuery($queryReqValue)) {
+              $this->savlibrary->addError(
+                'error.onlySelectQueryAllowed',
+                $config['field']
+              );
+              continue;
+            } elseif (!($resLocal = $GLOBALS['TYPO3_DB']->sql_query($queryReqValue))) {
+              $this->savlibrary->addError(
+                'error.incorrectQueryInReqValue',
+                $config['field']
+              );
+              continue;
+            }
+
+            // Process the query
+		        $value='';
+		        while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resLocal)) {
+		          if (array_key_exists('value',$rows)) {
+                $config['value'] = stripslashes($rows['value']);
+              }
+		        }
+
+          } else {
+            $config = $this->savlibrary->getConfig($field, 1);
+
+            // Special processing for exclude fields
+            switch ($config['field']) {
+              case 'tstamp':
+              case 'crdate':
+                $config['eval'] = 'datetime';
+                  break;
+            }
+           	$config['type'] = ($config['type'] ? $config['type'] : 'input');
+            $config['_value'] = stripslashes($row[$field]);
+            $config['value'] = stripslashes($row[$field]);
+          }
+
+          if (($func = $this->savlibrary->getFunc($config))) {
+
+            // Special preprocessing according to the type
+            switch ($config['type']) {
+              case 'select':
+                $config['separator'] = ',';
+                $config['nohtmlprefix'] = true;
+                break;
+              case 'group':
+                if ($config['internal_type'] == 'file') {
+                  $config['onlyfilename'] = 1;
+                }
+                break;
+            }
+
+            $value = html_entity_decode($this->savlibrary->itemviewers->$func($config));
+
+            // Special postprocessing according to the type
+            switch ($config['type']) {
+              case 'text':
+                $value = preg_replace('/<br \/>/','', $value);
+                $value = str_replace(chr(13), '', $value);
+                break;
+            }
+          } else {
+            $value = $config['value'];
+          }
+          
+          // Convert
+          $arrValues['###' . $field . '###'] = $value;
+        } elseif (preg_match('/ (as|AS) ' . $field . '/', $extPOSTVars['additionalFields'][0])) {
+          $arrValues['###' . $field . '###'] = stripslashes($row[$field]);
+        }
+      }
+    }
+    return $arrValues;
+  }
+
+   
+ 	/**
+	 * Process the XML file
+	 *
+	 * @param	$row array		row of data
+	 * @param $markerArray  array of markers
+	 *
+	 * @return	boolean		true if OK
+	 */
+	public function processXmlReferenceArray($row, $markerArray) {
+
+    // Set the file Path
+    $filePath = PATH_site . 'typo3temp/' . $this->extKey . '/';
+    
+    // Check if a replaceDistinct id has changed
+    foreach ($this->xmlReferenceArray as $key => $value) {
+      switch ($value['type']) {
+        case 'replacedistinct':
+
+          if ($row[$value['id']] != $value['fieldValue']) {
+            if (!is_null($value['fieldValue'])) {
+              // Set all the previous replaceDistinct ids to "changed"
+              $this->recursiveChangeField($key, 'changed', true);
+            }
+            $this->xmlReferenceArray[$key]['fieldValue'] = $row[$value['id']];
+          } 
+          break;
+      }
+    }
+
+    // Process the replaceDistinct and cutter parts
+    foreach ($this->xmlReferenceArray as $key => $value) {
+      switch ($value['type']) {
+        case 'replacedistinct':
+          if ($value['changed']) {
+
+            // Parse the template with the previous known markers
+            $buffer = utf8_decode($value['template']);
+            $buffer = $this->cObj->substituteMarkerArrayCached(
+              $buffer,
+              $this->previousMarkerArray,
+              array(),
+              array()
+            );
+            
+            $fileName = $key . '.xml';
+            
+            if(!$this->replaceReferenceMarkers($filePath, $fileName, $buffer)) {
+              return false;
+            }
+            
+            $this->recursiveChangeField($key, 'changed', false);
+            $this->unlinkReplaceAlways($filePath, $key);
+          }
+          break;
+        case 'cutifnull':
+        case 'cutifempty':
+        case 'cutifnotnull':
+        case 'cutifnotempty':
+        case 'cutifequal':
+        case 'cutifnotequal':
+        case 'cutifgreater':
+        case 'cutifless':
+        case 'cutifgreaterequal':
+        case 'cutiflessequal':
+
+          // Set the file name
+          $fileName = $key . '.xml';
+
+          // Set the field value
+          $value['fieldValue'] = $row[$value['id']];
+          
+          // The processing of the cutters depends on their place with respect to the replaceAlways attribute
+          $isChildOfReplaceAlways = $this->isChildOfReplaceAlways($key);
+          if ($isChildOfReplaceAlways) {
+            $value['changed']=true;
+            $fieldValue = $value['fieldValue'];
+            $marker = $markerArray;
+          } else {
+            $fieldValue = $value['previousFieldValue'];
+            $marker = $this->previousMarkerArray;
+          }
+          
+          // Set the condition
+          switch ($value['type']) {
+            case 'cutifnull':
+            case 'cutifempty':
+              $condition = empty($fieldValue);
+              break;
+            case 'cutifnotnull':
+            case 'cutifnotempty':
+              $condition = !empty($fieldValue);
+              break;
+            case 'cutifequal':
+              $condition = ($fieldValue == $value['value']);
+              break;
+            case 'cutifnotequal':
+              $condition = ($fieldValue != $value['value']);
+              break;
+            case 'cutifgreater':
+              $condition = ($fieldValue > $value['value']);
+              break;
+            case 'cutifless':
+              $condition = ($fieldValue > $value['value']);
+              break;
+            case 'cutifgreaterequal':
+              $condition = ($fieldValue >= $value['value']);
+              break;
+            case 'cutiflessequal':
+              $condition = ($fieldValue <= $value['value']);
+              break;
+          }
+
+          // Check if the field must be replaced
+          if ($value['changed'] && !$condition) {
+
+            // replace markers in the template
+            $buffer = utf8_decode($value['template']);
+            $buffer = $this->cObj->substituteMarkerArrayCached(
+                $buffer,
+                $marker,
+                array(),
+                array()
+            );
+
+            if(!$this->replaceReferenceMarkers($filePath, $fileName, $buffer)) {
+              return false;
+            }
+
+            if (!$isChildOfReplaceAlways) {
+              $this->recursiveChangeField($key, 'changed', false);
+            }
+
+          } else {
+            // The field is cut
+            $buffer = '';
+
+            if(!$this->replaceReferenceMarkers($filePath, $fileName, $buffer)) {
+              return false;
+            }
+          }
+
+          // Update the previous fied value
+          $this->xmlReferenceArray[$key]['previousFieldValue'] = $value['fieldValue'];
+
+          break;
+      }
+    }
+    
+    // Process the replaceAlways part
+    foreach ($this->xmlReferenceArray as $key => $value) {
+      switch ($value['type']) {
+        case 'replacealways':
+
+		      $fileName = $key . '.xml';
+
+          // replace markers in the template
+          $buffer = utf8_decode($value['template']);
+          $buffer = $this->cObj->substituteMarkerArrayCached(
+            $buffer,
+            $markerArray,
+            array(),
+            array()
+          );
+
+          if(!$this->replaceReferenceMarkers($filePath, $fileName, $buffer)) {
+            return false;
+          }
+          break;
+      }
+    }
+
+    // Keep the marker array
+    $this->previousMarkerArray = $markerArray;
+
+    return true;
+  }
+
+ 	/**
+	 * Process the last markers in the XML file
+	 *
+	 * @param	$row array		row of data
+	 * @param $markerArray  array of markers
+	 *
+	 * @return	boolean		true if OK
+	 */
+	public function postprocessXmlReferenceArray($row, $markerArray) {
+
+    // Check if there is at least on replaceDistinct item
+    foreach($this->xmlReferenceArray as $key => $value) {
+      if ($value['type'] == 'replacedisctinct') {
+        // Process row one more time
+        if (!$this->processXmlReferenceArray($row, $markerArray)) {
+            return false;
+        }
+        break;
+      }
+    }
+
+    // Set the file Path
+    $filePath = PATH_site . 'typo3temp/' . $this->extKey . '/';
+
+    // Convert to utf8 only for replaceLast
+    $utf8Encode = false;
+    $altPattern =  '';
+
+    //Post-processing
+    foreach($this->xmlReferenceArray as $key => $value) {
+      switch ($value['type']) {
+
+        case 'replacelast':
+          $utf8Encode = true;
+          $altPattern = '/(?s)(.*)(###)(REF_[^#]+)(###)(.*)/';
+        case 'replacelastbutone':
+
+          // Parse the template with the previous known markers
+          $buffer = utf8_decode($value['template']);
+          $buffer = $this->cObj->substituteMarkerArrayCached(
+            $buffer,
+            $this->previousMarkerArray,
+            array(),
+            array()
+          );
+
+          $fileName = $key . '.xml';
+
+          if(!$this->replaceReferenceMarkers($filePath, $fileName, $buffer, $utf8Encode, $altPattern)) {
+            return false;
+          }
+          break;
+      }
+    }
+
+    return true;
+  }
+  
+  
+ 	/**
+	 * Change a giben field value for all the child of a node
+	 *
+	 * @param	$keySearch string key
+	 * @param	$setField string field to change
+	 * @param	$setvalue mixed value for the field
+	 *
+	 * @return	none
+	 */
+  public function recursiveChangeField($keySearch, $setField, $setValue) {
+    $this->xmlReferenceArray[$keySearch][$setField] = $setValue;
+    foreach ($this->xmlReferenceArray as $key => $value) {
+      if($this->xmlReferenceArray[$key]['parent'] == $keySearch) {
+        $this->recursiveChangeField($key, $setField, $setValue);
+      }
+    }
+  }
+  
+ 	/**
+	 * Unlink the file associated with a replaceAlways item
+	 *
+	 * @param	$filePath string	file path
+	 * @param	$keySearch string key
+	 *
+	 * @return	none
+	 */
+   public function unlinkReplaceAlways($filePath, $keySearch) {
+    foreach ($this->xmlReferenceArray as $key => $value) {
+      if ($this->xmlReferenceArray[$key]['parent'] == $keySearch) {
+        if ($this->xmlReferenceArray[$key]['type'] != 'replacealways') {
+          $this->unlinkReplaceAlways($filePath, $key);
+        } elseif (file_exists($filePath . $key . '.xml')) {
+          unlink($filePath . $key . '.xml');
+        }
+      }
+    }
+  }
+
+ 	/**
+	 * Check if the key is a child of a replaceAlways item
+	 *
+	 * @param	$keySearch string key
+	 *
+	 * @return	boolean		true if OK
+	 */
+  public function isChildOfReplaceAlways($keySearch) {
+    $parent = $this->xmlReferenceArray[$keySearch]['parent'];
+    while ($parent != NULL) {
+      if($this->xmlReferenceArray[$parent]['type'] == 'replacealways') {
+        return true;
+      } else {
+        $parent = $this->xmlReferenceArray[$parent]['parent'];
+      }
+    }
+    return false;
+  }
+
+ 	/**
+	 * Replace the reference markers
+	 *
+	 * @param	$filePath string	file path
+	 * @param $fileName string file name
+	 * @param $template string template containing the markers
+	 * @param $mode string mode for the file writing
+	 *
+	 * @return	boolean		true if OK
+	 */
+  public function replaceReferenceMarkers($filePath, $fileName, $template, $utf8Encode = false, $altPattern = '') {
+
+    $pattern = '/(?s)(.*?)(<[^>]+>)###(REF_[^#]+)###(<\/[^>]+>)((?:.(?!<[^>]+>###REF_))*)/';
+    $pattern = ($altPattern ? $altPattern : $pattern);
+    if (preg_match_all($pattern, $template, $matches)) {
+
+      foreach($matches[0] as $keyMatch => $valueMatch) {
+
+  		  if ($fileHandle = fopen($filePath . $fileName, 'a')) {
+
+          // replace markers in the template
+          $buffer = $matches[1][$keyMatch];
+          $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
+          $buffer = $this->savlibrary->processConstantTags($buffer);
+          $buffer = $this->savlibrary->processLocalizationTags($buffer);
+
+          fwrite($fileHandle, $buffer);
+          $fileNameRef = $matches[3][$keyMatch] . '.xml';
+          if (file_exists($filePath . $fileNameRef)) {
+            if ($fileHandleRef = fopen($filePath . $fileNameRef,'r')) {
+              while($buffer = fread($fileHandleRef, 2048)) {
+                $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
+                fwrite($fileHandle, $buffer);
+              }
+              fclose($fileHandleRef);
+              unlink($filePath . $fileNameRef);
+            } else {
+              $this->savlibrary->addError(
+                'error.fileOpenError',
+                $fileName
+              );
+              return false;
+            }
+          } else {
+            // Error, the file does not exist
+            $this->savlibrary->addError(
+              'error.fileDoesNotExist',
+              $fileNameRef
+            );
+            return false;
+          }
+          $buffer = $matches[5][$keyMatch];
+          $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
+          $buffer = $this->savlibrary->processConstantTags($buffer);
+          $buffer = $this->savlibrary->processLocalizationTags($buffer);
+
+          fwrite($fileHandle, $buffer);
+          fclose($fileHandle);
+        } else {
+          // Error, the file cannot be opened
+          $this->savlibrary->addError(
+            'error.fileOpenError',
+            $fileName
+          );
+          return false;
+        }
+      }
+    } else {
+      // No marker, just create the reference file with the template
+  		if ($fileHandle = fopen($filePath . $fileName, 'a')) {
+
+        // Replace the loalization markers
+        $buffer = $template;
+        $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
+        $buffer = $this->savlibrary->processConstantTags($buffer);
+        $buffer = $this->savlibrary->processLocalizationTags($buffer);
+
+
+        fwrite($fileHandle, $buffer);
+        fclose($fileHandle);
+      } else {
+        // Error, the file cannot be opened
+        $this->savlibrary->addError(
+          'error.fileOpenError',
+          $fileName
+        );
+        return false;
+      }
+    }
+    return true;
+  }
+
+   
+	/**
+	 * Process the XML tree
+	 *
+	 * @param	$element object		XML element object
+	 *
+	 * @return	array		Merged arrays
+	 */
+  function processXml($element) {
+
+    // Process recursively all nodes
+    foreach ($element->children() as $child) {
+      if(!$this->processXml($child)) {
+        return false;
+      }
+    }
+
+    $attributes = $element->attributes();
+    if ((string) $attributes['sav_type']) {
+      $reference = 'REF_' . (int)$this->referenceCounter++;
+
+      $this->xmlReferenceArray[$reference]['type'] = strtolower((string) $attributes['sav_type']);
+      $this->xmlReferenceArray[$reference]['id'] = (string) $attributes['sav_id'];
+      $this->xmlReferenceArray[$reference]['value'] = (string) $attributes['sav_value'];
+      $this->xmlReferenceArray[$reference]['changed'] = false;
+      $this->xmlReferenceArray[$reference]['fieldValue'] = NULL;
+      $this->xmlReferenceArray[$reference]['previousFieldValue'] = NULL;
+      $this->xmlReferenceArray[$reference]['parent'] = NULL;
+
+      // Check if a reference id has to be set
+      switch ($this->xmlReferenceArray[$reference]['type']) {
+        case 'replacedistinct':
+        case 'cutifnull':
+        case 'cutifempty':
+        case 'cutifnotnull':
+        case 'cutifnotempty':
+        case 'cutifequal':
+        case 'cutifnotequal':
+        case 'cutifgreater':
+        case 'cutifless':
+        case 'cutifgreaterequal':
+        case 'cutiflessequal':
+          if (!$this->xmlReferenceArray[$reference]['id']) {
+            $this->savlibrary->addError(
+              'error.xmlIdMissing',
+              $this->xmlReferenceArray[$reference]['type']
+            );
+            return false;
+          }
+          break;
+      }
+      
+      // Remove the repeat attributes
+      unset($element[0]['sav_type']);
+      unset($element[0]['sav_id']);
+      unset($element[0]['sav_value']);
+
+      // Set the template
+      $template = $element->asXML();
+
+      // Check if there is an xml header in the template
+      if(preg_match('/^<\?xml[^>]+>/', $template, $match)) {
+
+        // Remove the header
+        $template = str_replace($match[0], '', $template);
+        $this->xmlReferenceArray[$reference]['template'] = $template;
+        if (!$this->xmlReferenceArray[$reference]['type']) {
+          $this->xmlReferenceArray[$reference]['type'] = 'replacelastbutone';
+        }
+
+        // Set the template with relaceLast type
+        $lastReference = 'REF_' . (int)$this->referenceCounter++;
+        $this->xmlReferenceArray[$lastReference]['template'] = $match[0] . '###' . $reference . '###';
+        $this->xmlReferenceArray[$lastReference]['type'] = 'replacelast';
+      } else {
+        $this->xmlReferenceArray[$reference]['template'] = $template;
+      }
+
+      // Delete all the children
+      foreach ($element->children() as $child) {
+        unset($element->$child);
+      }
+
+      // Replace the node by the reference
+      $element[0] = '###' . $reference . '###';
+    } else {
+
+      $template = $element->asXML();
+      // Check if there is an xml header in the template
+      if(preg_match('/^<\?xml[^>]+>/', $template, $match)) {
+        $reference = 'REF_' . (int)$this->referenceCounter++;
+
+        // Remove the header
+        $template = str_replace($match[0], '', $template);
+        $this->xmlReferenceArray[$reference]['template'] = $template;
+        if (!$this->xmlReferenceArray[$reference]['type']) {
+          $this->xmlReferenceArray[$reference]['type'] = 'replacelastbutone';
+        }
+
+        // Set the template with replaceLast type
+        $lastReference = 'REF_' . (int)$this->referenceCounter++;
+        $this->xmlReferenceArray[$lastReference]['template'] = $match[0] . '###' . $reference . '###';
+        $this->xmlReferenceArray[$lastReference]['type'] = 'replacelast';
+        // Delete all the children
+        foreach ($element->children() as $child) {
+          unset($element->$child);
+        }
+        // Replace the node by the reference
+        $element[0] = '###' . $reference . '###';
+      }
+    }
+    return true;
+  }
+
 
 	/**
 	 * build an item array

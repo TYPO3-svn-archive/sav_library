@@ -294,6 +294,27 @@ final class utils {
   }
 
 	/**
+	 * Returns a HTML DIV Element
+	 *
+	 * @param $attributes array
+	 * @param $content string
+	 *
+	 * @return string
+	 */
+   public function htmlDivElement($attributes, $content) {
+
+    $attributesString = implode(
+      ' ',
+      utils::htmlCleanAttributesArray($attributes)
+    );
+    return '<div' .
+      ($attributesString ? ' ' . $attributesString : '') .
+      '>' .
+      $content .
+      '</div>';
+  }
+
+	/**
 	 * Returns a HTML OPTION Element
 	 *
 	 * @param $attributes array

@@ -93,7 +93,7 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
        
 				$this->siteBackPath = $this->wizard->siteBackPath;
 				if ($this->wizard->wizArray['savext'][1]['generateForm']) {
-
+          
           if ($this->wizard->modData["wizId"] == t3lib_div::shortMd5($this->piFieldName("wizArray_upd").$ffPrefix.'[fieldHeader]') ) {
             $wizKey = $this->wizard->modData["wizKey"];
           } else {
@@ -140,18 +140,22 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
           $piConf['conf_opt_formViews'] = 0;
           }  
 
-
           // Selector and buttons for action on the fields 
           if (isset($this->wizard->wizArray['formviews'])) {
+            // Get the formviews configuration
+            $formViewsConf = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['kickstarter']['sections']['formviews'];
+
             $opt_formViews = array();
             $opt_formViews[0] = '';
             foreach($this->wizard->wizArray['formviews'] as $key => $view) {
+              // Set the option with the title using the associated style
               $opt_formViews[$key] = $view['title'];
+              $styles_formViews[$key] = $formViewsConf['styles']['value'][$view['type']];
             }
 
             $tempContent[] = '<tr>';
             $tempContent[] = '<td colspan="5">';
-            $tempContent[] = 'Use fields as in ' . $this->renderSelectBox($ffPrefix . '[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews);
+            $tempContent[] = 'Use fields as in ' . $this->renderSelectBox($ffPrefix . '[conf_opt_formViews]',$piConf['conf_opt_formViews'],$opt_formViews, $styles_formViews);
             $tempContent[] = '&nbsp;&nbsp;';
             $tempContent[] = '<input type="button" onclick="document.kickstarter_wizard[\'kickstarter[wizSpecialCmd]\'].value=\'' . 'reorderFields' . '\';' .
               'setFormAnchorPoint(\'' . t3lib_div::shortMd5($this->piFieldName("wizArray_upd") . $ffPrefix . '[fieldHeader]') . '\');' .
@@ -589,6 +593,21 @@ class ux_tx_kickstarter_section_tables extends tx_kickstarter_section_tables {
 		$onCP = $this->getOnChangeParts($prefix);
 		return $this->wopText($prefix).$onCP[0].'<textarea name="'.$this->piFieldName('wizArray_upd').$prefix.'" style="width:'.$width.'px;" rows="'.$rows.'" wrap="OFF" onChange="'.$onCP[1].'"'.$this->wop($prefix).'>'.t3lib_div::formatForTextarea($value).'</textarea>';
 	}
+
+	function renderSelectBox($prefix,$value,$optValues, $styles = array())	{
+		$onCP = $this->getOnChangeParts($prefix);
+		$opt=array();
+		$isSelFlag=0;
+		foreach($optValues as $k=>$v)	{
+			$sel = (!strcmp($k,$value)?' selected="selected"':'');
+			if ($sel)	$isSelFlag++;
+			$style = ($styles[$k] ? 'style="' . $styles[$k] . '" ' : '');
+			$opt[]='<option ' . $style . 'value="'.htmlspecialchars($k).'"'.$sel.'>'.htmlspecialchars($v).'</option>';
+		}
+		if (!$isSelFlag && strcmp('',$value))	$opt[]='<option value="'.$value.'" selected="selected">'.htmlspecialchars("CURRENT VALUE '".$value."' DID NOT EXIST AMONG THE OPTIONS").'</option>';
+		return $this->wopText($prefix).$onCP[0].'<select name="'.$this->piFieldName("wizArray_upd").$prefix.'" onchange="'.$onCP[1].'"'.$this->wop($prefix).'>'.implode('',$opt).'</select>';
+	}
+
   
 }
 

@@ -1598,8 +1598,6 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
                   }
                 }
                                
-//debug($showFields,'$showFields');
-//debug($showFolders,'$showFolders');
                 // Generate the views
                 if (isset($showFolders)) {
                   ksort($showFolders);

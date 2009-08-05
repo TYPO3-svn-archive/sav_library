@@ -89,7 +89,12 @@ plugin.sav_library {
     .sav-library IMG.printButton {width:18px; height:16px;}  
     .sav-library INPUT.generateRTFButton {width:20px; height:20px;}    
     .sav-library IMG.exportButton {padding-right:5px;}        
-    .sav-library INPUT.exportokButton {float:left;padding-right:5px;}        
+    .sav-library IMG.orderAsc {padding:3px 5px 0px 5px;}
+    .sav-library IMG.orderDesc {padding:3px 5px 0px 5px;}
+    .sav-library IMG.orderAscAbove {padding:3px 5px 0px 5px;}
+    .sav-library IMG.orderDescBelow {clear:left;padding:3px 5px 0px 5px;}
+    .sav-library IMG.printButton {width:18px; height:16px;}
+    .sav-library INPUT.exportokButton {float:left;padding-right:5px;}
     .sav-library INPUT.submitButton {font-size:9px;margin-top:1px;}        
     .sav-library IMG.rightArrowButton {float:none; padding-left:2px;margin:0px;}      
     .sav-library IMG.leftArrowButton {float:none; padding-right:2px;margin:0px;}      
@@ -139,6 +144,15 @@ plugin.sav_library {
     .sav-library DIV.title DIV.titleIconLeft A {
       float:left;
     }
+    .sav-library DIV.subForm DIV.title DIV.titleIconLeft {
+      float:left;
+      background-color:inherit;
+      color:inherit;
+      padding:2px 5px 2px 2px;
+    }
+    .sav-library DIV.subForm DIV.title DIV.titleIconLeftVoid {
+      display:none;
+    }
     .sav-library DIV.title DIV.titleLabel { 
       float:left;
       background-color:inherit;
@@ -148,7 +162,13 @@ plugin.sav_library {
       vertical-align:middle;
       padding:4px;
     }    
-    .sav-library DIV.title DIV.titleLabel UL { 
+    .sav-library DIV.title DIV.titleLabel SPAN {
+      float:left;
+    }
+    .sav-library DIV.title DIV.titleLabel DIV.orderAscDesc {
+      float:left;
+    }
+    .sav-library DIV.title DIV.titleLabel UL {
       float:left;
       margin:0px;
       padding:0px; 
@@ -572,11 +592,28 @@ plugin.sav_library {
       vertical-align: baseline;
     }       
   
-  	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner SPAN.checkbox {
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.checkbox {
       float:left;
-      padding:0px 5px 0px 5px;    
+      padding:0px;
 		  margin:0px;
-    } 
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.checkbox SPAN.checkboxSelected {
+      float:left;
+      width:14px;
+      padding:0px;
+		  margin:0px;
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.checkbox SPAN.checkboxNotSelected {
+      float:left;
+      width:14px;
+      padding:0px;
+		  margin:0px;
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.checkbox SPAN.checkboxMessage {
+      float:left;
+      padding:0px;
+		  margin:0px;
+    }
   	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner BR.checkbox {
       clear:left;
       padding:0px;    

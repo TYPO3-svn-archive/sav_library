@@ -32,6 +32,9 @@
 			<label index="check.description">Attributes for &quot;checkbox&quot;</label>
 			<label index="check.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="check.syntax">
+        &lt;b&gt;displayAsImage = 1;&lt;/b&gt;
+        If set, the check box is displayed as an image instead of a label.
+        
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
         Do not display the checkbox value (that is &quot;No&quot;) if it is not checked (obviously it does not apply when in edit mode)
       </label>
@@ -41,8 +44,11 @@
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.
         
+        &lt;b&gt;displayAsImage = 1;&lt;/b&gt;
+        If set, the check box is displayed as an image instead of a label.
+
         &lt;b&gt;doNotDisplayIfNotChecked = 1;&lt;/b&gt;
-        Do not display the checkbox if it is not checked (obviously it does not apply when in edit mode).
+        If set, do not display the check box value (default is &quot;No&quot;) if it is not checked (obviously it does not apply when in edit mode).
 
         &lt;b&gt;nbItems = integer;&lt;/b&gt;
         Number of items to display.
@@ -162,10 +168,10 @@
         &lt;b&gt;Where clause&lt;/b&gt; 
         Defines the WHERE clause for query. It can be:
         . a conventional MySQL clause.
-        - The tag ###user### can be used. It will be replaced by the user uid.
-        - The tag ###uid### can be used. It will be replaced by the current uid record.
-        - The tag ###CURRENT_PID### can be used. It will be replaced by the current page uid.
-        - The tag ###STORAGE_PID### can be used. It will be replaced by the storage page uid.
+        - The marker ###user### can be used. It will be replaced by the user uid.
+        - The marker ###uid### can be used. It will be replaced by the current uid record.
+        - The marker ###CURRENT_PID### can be used. It will be replaced by the current page uid.
+        - The marker ###STORAGE_PID### can be used. It will be replaced by the storage page uid.
         . ###group_list = list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user belongs to the group list. 
         . ###group_list != list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user does not belong to the group list. 
         . ###func:WHERE_Clause####. func must be a valid method defined in the tx_savlibrary class. If the method returns true then the WHERE clause is added otherwise it is omitted. The method may have one parameter.
@@ -231,19 +237,19 @@
         Use the selector to set either &quot;Show all&quot;, &quot;Show single&quot;, &quot;Input form&quot;.
         
         &lt;b&gt;ShowAllTitle, ShowSingleTitle, inputTitle&lt;/b&gt;        
-        The content will be displayed as the title of the view. if metatags ###fieldname### are used, they will be replaced by the label associated with the fieldname.
+        The content will be displayed as the title of the view. if markers ###fieldname### are used, they will be replaced by the label associated with the fieldname.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
-        The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
+        The marker $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
         
         &lt;b&gt;ShowAllItemTemplate&lt;/b&gt;        
-        Template for the &quot;Show all&quot;, &quot;Update view&quot; or &quot;Print view&quot;. The fields to include are defined using metatags ###fieldname###.
-        Metatags ###tablename.fieldname### can also be used. In this case, no processing is performed, the metatag is replaced by the value in the selected row.
+        Template for the &quot;Show all&quot;, &quot;Update view&quot; or &quot;Print view&quot;. The fields to include are defined using markers ###fieldname###.
+        markers ###tablename.fieldname### can also be used. In this case, no processing is performed, the marker is replaced by the value in the selected row.
         
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
-        The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
+        The marker $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
         
-        In the case of a view &quot;Update view&quot; or &quot;Print view&quot;, tags ###field[field_name, label]### generate the display of the label (localization can be used with $$$tag$$$ or $$$label[fieldName]$$$), the current value of field &quot;field_name&quot; and an input element for update.
-        Tags  ###newfield[field_name, label]### generate the display of the label and an input element for the field &quot;field_name&quot;. In both cases, label and field will be wrapped with default CSS classes 
+        In the case of a view &quot;Update view&quot; or &quot;Print view&quot;, markers ###field[field_name, label]### generate the display of the label (localization can be used with $$$tag$$$ or $$$label[fieldName]$$$), the current value of field &quot;field_name&quot; and an input element for update.
+        markers  ###newfield[field_name, label]### generate the display of the label and an input element for the field &quot;field_name&quot;. In both cases, label and field will be wrapped with default CSS classes
         . updateCol1 to updateCol4 for an &quot;Update view&quot; (respectively the label, the previous value, the input value, the checkbox),
         . printCol1 and printCol2 for a &quot;Print view&quot; (respectively the label, the field).
         If you do not want this wrapping, just use $$$label[fieldName]$$$ for the label and ###field[fieldName]### for the field. 
@@ -344,9 +350,9 @@
 
         &lt;b&gt;func = makeNewWindowLink;&lt;/b&gt;
         This function generates an hyperlink associated with the value of the field which opens a new window. Paramaters are :
-        . windowUrl = string; string is the url. The tag ###special[fieldname]### from selectors can be used. This parameter is not necessary if the field is an image.
+        . windowUrl = string; string is the url. The marker ###special[fieldname]### from selectors can be used. This parameter is not necessary if the field is an image.
         Optional attributes can be added:
-        . windowText = string; string will be added above the image. The tag ###special[fieldname]### from selectors can be used.
+        . windowText = string; string will be added above the image. The marker ###special[fieldname]### from selectors can be used.
         . windowBodyStyle = string; string will be added as the style attribute to the body html tag. Do not forget to use \; for style attributes, 
         since the semi-colon is use to split field attributes, and do not forget to end your definition by a semi-colon
         Example: windowBodyStyle = fontweight:bold\;font-color:blue\;;
@@ -401,8 +407,8 @@
 			<label index="general.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="general.syntax">
         &lt;b&gt;addEdit = 1;&lt;/b&gt; 
-        When the field is used in an &quot;Update form&quot; view, it will add an input element for update that can be used with the tag ###field_name_Edit### where &quot;field_name&quot; is the name of the field.
-        See also the help for Form views (showAllItemTemplate) to see how to use tags ###field[field_name, label]###. 
+        When the field is used in an &quot;Update form&quot; view, it will add an input element for update that can be used with the marker ###field_name_Edit### where &quot;field_name&quot; is the name of the field.
+        See also the help for Form views (showAllItemTemplate) to see how to use markers ###field[field_name, label]###.
 
         &lt;b&gt;addEditIfNull = 1;&lt;/b&gt; 
         Same as addEdit but the element will be added only if the field is null. 
@@ -440,7 +446,7 @@
         Cut the field if null.
         
         &lt;b&gt;cutIf=fieldName=value;&lt;/b&gt;
-        Cuts the field if current value of the field is equal to the given value. The tags ###user### or ###cruser### (same as user but should be used if a new record is created) will be replaced by the user id.
+        Cuts the field if current value of the field is equal to the given value. The markers ###user### or ###cruser### (same as user but should be used if a new record is created) will be replaced by the user id.
         Use EMPTY for the value to test an empty field.
         
         &lt;b&gt;cutIf=fieldName!=value;&lt;/b&gt;
@@ -502,12 +508,12 @@
         If the field is a checkbox, it is used as a flag to verify is the mail has to be sent. Mail information are the following:
         . fieldForCheckMail=field_name; The mail will be sent if the value of the fieldname for the current row is not null. 
         . mailIfFieldSetTo=string; The mail will be sent if the value of the fieldname for the current row was previoulsy null or zero and is set to the given string value. 
-        . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
+        . mailSender=string; mail of the sender. marker ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
         . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias &quot;value&quot; that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
-        . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
-        . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value. 
+        . mailSubject=string; subject of the mail. markers ###fieldname### are allowed and will be replaced by their current value.
+        . mailMessage=string, mail message. markers ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
         . mailMessageLanguage=string; This parameter will force the language for the message to the value of the string.
@@ -515,12 +521,12 @@
         
         &lt;b&gt;mailAlways = 1;&lt;/b&gt; (mail must be set to 1)
         The mail is always sent when saving. Mail information are the following:
-        . mailSender=string; mail of the sender. Metatag ###user_email### will be replaced by the user email.
+        . mailSender=string; mail of the sender. marker ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
         . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias &quot;value&quot; that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
-        . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
-        . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value.
+        . mailSubject=string; subject of the mail. markers ###fieldname### are allowed and will be replaced by their current value.
+        . mailMessage=string, mail message. markers ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
         . mailMessageLanguage=string; This parameter will force the language for the message to the value of the string.
@@ -528,12 +534,12 @@
         
         &lt;b&gt;mailAuto = 1;&lt;/b&gt; (mail must be set to 1)
         The mail is sent when saving if the field is not empty and if one field in the form is changed. Mail information are the following:
-        . mailSender=string; mail of the sender. The tag ###user_email### will be replaced by the user email.
+        . mailSender=string; mail of the sender. The marker ###user_email### will be replaced by the user email.
         . mailReceiver=string; mail of the person who will receive the mail and process the information.
         . mailReceiverFromField=field_name; The field_name contains the mail of the person who will receive the mail and process the information.
         . mailReceiverFromQuery=MySQL_Query; The receiver is obtained from a select query with an alias &quot;value&quot; that will used to retreive the receiver. Example: SELECT email as value from fe_users where ...
-        . mailSubject=string; subject of the mail. Metatags ###fieldname### are allowed and will be replaced by their current value.
-        . mailMessage=string, mail message. Metatags ###fieldname### are allowed and will be replaced by their current value.
+        . mailSubject=string; subject of the mail. markers ###fieldname### are allowed and will be replaced by their current value.
+        . mailMessage=string, mail message. markers ###fieldname### are allowed and will be replaced by their current value.
         . mailcc=string; if set the string is used as Cc: for the mail.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
         . mailMessageLanguage=string; This parameter will force the language for the message to the value of the string.
@@ -543,17 +549,27 @@
         The value will be displayed in place of the label. Not so useful since the label can be cut.
 
         &lt;b&gt;orderLinkInTitle = 1;&lt;/b&gt;
-        If this parameter is set, it makes it possible to generate an hyperlink in the title bar of the &quot;showAll&quot;. The hyperlink is asscoiated with the field if the tag ###fieldname###
+        If this parameter is set, it makes it possible to generate an hyperlink in the title bar of the &quot;showAll&quot;. The hyperlink is asscoiated with the field if the marker ###fieldname###
         is used in the &quot;showAllTitle&quot; section. Order clauses have to be defined in the &quot;Where Tags&quot; section of the &quot;Query Form&quot; with &quot;+&quot; and &quot;-&quot; sign added after &quot;fieldname&quot;. 
         Use for example:
           'fieldmane+' =&gt; array('order' =&gt; 'tablename.fieldname'),
           'fieldmane-' =&gt; array('order' =&gt; 'tablename.fieldname desc'),
 
+        &lt;b&gt;orderLinkInTitleSetup = string;&lt;/b&gt;
+        This property controls the display of the link when orderLinkInTitle is set. The format is “param1:param2:param3” where “param1” to “param3” can take the following values:
+        . value: the field value is displayed,
+        . link: the field value is displayed with a link with toggle the sort,
+        . asc: an icon is displayed with a link to make an ascending sort,
+        . desc: an icon is displayed with a link to make a descending sort,
+        . ascdesc: two icons are displayed with separate links to make an ascending or descending sort,
+        . if there is no value, nothing is displayed.
+        The default is &quot;:link:&quot;.
+
         &lt;b&gt;query = SQL statements;&lt;/b&gt;
         The query will be executed once the input form data have been saved. Therefore, it can only be used with &quot;input&quot; or &quot;update&quot; views.
         Because any query may be executed, for security reason, this property can only be used if an admin user has checked the field “Allow the use of the “query” property” in the advanced folder of the flexform.
         It may be useful, for example, to update a specific table when the current data are saved. Several queries can be used in the SQL statements. Each query must be separated using &quot;\;&quot;.
-        Special tags can be used in the statement :
+        Special markers can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###CURRENT_PID### will be replaced by the current page uid.
         . ###STORAGE_PID### will be replaced by the storage page uid.
@@ -565,11 +581,11 @@
 
         &lt;b&gt;queryForEach = field_name;&lt;/b&gt;
         If the field is a true MM relation, the query, as defined above, will be executed for all the record in the relation.
-        The special tag ###field_name###, where &quot;field_name&quot; is the field where the relation is defined, can be used to identify the record. It will be replaced by the uid of the associated record.
+        The special marker ###field_name###, where &quot;field_name&quot; is the field where the relation is defined, can be used to identify the record. It will be replaced by the uid of the associated record.
         
         &lt;b&gt;reqValue = SQL SELECT statement;&lt;/b&gt;
         SQL SELECT statement must have an alias &quot;value&quot; which will be used as the value to display.
-        Special tags can be used in the statement :
+        Special markers can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###uidItem### will be replaced by the uid of the current subform item.
         . ###user### will be replaced by the user id.
@@ -592,7 +608,7 @@
         &lt;b&gt;tsProperties = string;&lt;/b&gt;
         It defines the properties of the TS cObject.
         Markers ###fieldName### can be used. The marker will be replaced by the current value of the field.
-        Localization tags $$$tag$$$ can also be used. The tag will be replaced by its value according to the configuration language.
+        Localization markers $$$tag$$$ can also be used. The tag will be replaced by its value according to the configuration language.
         Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it &quot;\;&quot;
 
         &lt;b&gt;verifier = verifier_name;&lt;/b&gt;
@@ -608,7 +624,7 @@
         &lt;b&gt;verifierMessage = string;&lt;/b&gt;
         It replaces the default message.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
-        The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
+        The marker $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
 
         &lt;b&gt;verifierParam = expression;&lt;/b&gt;
         The expression can be :
@@ -624,7 +640,7 @@
         &lt;b&gt;wrapItem = string;&lt;/b&gt;
         The string will be used to wrap the item. The syntax in the same as in TypoScript.
         Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
-        The tag $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
+        The marker $$$label[fieldName]$$$ will be replaced by the fieldName title according to the localization.
 
       </label>
 			<label index="graph.description">Attributes for &quot;XML Graph&quot;</label>
@@ -648,11 +664,11 @@
         &lt;b&gt;generateRTF=1;&lt;/b&gt;
         Sets the RTF generator.
         &lt;b&gt;templateRTF=filename;&lt;/b&gt;
-        Defines the template to be used by the RTF generator. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
+        Defines the template to be used by the RTF generator. Field markers ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
         &lt;b&gt;saveFileRTF=filename;&lt;/b&gt;
-        Name under which the generated file will be saved. Field tags ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
+        Name under which the generated file will be saved. Field markers ###tableName.fieldName### or ###fieldName### (for aliases) can be used.
         &lt;b&gt;tableName.fieldName=string1-&gt;string2;&lt;/b&gt;
-        In an rtf document, if the field tag ###tableName.fieldName### exists string1 will be replaced by string2. String1 can be NL (for the ASCII character LF).
+        In an rtf document, if the field marker ###tableName.fieldName### exists string1 will be replaced by string2. String1 can be NL (for the ASCII character LF).
         It may be useful when one wants to input data in a textarea and display them in one line with a given separator in the file.
         &lt;b&gt;link = string;&lt;/b&gt;
         The string will be used for the link instead of the field value.
@@ -668,6 +684,10 @@
 			<label index="radio.syntax">
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.     
+
+        &lt;b&gt;displayAsImage = 1;&lt;/b&gt;
+        If set, the radio buttons are displayed as images instead of labels.
+
       </label>
 			<label index="rel.description">Attributes for &quot;Database relation&quot;</label>
 			<label index="rel.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
@@ -675,7 +695,7 @@
         1) Selectorbox, select global
         
         &lt;b&gt;aliasSelect = field_name;&lt;/b&gt;
-        Defines an alias used in the SELECT query. Tags ###fieldname### can be used, fieldname must be in the relation table.
+        Defines an alias used in the SELECT query. markers ###fieldname### can be used, fieldname must be in the relation table.
         &lt;b&gt;labelSelect = field_name;&lt;/b&gt;
         Defines the label from field_name for the selector.
         &lt;b&gt;additionalTableSelect = comma-separated table names;&lt;/b&gt;
@@ -685,17 +705,17 @@
         &lt;b&gt;whereSelect=string;&lt;/b&gt;      			
         Defines the WHERE clause for the selector. It can be:
         . a conventional MySQL clause. 
-        - The tag ###user### can be used. It will be replaced by the user uid.
-        - The tag ###uid### can be used. it will be replaced by the main current record.
-        - The tag ###CURRENT_PID### can be used. It will be replaced by the current page uid.
-        - The tag ###STORAGE_PID### can be used. It will be replaced by the storage page uid.
+        - The marker ###user### can be used. It will be replaced by the user uid.
+        - The marker ###uid### can be used. it will be replaced by the main current record.
+        - The marker ###CURRENT_PID### can be used. It will be replaced by the current page uid.
+        - The marker ###STORAGE_PID### can be used. It will be replaced by the storage page uid.
         . ###group_list = list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user belongs to the group list. 
         . ###group_list != list_of_comma_separed_fe_groups###. To be used with a selector on fe_users. It checks if the user does not belong to the group list. 
         &lt;b&gt;groupBySelect=string;&lt;/b&gt;
         Defines the GROUP BY clause for the selector.
         &lt;b&gt;content=SQL select statement;&lt;/b&gt;
         SQL select statement must have an alias &quot;uid&quot; and an alias &quot;label&quot; which will be used as the value to display.
-        Special tags can be used in the statement :
+        Special markers can be used in the statement :
         . ###uid### will be replaced by the current record uid.
         . ###uidSelected### will be replaced by the selected item.
         . ###user### will be replaced by the user id.
@@ -711,7 +731,7 @@
         &lt;b&gt;separator = string;&lt;/b&gt;
         It should be used when the max number of relations is greater than 1 (not true MM-relation) to replace the default &lt; br /&gt; separator between items in showAll or showSingle views.       
         &lt;b&gt;specialFields = comma-separated list of fields;&lt;/b&gt;
-        The value of the fields will be propagated in the ###special[fieldname]### tag when available.
+        The value of the fields will be propagated in the ###special[fieldname]### marker when available.
         &lt;b&gt;singleWindow = 1;&lt;/b&gt;
         In case of a MM relation, a double window is used to select items. When this option is used, a single selectorbox in multiple mode is used.
         &lt;b&gt;overrideEnableFields = 1;&lt;/b&gt;    

@@ -139,6 +139,16 @@ class utils_testcase extends tx_phpunit_testcase {
     ));
     $this->assertEquals('<span class="test">Test content</span>', $this->fixture->htmlSpanElement($attributes, 'Test content'));
   }
+
+  public function test_htmlDivElement() {
+    $attributes = array(
+    );
+    $this->assertEquals('<div>Test content</div>', $this->fixture->htmlDivElement($attributes, 'Test content'));
+    $attributes = array_merge($attributes, array(
+      $this->fixture->htmlAddAttribute('class', 'test'),
+    ));
+    $this->assertEquals('<div class="test">Test content</div>', $this->fixture->htmlDivElement($attributes, 'Test content'));
+  }
   
   public function test_htmlOptionElement() {
     $attributes = array(
