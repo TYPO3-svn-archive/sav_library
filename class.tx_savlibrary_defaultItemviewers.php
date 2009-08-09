@@ -2830,6 +2830,9 @@ class tx_savlibrary_defaultItemviewers {
       // Define the main directory
       define('JP_maindir', t3lib_extMgm::extPath('sav_jpgraph') . 'src/');
 
+      // Define the cache dir
+      define('CACHE_DIR', 'typo3temp/sav_jpgraph/');
+    
       // Require the xml class
       require_once(t3lib_extMgm::extPath('sav_jpgraph'). 'class.typo3.php');
       require_once(t3lib_extMgm::extPath('sav_jpgraph'). 'class.xmlgraph.php');
