@@ -34,6 +34,7 @@
 			<label index="pi_flexform.permanentFilter">Permanent filter</label>
 			<label index="pi_flexform.addFragment">Add a fragment(#content id) to links</label>
 			<label index="pi_flexform.allowQueryProperty">Allow the use of the &quot;query&quot; property</label>
+			<label index="pi_flexform.allowExec">Allow the use of the exec function in export</label>
 			<label index="pi_flexform.helpPage">Help page</label>
 			<label index="pi_flexform.help">Help</label>
 			<label index="pi_flexform.storagePage">Storage page</label>
@@ -80,7 +81,7 @@
 			<label index="error.incorrectQueryForeignTable">The &quot;foreign table&quot; field in the query must start either by inner join, left join, right join or by a comma.</label>
 			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library have not the same version. Open the extension with the kickstater and save it.</label>
 			<label index="error.incorrectXmlFile">The XML file contains syntax errors: %s.</label>
-			<label index="error.incorrectXmlProducedFile">The XML file produced during the export contains syntax errors. It may come from your template xml file.</label>
+			<label index="error.incorrectXmlProducedFile">The XML file produced during the export contains syntax errors. It may come from your template xml file: %s.</label>
 			<label index="error.incorrectXsltFile">The XSL tranformation file contains syntax errors: %s.</label>
 			<label index="error.incorrectXsltProcess">The XSL tranformation failed.</label>
 			<label index="error.isValidLength">The input has a length greater than the allowed length.</label>
@@ -109,7 +110,10 @@
 			<label index="error.verifierUnknown">Extension configuration error: unknown verifier.</label>
 			<label index="error.verifierInvalidIntervalParameter">Extension configuration error: invalid interval.</label>
 			<label index="error.xmlIdMissing">An xml &quot;sav_id&quot; attribute must be used with the following &quot;sav_type&quot; attribute: %s.</label>
-			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form.</label>
+			<label index="error.xmlError">Error: %s.</label>
+			<label index="error.xmlErrorMessage">%s in line %s</label>
+			<label index="error.xmlErrorFile">see the file</label>
+      <label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form.</label>
 			<label index="fatal.notAuthenticated">Fatal error. You must be authenticated to save these data.</label>
 			<label index="button.edit">Edit</label>
 			<label index="button.save">Save</label>
@@ -163,6 +167,7 @@
 			<label index="itemviewer.configurationGroup">Group</label>
 			<label index="itemviewer.xmlFile">XML file</label>
 			<label index="itemviewer.xsltFile">XSLT file</label>
+			<label index="itemviewer.exec">Exec</label>
 			<label index="itemviewer.whereClause">Where clause</label>
 			<label index="itemviewer.orderClause">Order clause</label>
 			<label index="itemviewer.error">Error</label>

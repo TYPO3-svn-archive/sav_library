@@ -1160,7 +1160,7 @@ class tx_savlibrary_defaultViewers {
     );
     $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
     
-    // Display the filed for the XLST file
+    // Display the field for the XLST file
     $config = array(
       'size' => 80,
   		'elementControlName' => $this->savlibrary->formName . '[xsltFile][0]',
@@ -1173,6 +1173,20 @@ class tx_savlibrary_defaultViewers {
     );
     $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
     
+    // Display the field for the exec command
+    if ($this->savlibrary->conf['allowExec']) {
+      $config = array(
+        'size' => 80,
+    		'elementControlName' => $this->savlibrary->formName . '[exec][0]',
+        'value' => $extPOSTVars['exec'][0],
+      );
+      $cutters = array();
+      $markers = array(
+        'Label' => $this->savlibrary->getLibraryLL('itemviewer.exec'),
+        'Value' => $this->savlibrary->itemviewers->viewStringInputEditMode($config),
+      );
+      $ta['REGIONS']['items'][] = $this->buildItemArray($markers, $cutters);
+    }
 
     // Display the error if any
     if (isset($res['ERROR'])) {
@@ -1502,12 +1516,13 @@ class tx_savlibrary_defaultViewers {
             // Write the content to the output file
             $arrError['fwrite'] = fwrite($fileHandle, $this->csvValues($markerArray, ';') . chr(10));
           }
+          $previousRow = $row;
         }
 
         // Post process the XML file if any
         if ($extPOSTVars['xmlFile'][0]) {
             // process last markers
-            if(!$this->postprocessXmlReferenceArray($row, $markerArray)) {
+            if(!$this->postprocessXmlReferenceArray($previousRow, $markerArray)) {
               return $ta;
             }
         }
@@ -1522,10 +1537,29 @@ class tx_savlibrary_defaultViewers {
 
             // Load the XML source
             $xml = new DOMDocument;
+            libxml_use_internal_errors(true);
+
             if (@$xml->load($filePath . $xmlfileName) === false) {
+            
+              $conf['parameter'] = 'typo3temp/' . $this->extKey . '/' . $xmlfileName;
+              $conf['target'] = '_blank';
               $this->savlibrary->addError(
-                'error.incorrectXmlProducedFile'
+                'error.incorrectXmlProducedFile',
+                  $this->cObj->typoLink($this->savlibrary->getLibraryLL('error.xmlErrorFile'), $conf)
               );
+
+              // Get the errors
+              $errors = libxml_get_errors();
+              foreach ($errors as $error) {
+                $addMessage = sprintf($GLOBALS['TSFE']->sL('LLL:EXT:sav_library/locallang.xml:error.xmlErrorMessage'), $error->message, $error->line);
+                $this->savlibrary->addError(
+                  'error.xmlError',
+                  $addMessage
+                );
+              }
+              
+
+              libxml_clear_errors();
               return $ta;
             }
 
@@ -1581,8 +1615,35 @@ class tx_savlibrary_defaultViewers {
             $arrError['copy'] = copy($xmlfilePath . $xmlfileName, $filePath . $fileName);
           }
         }
+        
         clearstatcache();
 			  t3lib_div::fixPermissions($filePath . $fileName);
+
+			  // Check if an Exec command exists, if allowec
+			  if ($this->savlibrary->conf['allowExec']) {
+          if ($extPOSTVars['exec'][0]) {
+            // Replace some tags
+            $cmd = str_replace('###FILE###',$filePath . $fileName, $extPOSTVars['exec'][0]);
+            $cmd = str_replace('###SITEPATH###', dirname(PATH_thisScript), $cmd);
+
+
+            // Process the command if not in safe mode
+            if (!ini_get('safe_mode')) {
+              $cmd = escapeshellcmd($cmd);
+            }
+            
+            // Special processing for white spaces in windows directories
+            $cmd = preg_replace('/\/(\w+\s\w+)\//', '/"$1"/', $cmd);
+
+            // Exec the command
+            exec ($cmd);
+
+
+            return $ta;
+          }
+        }
+
+
 
 		    if (!in_array(FALSE, $arrError)) {
           header('Content-Disposition: attachment; filename=' . $fileName);
@@ -1747,6 +1808,15 @@ class tx_savlibrary_defaultViewers {
 	 */
 	public function processXmlReferenceArray($row, $markerArray) {
 
+    // Special processing
+    foreach ($markerArray as $key => $value) {
+      // Replace & by &amp;
+      $markerArray[$key] = str_replace('& ', '&amp; ', $markerArray[$key]);
+
+      // Suppress empty tags
+      $markerArray[$key] = preg_replace('/<[^\/>][^>]*><\/[^>]+>/', '', $markerArray[$key]);
+    }
+
     // Set the file Path
     $filePath = PATH_site . 'typo3temp/' . $this->extKey . '/';
     
@@ -1754,7 +1824,6 @@ class tx_savlibrary_defaultViewers {
     foreach ($this->xmlReferenceArray as $key => $value) {
       switch ($value['type']) {
         case 'replacedistinct':
-
           if ($row[$value['id']] != $value['fieldValue']) {
             if (!is_null($value['fieldValue'])) {
               // Set all the previous replaceDistinct ids to "changed"
@@ -1771,7 +1840,6 @@ class tx_savlibrary_defaultViewers {
       switch ($value['type']) {
         case 'replacedistinct':
           if ($value['changed']) {
-
             // Parse the template with the previous known markers
             $buffer = utf8_decode($value['template']);
             $buffer = $this->cObj->substituteMarkerArrayCached(
@@ -1780,16 +1848,16 @@ class tx_savlibrary_defaultViewers {
               array(),
               array()
             );
-            
+
             $fileName = $key . '.xml';
-            
+
             if(!$this->replaceReferenceMarkers($filePath, $fileName, $buffer)) {
               return false;
             }
             
             $this->recursiveChangeField($key, 'changed', false);
             $this->unlinkReplaceAlways($filePath, $key);
-          }
+          } 
           break;
         case 'cutifnull':
         case 'cutifempty':
@@ -1811,7 +1879,7 @@ class tx_savlibrary_defaultViewers {
           // The processing of the cutters depends on their place with respect to the replaceAlways attribute
           $isChildOfReplaceAlways = $this->isChildOfReplaceAlways($key);
           if ($isChildOfReplaceAlways) {
-            $value['changed']=true;
+            $value['changed'] = true;
             $fieldValue = $value['fieldValue'];
             $marker = $markerArray;
           } else {
@@ -1924,14 +1992,21 @@ class tx_savlibrary_defaultViewers {
 	 */
 	public function postprocessXmlReferenceArray($row, $markerArray) {
 
-    // Check if there is at least on replaceDistinct item
+    // Mark all references as changed
+    $replacedistinct = FALSE;
     foreach($this->xmlReferenceArray as $key => $value) {
-      if ($value['type'] == 'replacedisctinct') {
-        // Process row one more time
-        if (!$this->processXmlReferenceArray($row, $markerArray)) {
-            return false;
-        }
-        break;
+      $this->xmlReferenceArray[$key]['changed'] = true;
+      switch ($value['type']) {
+        case 'replacedistinct':
+          $replacedistinct = TRUE;
+          break;
+      }
+    }
+    
+    // Process all the references one more time
+    if ($replacedistinct) {
+      if (!$this->processXmlReferenceArray($row, $markerArray)) {
+        return false;
       }
     }
 
@@ -1945,7 +2020,6 @@ class tx_savlibrary_defaultViewers {
     //Post-processing
     foreach($this->xmlReferenceArray as $key => $value) {
       switch ($value['type']) {
-
         case 'replacelast':
           $utf8Encode = true;
           $altPattern = '/(?s)(.*)(###)(REF_[^#]+)(###)(.*)/';
@@ -2055,6 +2129,7 @@ class tx_savlibrary_defaultViewers {
           $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
           $buffer = $this->savlibrary->processConstantTags($buffer);
           $buffer = $this->savlibrary->processLocalizationTags($buffer);
+          
 
           fwrite($fileHandle, $buffer);
           $fileNameRef = $matches[3][$keyMatch] . '.xml';

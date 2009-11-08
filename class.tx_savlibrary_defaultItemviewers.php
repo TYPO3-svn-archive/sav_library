@@ -1058,7 +1058,7 @@ class tx_savlibrary_defaultItemviewers {
         } else {
           $fileArray = explode(',', $config['value']);
         }
-        
+
         // One or several images to display. Set parameters
         foreach($fileArray as $file) {
         
@@ -1074,7 +1074,7 @@ class tx_savlibrary_defaultItemviewers {
             } else {
               $out = $this->savlibrary->makeImage($file, '', $params);
             }
-                 
+
             if ($config['func']=='makeNewWindowLink') {
               $out = $this->savlibrary->makeNewWindowLink (
                 $out,
@@ -2131,6 +2131,11 @@ class tx_savlibrary_defaultItemviewers {
           ',' . $config['additionaltableselect'] :
           ''
         ) .
+        (
+          $config['additionaljointableselect'] ?
+          ' ' . $config['additionaljointableselect'] :
+          ''
+        ) .
 				'',
 			/* WHERE    */	'1' .
  			  (
@@ -2411,6 +2416,9 @@ class tx_savlibrary_defaultItemviewers {
           $GLOBALS['TCA'][$allowed_table]['ctrl']['default_sortby']
         )
       );
+      if ($order == 'sorting') {
+        $order = ($config['MM'] ? $config['MM'] . '.' . $order : $order);
+      }
       $maxSubItems = (
         isset($config['maxsubitems']) ?
         $config['maxsubitems'] :

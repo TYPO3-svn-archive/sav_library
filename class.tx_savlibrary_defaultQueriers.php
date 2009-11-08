@@ -1336,7 +1336,6 @@ class tx_savlibrary_defaultQueriers {
         $fieldQuery = $configTable[$keyField]['query']; 
 
   			foreach($valueField as $key => $value) {
-
           // Check if the use of the query property is allowed
           if (!$this->savlibrary->conf['allowQueryProperty']) {
             $error = true;
@@ -1345,7 +1344,8 @@ class tx_savlibrary_defaultQueriers {
           }
         
           if (!$configTable[$keyField]['queryonvalue'] || ($configTable[$keyField]['queryonvalue'] == $value)) {
-            $mA["###uid###"] = $this->savlibrary->uid;
+            $mA["###uid###"] = intval($this->savlibrary->uid);
+            $mA['###uidItem###'] = intval($key);
             $mA["###CURRENT_PID###"] = $GLOBALS['TSFE']->page['uid'];
             $mA["###value###"] = $val;
             $mA["###user###"] = $GLOBALS['TSFE']->fe_user->user['uid'];

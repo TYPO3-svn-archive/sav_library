@@ -70,6 +70,9 @@
         &lt;b&gt;Allow the use of the &quot;query&quot; property&lt;/b&gt;
         The &quot;query&quot; property makes it possible to execute queries in &quot;input&quot; or &quot;update&quot; forms.
         Because any query may be executed, for security reason, only admin users can check this field must when this property is needed.
+        
+        &lt;b&gt;Allow the use of the exec function in export&lt;/b&gt;
+        The use of the php exec function is allowed in export which makes the execution of text processors possible, for example.
 
         &lt;b&gt;Storage page&lt;/b&gt;
         This option makes it possible to store your record in a storage page, for example a &quot;sysfolder&quot;, otherwise records are stored in the current page.
