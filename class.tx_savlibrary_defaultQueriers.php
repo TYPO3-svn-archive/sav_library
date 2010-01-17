@@ -346,16 +346,23 @@ class tx_savlibrary_defaultQueriers {
 		}
     $this->savlibrary->addMessage('message.clikToUpdate');
 
-    // Gest the variable
+    // Get the variable
     $extPOSTVars = t3lib_div::_POST($this->savlibrary->formName); 
-
+    $error = false;
+    
     // Buid the configuration table
     $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
     $configTable = $this->buildConfigurationTable($viewConfiguration);
-    
+
+    // Get the uploaded files
+    $errorForm = $this->uploadFiles($this->savlibrary->formName, $configTable, $extPOSTVars);
+    if (is_array($errorForm)) {
+      $error = true;
+    }
+
     // Verify the required fields
     if (is_array($extPOSTVars)) {
-      $error = false;
+
       foreach ($extPOSTVars as $keyVar => $valueVar) {
         if (is_array($valueVar) && isset($configTable[$keyVar])) {
           foreach ($valueVar as $key => $value) {
@@ -370,7 +377,7 @@ class tx_savlibrary_defaultQueriers {
     }     
 
     // Check if it is the Admin mode
-    if ($extPOSTVars['formAction']=='updateFormAdmin') {
+    if ($extPOSTVars['formAction'] == 'updateFormAdmin') {
       // Prepare data for update
       foreach($_POST[$this->savlibrary->formName] as $field => $value) {
         if(!$_POST['Check_'.$this->savlibrary->formName][$field]) {
@@ -453,7 +460,13 @@ class tx_savlibrary_defaultQueriers {
      	); 
 
       if ($error) {
-       	$this->savlibrary->addError($errorForm);      
+        if (is_array($errorForm)) {
+          foreach ($errorForm as $keyField => $valueField){
+       	    $this->savlibrary->addError(current($valueField));
+          }
+        } else {
+       	  $this->savlibrary->addError($errorForm);
+        }
       } else {    	
        	$this->savlibrary->addMessage('message.dataSaved', '', 'datasaved');
       }
@@ -768,77 +781,12 @@ class tx_savlibrary_defaultQueriers {
 		}
 		$error = false;
 
-		// check for uploaded files
-		if (is_array($GLOBALS['_FILES'][$this->savlibrary->formName])) {	
-			foreach($GLOBALS['_FILES'][$this->savlibrary->formName]['name'] as $key => $value) {
-			
-				if (array_key_exists($key, $configTable)) {
-				  foreach ($value as $k => $v) {
+    // Get the uploaded files
+    $errorForm = $this->uploadFiles($this->savlibrary->formName, $configTable, $row);
+    if (is_array($errorForm)) {
+      $error = true;
+    }
 
-            // Insert the file name in the row
-            $v = str_replace(' ', '_', $v);
-            if ($v) {
-         						  
-              $config = $configTable[$key];
-               
-              // Verification 
-              $func = $config['verifier'];
-              if ($func) {
-                if (method_exists($this->savlibrary->verifiers, $func)) {
-                  $temp = $this->savlibrary->verifiers->$func($v, $config['verifierparam']);
-                  if (!$errorForm[$key][$k] && $temp) {
-                    $errorForm[$key][$k] = $temp;
-                    $error_field = true;
-                  }
-                } else {
-                  $error_field = true;
-				          $errorForm[$key][$k] = 'error.verifierUnknown';
-                }      
-              }            
-	
-              if (!$error_field) {
-  						  $row[$key][$k] = $v;
-  						  $value = $v;
-					       // check if the file extention is allowed
-                $path_parts = pathinfo($value);
-
-                if (($config['allowed'] && strpos($config['allowed'], $path_parts['extension']) === false)
-                  || (!$config['allowed'] && (strpos($config['disallowed'], $path_parts['extension']) === true))
-                  ) {
-						      $error = true;
-						      $errorForm[$key][$k] = 'error.extensionNotAllowed';
-                } else {
-
-  						    // create the directories if necessary
-  						    $uploadfolder = $config['uploadfolder'] . ($row['addtouploadfolder'][$k] ? '/' . $row['addtouploadfolder'][$k] : '');
-
-  						    $dirs = explode('/',$uploadfolder);
-  						    $path = '.';
-  						    foreach($dirs as $dir){ 
-                    $path .= '/' . $dir;
-  						      if (!is_dir($path)) {
-                      if(!mkdir($path)) {
-                        $error = true;
-                        $errorForm[$key][$k] = 'error.mkdirIncorrect';
-                      }
-  							    }
-  						    }
-
-  						    // Move the file in the uploadfolder
-  						    if (!move_uploaded_file($GLOBALS['_FILES'][$this->savlibrary->formName]['tmp_name'][$key][$k], $uploadfolder . '/' . $value)) {
-                    $error = true;
-  							    $errorForm[$key][$k] = 'error.uploadedIncorrect';
-  						    }
-  					    }
-					    }
-					  }
-					}
-				}
-			}
-			// Unset the hidden parameter with the additional path to the uploadfolder
-			unset($row['addtouploadfolder']);
-		}
-		
 		// Remove the fields or make special processing when special processing is needed
 		$regularRow = $row;
 		$special = array();
@@ -1342,7 +1290,7 @@ class tx_savlibrary_defaultQueriers {
             $errorForm[$keyField][$key] = 'error.queryPropertyNotAllowed';
             continue;
           }
-        
+
           if (!$configTable[$keyField]['queryonvalue'] || ($configTable[$keyField]['queryonvalue'] == $value)) {
             $mA["###uid###"] = intval($this->savlibrary->uid);
             $mA['###uidItem###'] = intval($key);
@@ -1547,6 +1495,102 @@ class tx_savlibrary_defaultQueriers {
    ***************************************************************/
 
 	/**
+	 * upload Files
+	 *
+   * @param $table string (table name)
+ 	 *
+	 * @return string
+	 */
+  public function uploadFiles($formName, &$configTable, &$row) {
+		// check for uploaded files
+		if (is_array($GLOBALS['_FILES'][$formName])) {
+      $error = false;
+			foreach($GLOBALS['_FILES'][$formName]['name'] as $keyField => $valueField) {
+			
+        $errorField = false;
+
+				if (array_key_exists($keyField, $configTable)) {
+				  foreach ($valueField as $key => $value) {
+
+            // Insert the file name in the row
+            $value = str_replace(' ', '_', $value);
+            if ($value) {
+
+              $config = $configTable[$keyField];
+
+              // Verification
+              $func = $config['verifier'];
+              if ($func) {
+                if (method_exists($this->savlibrary->verifiers, $func)) {
+                  $temp = $this->savlibrary->verifiers->$func($value, $config['verifierparam']);
+                  if (!$errorForm[$keyField][$key] && $temp) {
+                    $errorForm[$keyField][$key] = $temp;
+                    $errorField = true;
+                  }
+                } else {
+                  $errorField = true;
+				          $errorForm[$keyField][$key] = 'error.verifierUnknown';
+                }
+              }
+
+              if (!$errorField) {
+  						  $valueField = $value;
+					       // check if the file extention is allowed
+                $path_parts = pathinfo($valueField);
+
+                if (($config['allowed'] && strpos($config['allowed'], $path_parts['extension']) === false)
+                  || (!$config['allowed'] && (strpos($config['disallowed'], $path_parts['extension']) !== false))
+                  ) {
+						      $error = true;
+						      $errorForm[$keyField][$key] = 'error.extensionNotAllowed';
+                } else {
+
+                  // Add the field to the row
+  						    $row[$keyField][$key] = $value;
+
+  						    // create the directories if necessary
+  						    $uploadfolder = $config['uploadfolder'] . ($row['addtouploadfolder'][$key] ? '/' . $row['addtouploadfolder'][$key] : '');
+
+  						    $dirs = explode('/',$uploadfolder);
+  						    $path = '.';
+  						    foreach($dirs as $dir){
+                    $path .= '/' . $dir;
+  						      if (!is_dir($path)) {
+                      if(!mkdir($path)) {
+                        $error = true;
+                        $errorForm[$keyField][$key] = 'error.mkdirIncorrect';
+                      }
+  							    }
+  						    }
+
+  						    // Move the file in the uploadfolder
+  						    if (!move_uploaded_file($GLOBALS['_FILES'][$formName]['tmp_name'][$keyField][$key], $uploadfolder . '/' . $valueField)) {
+                    $error = true;
+  							    $errorForm[$keyField][$key] = 'error.uploadedIncorrect';
+  						    }
+  					    }
+					    } else {
+                $error = true;
+              }
+					  }
+					}
+				}
+			}
+			// Unset the hidden parameter with the additional path to the uploadfolder
+			unset($row['addtouploadfolder']);
+			if ($error) {
+        return $errorForm;
+      } else {
+        return false;
+      }
+		}
+  }
+
+
+
+
+
+	/**
 	 * Get allowed Pages from the starting point and the storage page
 	 *
    * @param $table string (table name)
@@ -1699,7 +1743,7 @@ class tx_savlibrary_defaultQueriers {
     $headers .= 'Return-Path: ' . $mailSender . "\r\n";
     if ($config['mailcc']) {
       $headers .= 'Cc: ' . $config['mailcc'] . "\r\n";
-    } 
+    }
 
     if (!ini_get('safe_mode')) {
 			// If safe mode is on, the fifth parameter to mail is not allowed,
@@ -1880,9 +1924,9 @@ class tx_savlibrary_defaultQueriers {
         while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
           if (in_array($rows['title'], $groups)) {
             if ($matches[1][$key]=='!') {
-              $clause .= ' AND find_in_set(' . $rows['uid'] . ', usergroup)=0';
+              $clause .= ' AND find_in_set(' . $rows['uid'] . ', fe_users.usergroup)=0';
             } else {
-              $clause .= ' OR find_in_set(' . $rows['uid'] . ', usergroup)>0';
+              $clause .= ' OR find_in_set(' . $rows['uid'] . ', fe_users.usergroup)>0';
             }        
           }     
         }
