@@ -1542,9 +1542,9 @@ class ux_tx_kickstarter_section_pi extends tx_kickstarter_section_pi {
                     $tempo = $table['fields'];
                     unset($orderedFields);
                     foreach ($tempo as $key => $field) {
-                      
+
                       if ($field['type']!='ShowOnly') {
-                      
+
                         // Generate the additional TCA information
                         $prefix = preg_replace('/pi[0-9]/','',$cN);
 				                $fConf = $field;

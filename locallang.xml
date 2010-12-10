@@ -79,7 +79,7 @@
 			<label index="error.incorrectQueryInQueryProperty">Error in the query associated with the property &quot;query&quot;.</label>
 			<label index="error.incorrectQueryInContent">Error in the query associated with the property &quot;content&quot; in the field: %s.</label>
 			<label index="error.incorrectQueryForeignTable">The &quot;foreign table&quot; field in the query must start either by inner join, left join, right join or by a comma.</label>
-			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library have not the same version. Open the extension with the kickstater and save it.</label>
+			<label index="error.incorrectVersion">Please contact the Webmaster. Extension and library do not have the same version. Open the extension with the kickstater and save it.</label>
 			<label index="error.incorrectXmlFile">The XML file contains syntax errors: %s.</label>
 			<label index="error.incorrectXmlProducedFile">The XML file produced during the export contains syntax errors. It may come from your template xml file: %s.</label>
 			<label index="error.incorrectXsltFile">The XSL tranformation file contains syntax errors: %s.</label>
@@ -113,11 +113,12 @@
 			<label index="error.xmlError">Error: %s.</label>
 			<label index="error.xmlErrorMessage">%s in line %s</label>
 			<label index="error.xmlErrorFile">see the file</label>
-      <label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form.</label>
+			<label index="fatal.incorrectTCA">Fatal error. The local table has an incorrect TCA. You may not have not used the correct name in the &quot;Local table&quot; field of the query associated with your form.</label>
 			<label index="fatal.notAuthenticated">Fatal error. You must be authenticated to save these data.</label>
 			<label index="button.edit">Edit</label>
 			<label index="button.save">Save</label>
 			<label index="button.saveandclose">Save and close</label>
+			<label index="button.saveandshow">Save and show</label>
 			<label index="button.close">Close</label>
 			<label index="button.export">Export in csv</label>
 			<label index="button.new">New</label>

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Yolf (Laurent Foulloy) <yolf.typo3@orange.fr>
+*  (c) 2009 Laurent Foulloy <yolf.typo3@orange.fr>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -27,7 +27,7 @@ require_once(t3lib_extMgm::extPath('rtehtmlarea').'pi2/class.tx_rtehtmlarea_pi2.
 /**
  * SAV Library: Item viewers
  *
- * @author	Yolf <yolf.typo3@orange.fr>
+ * @author	Laurent Foulloy <yolf.typo3@orange.fr>
  *
  */
 
@@ -39,9 +39,7 @@ class tx_savlibrary_defaultItemviewers {
   protected $extConfig;       // Reference to the extension configuration
   protected $extKey;          // Extension Key
 
-/**
- * Start variables for the RTE API
- */
+  // Variables for the RTE API
 	public $RTEObj;
 	public $RTEinit = 0;
 	public $docLarge = 1;
@@ -59,9 +57,8 @@ class tx_savlibrary_defaultItemviewers {
 	public $RTEtypeVal = 'text';
   public $changedRTEList = '';     // List of changedRTE for textarea with RTE	
   public $updateRTEList = '';      // List of updateRTE for textarea with RTE
-  /**
- * End variables for the RTE API
- */
+
+  // Variables for the graphs
   private $imageCounter = 0;       // image counter for graph
 
   /**
@@ -124,7 +121,7 @@ class tx_savlibrary_defaultItemviewers {
 		  $ondblclick = '';
     }
 
-    // Add the Input text element
+    // Adds the Input text element
     $htmlArray[] = utils::htmlInputTextElement(
       array(
         utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -169,7 +166,7 @@ class tx_savlibrary_defaultItemviewers {
 		
     $htmlArray = array();
 
-    // Add the input password element
+    // Adds the input password element
     $htmlArray[] = utils::htmlInputPasswordElement(
       array(
         utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -303,7 +300,7 @@ class tx_savlibrary_defaultItemviewers {
           );
         }
 
-        // Check if donotdisplayifnotchecked is set
+        // Checks if donotdisplayifnotchecked is set
         if ($config['donotdisplayifnotchecked']) {
           $messageIfNotChecked = '';
         }
@@ -316,7 +313,7 @@ class tx_savlibrary_defaultItemviewers {
           break;
         }
         if ($cpt == $cols){
-          // Add the br element
+          // Adds the br element
           $htmlArray[] = utils::htmlBrElement(
             array(
               utils::htmlAddAttribute('class', 'checkbox'),
@@ -396,7 +393,7 @@ class tx_savlibrary_defaultItemviewers {
         $checked = (($val&0x01 || $value[1]==1 )? 'checked' : '');
         $val = $val >> 1;
         
-        // Add the hidden input element
+        // Adds the hidden input element
         $htmlArray[] = utils::htmlInputHiddenElement(
           array(
             utils::htmlAddAttribute(
@@ -407,7 +404,7 @@ class tx_savlibrary_defaultItemviewers {
           )
         );
         
-        // Add the checkbox input element
+        // Adds the checkbox input element
         $htmlArray[] = utils::htmlInputCheckBoxElement(
           array(
             utils::htmlAddAttribute(
@@ -420,7 +417,7 @@ class tx_savlibrary_defaultItemviewers {
           )
         );
 
-        // Add the span element
+        // Adds the span element
         $htmlArray[] = utils::htmlSpanElement(
           array(
             utils::htmlAddAttribute('class', 'checkbox'),
@@ -436,7 +433,7 @@ class tx_savlibrary_defaultItemviewers {
         }
         if ($cpt == $cols){
         
-          // Add the br element
+          // Adds the br element
           $htmlArray[] = utils::htmlBrElement(
             array(
               utils::htmlAddAttribute('class', 'checkbox'),
@@ -458,7 +455,7 @@ class tx_savlibrary_defaultItemviewers {
           $checked = ($config['default'] ? 'checked' : '');
         }
       }      	
-      // Check if it is associated with a mail		
+      // Checks if it is associated with a mail
       if ($config['mail']) {
 
         $htmlArray[] = $this->savlibrary->mailButton(
@@ -473,7 +470,7 @@ class tx_savlibrary_defaultItemviewers {
           ) . '<div class="separator">&nbsp;</div>';
         if ($config['value']) {
         
-          // Add the hidden input element
+          // Adds the hidden input element
           $htmlArray[] = utils::htmlInputHiddenElement(
             array(
               utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -481,7 +478,7 @@ class tx_savlibrary_defaultItemviewers {
             )
           );
 
-          // Add the checkbox input element
+          // Adds the checkbox input element
           $htmlArray[] = utils::htmlInputCheckBoxElement(
             array(
               utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -491,7 +488,7 @@ class tx_savlibrary_defaultItemviewers {
             )
           );
         } else {
-          // Add the hidden input element
+          // Adds the hidden input element
           $htmlArray[] = utils::htmlInputHiddenElement(
             array(
               utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -500,7 +497,7 @@ class tx_savlibrary_defaultItemviewers {
           );
         }
       } else {
-        // Add the hidden input element
+        // Adds the hidden input element
         $htmlArray[] = utils::htmlInputHiddenElement(
           array(
             utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -508,7 +505,7 @@ class tx_savlibrary_defaultItemviewers {
           )
         );
 
-        // Add the checkbox input element
+        // Adds the checkbox input element
         $htmlArray[] = utils::htmlInputCheckBoxElement(
           array(
             utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -598,7 +595,7 @@ class tx_savlibrary_defaultItemviewers {
       foreach ($config['items'] as $key => $value) {
         $checked = ($val == $value[1] ? 'checked' : '');
 
-        // Add the radio input element
+        // Adds the radio input element
         $htmlArray[] = utils::htmlInputRadioElement(
           array(
             utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -608,7 +605,7 @@ class tx_savlibrary_defaultItemviewers {
           )
         );
 
-        // Add the span element
+        // Adds the span element
         $htmlArray[] = utils::htmlSpanElement(
           array(
             utils::htmlAddAttribute('class', 'left'),
@@ -619,7 +616,7 @@ class tx_savlibrary_defaultItemviewers {
         
         $cpt++;  
         if ($cpt == $cols) {
-          // Add the BR element
+          // Adds the BR element
           $htmlArray[] = utils::htmlBrElement(
             array(
               utils::htmlAddAttribute('class', 'radio'),
@@ -669,16 +666,17 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	
   public function viewTextAreaEditMode(&$config) {
-  
+
     $htmlArray = array();
     
 		if (isset($config['wizards']['RTE'])) {
 
 			if(!$this->RTEObj) {
         $this->RTEObj = t3lib_div::makeInstance('tx_rtehtmlarea_pi2');
-        $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .=
+        $GLOBALS['TSFE']->additionalHeaderData['rtehtmlarea'] .=
           $this->additionalJS_initial;
       }
+
 			if($this->RTEObj->isAvailable()) {
 				$this->RTEcounter++;
 				
@@ -696,7 +694,7 @@ class tx_savlibrary_defaultItemviewers {
           $this,
           '',
           '',
-          $row=array(),
+          $row = array(),
           $PA,
           $specConf,
           $thisConfig,
@@ -705,23 +703,23 @@ class tx_savlibrary_defaultItemviewers {
           0
         );
 
-        // Replace [ and ] in the id
+				// Removes the hidden field
+				$out = preg_replace('/<input type="hidden"[^>]*>/', '', $out);
+
+        // Replaces [ and ] in the id
 				$out = preg_replace('/id="([^"]*)"/e',
           '\'id="\' . strtr(\'$1\', \'[]\', \'__\') . \'"\'',
           $out
         );
         
-				// Remove the hidden field
-				$out = preg_replace('/<input type="hidden"[^>]*>/', '', $out);
-				
-        // Add onchange				
+        // Adds onchange
 				$out = preg_replace('/<textarea ([^>]*)>/',
           '<textarea $1' . ' cols="' . $config['cols'] . '" rows="' .
           $config['rows'] . '" onchange="document.changed=1;">'	,
           $out
         );
 				
-        // Replace height and width
+        // Replaces height and width
         if ($config['height']) {
           $out = preg_replace(
             '/height:[^p]*/',
@@ -729,7 +727,7 @@ class tx_savlibrary_defaultItemviewers {
             $out
           );
         }
-        // Add 45px to the first div
+        // Adds 45px to the first div
         $out = preg_replace('/height:([^p]*)/', 'height:$1+45', $out, 1);
         
         if ($config['width']) {
@@ -743,7 +741,7 @@ class tx_savlibrary_defaultItemviewers {
         $htmlArray[] = $out;
         $htmlArray[] = '<script type="text/javascript">';
 
-        // Replace [ and ] in the id
+        // Replaces [ and ] in the id
         $htmlArray[] = preg_replace('/editornumber = "([^"]*)"/e',
           '\'editornumber = "\' . strtr(\'$1\', \'[]\', \'__\') . \'"\'',
           $this->additionalJS_post[$this->RTEcounter-1]
@@ -751,12 +749,13 @@ class tx_savlibrary_defaultItemviewers {
 
 		    $htmlArray[] = '</script>';
 		    if (!$this->RTEinit) {
-          $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .=
+          $GLOBALS['TSFE']->additionalHeaderData['rtehtmlarea'] .=
             $this->additionalJS_initial;
           $this->RTEinit = 1;   
         }
 
-        $js = array();                
+        // Builds the additional header data
+        $js = array();
         $js[] = '<script type="text/javascript">';
         $js[] = (
           isset($this->additionalJS_pre[0]) ?
@@ -764,9 +763,9 @@ class tx_savlibrary_defaultItemviewers {
           $this->additionalJS_pre['rtehtmlarea-loadJScode']
         );
 		    $js[] = '</script>';
-        $GLOBALS['TSFE']->additionalHeaderData['tx_savlibrary'] .= implode('', $js);
+        $GLOBALS['TSFE']->additionalHeaderData['rtehtmlarea'] .= implode('', $js);
 
-        // Replace [ and ] in the id
+        // Replaces [ and ] in the id
 		    $this->updateRTEList .= preg_replace('/RTEarea\[\'([^\']*)\'\]/e',
           '\'RTEarea[\\\'\' . strtr(\'$1\', \'[]\', \'__\') . \'\\\']\'',
           $this->additionalJS_submit[$this->RTEcounter-1]
@@ -775,7 +774,7 @@ class tx_savlibrary_defaultItemviewers {
 		    $this->changedRTEList .= 'changedTextareaRTE(' . $this->RTEcounter . ');';
 			}
     } else {
-      // Add the textarea element
+      // Adds the textarea element
       $htmlArray[] = utils::htmlTextareaElement(
         array(
           utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -838,14 +837,14 @@ class tx_savlibrary_defaultItemviewers {
   
     $htmlArray = array();
     
-    // generate the button
+    // Generates the button
     if ($config['generatertf']) {
       $htmlArray[] = $this->savlibrary->generateRTFButton(
         $this->savlibrary->formName,
         $config['cryptedFieldName'],
         $this->savlibrary->rowItem
       );
-      // update the field
+      // Updates the field
       if ($config['uid']) {
         $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
           /* TABLE   */	$config['table'],		
@@ -903,7 +902,7 @@ class tx_savlibrary_defaultItemviewers {
 		if(!$config['value']) {
       $htmlArray[] = '';
     } else {
-      // Check if a makeItemLink func is used
+      // Checks if a makeItemLink func is used
       if ($config['func'] == 'makeItemLink') {
         $temp = $this->savlibrary->makeDateFormat(
           $config['_value'],
@@ -935,19 +934,36 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewDateTimeEditMode(&$config){
-		
-		$out = tx_savdateselectlib::getInputButton(
-      $config['elementControlName'],
-      (
-        $config['value'] ?
-        $config['value'] :
-        ($config['nodefault'] ? '' : time())
-      ),
-      $config
+  
+    $htmlArray = array();
+    
+    // Sets the format
+    $format = ($config['format'] ? $config['format'] : '%d/%m/%Y %H:%M');
+    
+    // Sets the value
+    $value = (
+      $config['value'] ?
+      strftime($format, $config['value']) :
+      ($config['nodefault'] ? '' : strftime($format, time()))
+    );
+    $htmlArray[] = utils::htmlInputTextElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttribute('id', 'input_' . strtr($config['elementControlName'],'[]','__')),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('value', $value),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      )
+    );
+    $htmlArray[] = $this->savlibrary->datePicker->buildDatePickerSetup(
+      array(
+        'id' => strtr($config['elementControlName'],'[]','__'),
+        'format' => ($config['format'] ? $config['format'] : '%d/%m/%Y %H:%M'),
+        'showsTime' => true,
+      )
     );
 
-		$htmlArray = explode(chr(10), $out);
-		
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
 
@@ -968,7 +984,7 @@ class tx_savlibrary_defaultItemviewers {
 		if(!$config['value']) {
       $htmlArray[] = '';
     } else {
-      // Check if a makeItemLink func is used
+      // Checks if a makeItemLink func is used
       if ($config['func'] == 'makeItemLink') {
         $temp = $this->savlibrary->makeDateFormat(
           $config['_value'],
@@ -1000,18 +1016,36 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewDateEditMode(&$config){
-  
-    $out = tx_savdateselectlib::getInputButton(
-      $config['elementControlName'],
-      (
-        $config['value'] ?
-        $config['value'] :
-        ($config['nodefault'] ? '' : strtotime(date('m/d/Y')))
-      ),
-      $config
+
+    $htmlArray = array();
+
+    // Sets the format
+    $format = ($config['format'] ? $config['format'] : '%d/%m/%Y');
+
+    // Sets the value
+    $value = (
+      $config['value'] ?
+      strftime($format, $config['value']) :
+      ($config['nodefault'] ? '' : strftime($format, strtotime(date('m/d/Y'))))
     );
-    
-		$htmlArray = explode(chr(10), $out);
+
+    $htmlArray[] = utils::htmlInputTextElement(
+      array(
+        utils::htmlAddAttribute('name', $config['elementControlName']),
+        utils::htmlAddAttribute('id', 'input_' . strtr($config['elementControlName'], '[]', '__')),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
+        utils::htmlAddAttribute('value', $value),
+        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+      )
+    );
+    $htmlArray[] = $this->savlibrary->datePicker->buildDatePickerSetup(
+      array(
+        'id' => strtr($config['elementControlName'], '[]', '__'),
+        'format' => ($config['format'] ? $config['format'] : '%d/%m/%Y'),
+        'showsTime' => true,
+      )
+    );
 
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
@@ -1029,17 +1063,17 @@ class tx_savlibrary_defaultItemviewers {
   public function viewFile(&$config){
 
     $htmlArray = array();
-    
+
     $folder = $config['uploadfolder'] .
       ($config['addtouploadfolder'] ? '/' . $config['addtouploadfolder'] : '');
 
 		if ($config['iframe']) {
-		    // it's an image to be opened in an iframe
+		    // It's an image to be opened in an iframe
 		    $width = $config['width'] ? $config['width'] : '100%';
 		    $height = $config['height'] ? $config['height'] : '800';
 		    $message = $config['message'] ? $config['message'] : '';
 
-        // Add the iframe element
+        // Adds the iframe element
         $htmlArray[] = utils::htmlIframeElement(
           array(
             utils::htmlAddAttribute('src', $folder . '/' . $config['value']),
@@ -1050,7 +1084,7 @@ class tx_savlibrary_defaultItemviewers {
         );
 
         
-    }	elseif ($config['allowed']) {
+    }	elseif ($config['allowed'] == $GLOBALS['TYPO3_CONF_VARS']['GFX']['imagefile_ext'] || $config['allowed'] == 'gif,png,jpeg,jpg') {
       
         //
         if ($config['func'] == 'makeItemLink') {
@@ -1059,7 +1093,7 @@ class tx_savlibrary_defaultItemviewers {
           $fileArray = explode(',', $config['value']);
         }
 
-        // One or several images to display. Set parameters
+        // One or several images to display. Sets parameters
         foreach($fileArray as $file) {
         
   		    if ($file && file_exists($folder . '/' . $file)) {
@@ -1117,32 +1151,45 @@ class tx_savlibrary_defaultItemviewers {
           }
         }
       } else {
-        // It's a file. Make an hyperlink
+        // It's a file. Makes an hyperlink
         $out = '';
         $params['folder'] = $folder;
         $params['message'] = $config['message'];
         $params['target'] = $config['target'];
-        if ($config['addicon']) {
-          $pathInfo = pathinfo($config['_value']);
-          $fileName = $pathInfo['extension'] . '.gif';
-          if (file_exists(t3lib_extMgm::extPath('sav_library') . 'res/fileicons/' . $fileName)) {
-            $htmlArray[] = utils::htmlImgElement(
+        $fileNames = explode(';', $config['value']);
+        foreach ($fileNames as $fileName) {
+          if($fileName) {
+            $icon = '';
+            if ($config['addicon']) {
+              $pathInfo = pathinfo($fileName);
+              $iconFileName = $pathInfo['extension'] . '.gif';
+              if (file_exists(t3lib_extMgm::extPath('sav_library') . 'res/fileicons/' . $iconFileName)) {
+                $icon = utils::htmlImgElement(
+                  array(
+                    utils::htmlAddAttribute('src',
+                      t3lib_extMgm::siteRelPath('sav_library') . 'res/fileicons/' . $iconFileName),
+                   utils::htmlAddAttribute('alt', 'Icon ' . $pathInfo['extension']),
+                   utils::htmlAddAttribute('class', 'fileIcon '),
+                  )
+                );
+              } elseif (file_exists('typo3/gfx/fileicons/' . $iconFileName)) {
+                $icon = utils::htmlImgElement(
+                  array(
+                    utils::htmlAddAttribute('src', 'typo3/gfx/fileicons/' . $iconFileName),
+                    utils::htmlAddAttribute('alt', 'Icon ' . $pathInfo['extension']),
+                    utils::htmlAddAttribute('class', 'fileIcon '),
+                  )
+                );
+              }
+            }
+            $htmlArray[] = utils::htmlDivElement(
               array(
-                utils::htmlAddAttribute('src',
-                  t3lib_extMgm::siteRelPath('sav_library') . 'res/fileicons/' . $fileName),
-                utils::htmlAddAttribute('alt', 'Icon ' . $pathInfo['extension']),
-              )
-            ) . '&nbsp;&nbsp;';
-          } elseif (file_exists('typo3/gfx/fileicons/' . $fileName)) {
-            $htmlArray[] = utils::htmlImgElement(
-              array(
-                utils::htmlAddAttribute('src', 'typo3/gfx/fileicons/' . $fileName),
-                utils::htmlAddAttribute('alt', 'Icon ' . $pathInfo['extension']),
-              )
-            ) . '&nbsp;&nbsp;';
+                utils::htmlAddAttribute('class', 'file'),
+              ),
+              $icon . $this->savlibrary->makeLink($fileName, '', $params)
+            );
           }
         }
-      $htmlArray[] = $this->savlibrary->makeLink($config['value'], '', $params);
     }
     
     return $this->savlibrary->arrayToHTML($htmlArray);
@@ -1156,7 +1203,7 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	 
   public function viewFileEditMode(&$config){
-  
+
     $htmlArray = array();
     
     $addtouploadfolder = (
@@ -1169,35 +1216,38 @@ class tx_savlibrary_defaultItemviewers {
       $config['size'] = '';
     }
 
-    $htmlArray[] = utils::htmlInputTextElement(
-      array(
-        utils::htmlAddAttribute('name', $config['field']),
-        utils::htmlAddAttribute('value', $config['value']),
-        utils::htmlAddAttribute('size', $config['size']),
-      )
-    );
+    $fileNames = explode(';', $config['value']);
+    for ($i = 0; $i < $config['maxitems']; $i++) {
+      $htmlArray[] = utils::htmlInputTextElement(
+        array(
+          utils::htmlAddAttribute('name', $config['elementControlName'] . '[' . $i . ']'),
+          utils::htmlAddAttribute('class', 'file'),
+          utils::htmlAddAttribute('value', ($fileNames[$i] ? $fileNames[$i] : '')),
+          utils::htmlAddAttribute('size', $config['size']),
+        )
+      );
 
-    $htmlArray[] = utils::htmlInputFileElement(
-      array(
-        utils::htmlAddAttribute('name', $config['elementControlName']),
-        utils::htmlAddAttribute('value', ''),
-        utils::htmlAddAttribute('size', $config['size']),
-        utils::htmlAddAttribute('onchange', 'document.changed=1;'),
-      )
-    );
+      $htmlArray[] = utils::htmlInputFileElement(
+        array(
+          utils::htmlAddAttribute('name', $config['elementControlName'] . '[' . $i . ']'),
+          utils::htmlAddAttribute('value', ''),
+          utils::htmlAddAttribute('size', $config['size']),
+          utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+        )
+      );
 
-    $htmlArray[] = utils::htmlInputHiddenElement(
-      array(
-        utils::htmlAddAttribute('name',
-          $this->savlibrary->formName . '[addtouploadfolder]' . (
-            isset($this->savlibrary->rowItem) ?
-            '[' . $this->savlibrary->rowItem . ']' :
-            '[' . $config['uid'] . ']')
-          ),
-        utils::htmlAddAttribute('value', $addtouploadfolder),
-      )
-    );
-
+      $htmlArray[] = utils::htmlInputHiddenElement(
+        array(
+          utils::htmlAddAttribute('name',
+            $this->savlibrary->formName . '[addtouploadfolder]' . (
+              isset($this->savlibrary->rowItem) ?
+              '[' . $this->savlibrary->rowItem . ']' :
+              '[' . $config['uid'] . ']')
+            ),
+          utils::htmlAddAttribute('value', $addtouploadfolder),
+        )
+      );
+    }
     return $this->savlibrary->arrayToHTML($htmlArray);
   } 
 
@@ -1224,7 +1274,7 @@ class tx_savlibrary_defaultItemviewers {
     if(!$config['value'] && !$config['edit']) {
       $out = '';
     } else {
-      // explode the value
+      // Explodes the value
 		  $schedule = array();
 		  $days = explode(';', $config['value']);
 		  foreach($days as $day) {
@@ -1331,7 +1381,7 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
 
-    // find the selected item
+    // Finds the selected item
     foreach ($config['items'] as $key => $item) {
       if ($item[1] == $config['_value']) {
         break;
@@ -1366,7 +1416,7 @@ class tx_savlibrary_defaultItemviewers {
     $htmlOptionArray = array();
 		$htmlOptionArray[] = '';
     
-    // Add the empty item option if any
+    // Adds the empty item option if any
 		if ($config['emptyitem']) {
 			// Add the Option element
 			$htmlOptionArray[] = utils::htmlOptionElement(
@@ -1384,7 +1434,7 @@ class tx_savlibrary_defaultItemviewers {
         ''
       );
 
-			// Add the Option element
+			// Adds the Option element
 			$htmlOptionArray[] = utils::htmlOptionElement(
         array(
           utils::htmlAddAttributeIfNotNull('selected', $selected),
@@ -1395,7 +1445,7 @@ class tx_savlibrary_defaultItemviewers {
 		}
 		$htmlOptionArray[] = '';
 
-    // Add the select element
+    // Adds the select element
 		$htmlArray[] = utils::htmlSelectElement(
       array(
         utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -1424,7 +1474,7 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
     
-    // Search for the key
+    // Searchs for the key
     $keyFound = 0;
     foreach ($config['items'] as $key => $item) {
       if ($item['uid'] == $config['_value']) {
@@ -1432,19 +1482,19 @@ class tx_savlibrary_defaultItemviewers {
         break;
       }
     }
-    // Keep only the item found
+    // Keeps only the item found
     if (!isset($config['codeArray'])) {
       $temp = $config['items'][$keyFound];
       unset($config['items']);
       $config['items'][$keyFound] = $temp;
     }
         
-    // Check if a special value exists
+    // Checks if a special value exists
     if (is_array($config['items'][$keyFound]['special'])) {
       $config['special'] = $config['items'][$keyFound]['special'];
     }
 
-    // check if a function is called
+    // Checks if a function is called
   	if ($config['func']) {
    		$htmlArray[] = $this->savlibrary->$config['func'](
         stripslashes($config['items'][$keyFound]['label']),
@@ -1452,7 +1502,7 @@ class tx_savlibrary_defaultItemviewers {
         $config
       );
     } else {
-      // get the field from the label field of the allowed table.
+      // Gets the field from the label field of the allowed table.
       if (isset($config['codeArray'])) {
   			$code = ((int) ($config['items'][$keyFound]['code']/100))*100;
   			
@@ -1488,9 +1538,9 @@ class tx_savlibrary_defaultItemviewers {
     $htmlOptionArray = array();
 		$htmlOptionArray[] = '';
 
-    // Add the empty item option if any
+    // Adds the empty item option if any
 		if ($config['emptyitem']) {
-			// Add the Option element
+			// Adds the Option element
 			$htmlOptionArray[] = utils::htmlOptionElement(
         array(
           utils::htmlAddAttribute('value', '0'),
@@ -1499,11 +1549,11 @@ class tx_savlibrary_defaultItemviewers {
       );
     }
     
-    // Add the option elements
+    // Adds the option elements
     foreach ($config['items'] as $key => $item) {
 			$selected = ($item['selected']) ? 'selected' : '';
 			
-			// Add the Option element
+			// Adds the Option element
 			$htmlOptionArray[] = utils::htmlOptionElement(
         array(
           utils::htmlAddAttributeIfNotNull('style', $item['style']),
@@ -1516,7 +1566,7 @@ class tx_savlibrary_defaultItemviewers {
 		}
 		$htmlOptionArray[] = '';
 		
-    // Add the select element
+    // Adds the select element
 		$htmlArray[] = utils::htmlSelectElement(
       array(
         utils::htmlAddAttribute('name', $config['elementControlName']),
@@ -1546,16 +1596,16 @@ class tx_savlibrary_defaultItemviewers {
     $htmlArray = array();
 
 		if ($config['MM'] || $config['maxitems']>1) {	  
-      // get all the fields
+      // Gets all the fields
   		foreach($config['items'] as $item) {
   			if($item['selected']) {
   			
-  			    // Check if a special value exists
+  			    // Checks if a special value exists
           if (is_array($item['special'])) {
             $config['special'] = $item['special'];
           }
 
-  				// if the code is not null, get the hierarchy item
+  				// If the code is not null, get the hierarchy item
   				if (isset($config['codeArray'])) {
   				  $code = ((int) ($item['code']/100))*100;
   				  if(!($item['code'] % 100)) {
@@ -1569,7 +1619,7 @@ class tx_savlibrary_defaultItemviewers {
   					  $htmlArray[] = $item['label'] . '<br />';
   				  }
           } else {
-            // check if a function is called
+            // Checks if a function is called
             if ($config['func']) {
               $temp = $this->savlibrary->$config['func'](
                 stripslashes($item['label']),
@@ -1595,7 +1645,7 @@ class tx_savlibrary_defaultItemviewers {
  		}    
 		else {
   		if ($config['content']) {
-        // get the field from a query. the uid marker is replace by the selected value
+        // Gets the field from a query. the uid marker is replace by the selected value
         $query = $config['content']; 
         $mA["###uid###"] = $config['uid'];
         $mA["###uidSelected###"] = key($selected);
@@ -1606,7 +1656,7 @@ class tx_savlibrary_defaultItemviewers {
           array()
         );
         
-        // Check if the query is a SELECT query and for errors
+        // Checks if the query is a SELECT query and for errors
         if (!$this->savlibrary->isSelectQuery($query)) {
           $this->savlibrary->addError(
             'error.onlySelectQueryAllowed',
@@ -1621,9 +1671,9 @@ class tx_savlibrary_defaultItemviewers {
           return $this->savlibrary->arrayToHTML($htmlArray);
         }
         
-        // Process the query
+        // Processes the query
   		  $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
-  		  // check if the makeExtLink is required
+  		  // Checks if the makeExtLink is required
   		  if ($config['func'] == 'makeExtLink') {
   		    $params['ext'] = $config['ext'];
   		    $params['id'] = $config['id'];
@@ -1636,7 +1686,7 @@ class tx_savlibrary_defaultItemviewers {
   		    return $row['label'];
         }
     	} else {
-        // Search for the key
+        // Searchs for the key
         $keyFound = 0;
         foreach ($config['items'] as $key => $item) {
           if ($item['uid'] == $config['_value']) {
@@ -1645,7 +1695,7 @@ class tx_savlibrary_defaultItemviewers {
           }
         }
 
-        // get the field from the label field of the allowed table.
+        // Gets the field from the label field of the allowed table.
         if (isset($config['codeArray'])) {
           $code = ((int) ($config['items'][$keyFound]['code']/100))*100;
           if(!($config['codeArray'][$code])) {
@@ -1681,7 +1731,7 @@ class tx_savlibrary_defaultItemviewers {
 		$htmlOptionArray[] = '';
 
 		if ($config['emptyitem']) {
-			// Add the Option element
+			// Adds the Option element
 			$htmlOptionArray[] = utils::htmlOptionElement(
         array(
           utils::htmlAddAttribute('value', '0'),
@@ -1692,7 +1742,7 @@ class tx_savlibrary_defaultItemviewers {
 		foreach($config['items'] as $key => $item) {
 			$selected = ($item['selected']) ? 'selected' : '';
 
-			// Add the Option element
+			// Adds the Option element
 			$htmlOptionArray[] = utils::htmlOptionElement(
         array(
           utils::htmlAddAttributeIfNotNull('style', $item['style']),
@@ -1705,7 +1755,7 @@ class tx_savlibrary_defaultItemviewers {
 		}
 		$htmlOptionArray[] = '';
 
-    // Add the select element
+    // Adds the select element
 		$htmlArray[] = utils::htmlSelectElement(
       array(
         utils::htmlAddAttribute('multiple', 'multiple'),
@@ -1781,7 +1831,7 @@ class tx_savlibrary_defaultItemviewers {
     
 		foreach($config['items'] as $key => $item) {
 			if($item['selected']) {
-  			// Add the Option element
+  			// Adds the Option element
   			$htmlOptionArray[] = utils::htmlOptionElement(
           array(
             utils::htmlAddAttribute('value', $item['uid']),
@@ -1792,7 +1842,7 @@ class tx_savlibrary_defaultItemviewers {
 		}
 		$htmlOptionArray[] = '';
 
-    // Add the select element
+    // Adds the select element
 		$htmlArray[] = utils::htmlSelectElement(
       array(
         utils::htmlAddAttribute('multiple', 'multiple'),
@@ -1815,7 +1865,7 @@ class tx_savlibrary_defaultItemviewers {
 		
 		foreach($config['items'] as $key => $item) {
 			if(!$item['selected']) {
-  			// Add the Option element
+  			// Adds the Option element
   			$htmlOptionArray[] = utils::htmlOptionElement(
           array(
             utils::htmlAddAttribute('value', $item['uid']),
@@ -1826,7 +1876,7 @@ class tx_savlibrary_defaultItemviewers {
 		}
 		$htmlOptionArray[] = '';
 
-    // Add the select element
+    // Adds the select element
 		$htmlArray[] = utils::htmlSelectElement(
       array(
         utils::htmlAddAttribute('multiple', 'multiple'),
@@ -1843,7 +1893,7 @@ class tx_savlibrary_defaultItemviewers {
       $this->savlibrary->arrayToHTML($htmlOptionArray)
     );
 
-		// Add it to the select list for Javascript
+		// Adds it to the select list for Javascript
     $this->savlibrary->selectList .= 'selectAll(\'' .
       $this->savlibrary->formName . '\', \'' . $elementControlName . '[]\');';
 
@@ -1870,7 +1920,7 @@ class tx_savlibrary_defaultItemviewers {
 
 
  	/**
-	 * db relation checkboxes viewer in edit mode
+	 * DB relation checkboxes viewer in edit mode
 	 *
 	 * @param $config array (Configuration array)
 	 *
@@ -1917,7 +1967,7 @@ class tx_savlibrary_defaultItemviewers {
         $checked = '';
       }
 			
-      // Add the hidden input element
+      // Adds the hidden input element
       $htmlArray[] = utils::htmlInputHiddenElement(
         array(
           utils::htmlAddAttribute(
@@ -1928,7 +1978,7 @@ class tx_savlibrary_defaultItemviewers {
         )
       );
 
-      // Add the checkbox input element
+      // Adds the checkbox input element
       $htmlArray[] = utils::htmlInputCheckBoxElement(
         array(
           utils::htmlAddAttribute(
@@ -1941,7 +1991,7 @@ class tx_savlibrary_defaultItemviewers {
         )
       );
 
-      // Add the span element
+      // Adds the span element
       $htmlArray[] = utils::htmlSpanElement(
         array(
           utils::htmlAddAttribute('class', 'checkbox'),
@@ -1950,7 +2000,7 @@ class tx_savlibrary_defaultItemviewers {
         stripslashes($item['label'])
       );
 
-      // Add the br element
+      // Adds the br element
       $htmlArray[] = utils::htmlBrElement(
         array(
           utils::htmlAddAttribute('class', 'checkbox'),
@@ -1983,7 +2033,7 @@ class tx_savlibrary_defaultItemviewers {
     $uid = $config['uid'];
 		$selected = array();
 
-    // Redisplay the item if an error in new form is detected
+    // Redisplays the item if an error in new form is detected
     if ($this->savlibrary->errorInForm) {
       $selected = array($config['_value'] => 1);
     } elseif ($uid) {
@@ -2003,14 +2053,16 @@ class tx_savlibrary_defaultItemviewers {
 
         // The record exits, just read it.
 
-        // Build a part of the WHERE clause depending on the relation
+        // Builds a part of the WHERE clause depending on the relation
         if ($config['MM']) {
-          // case of a true MM relation
+          // Case of a true MM relation
           $wherePart = ' AND ' . $MM_table . '.uid_local=' . $table . '.' . $MM_field .
   					' AND ' . $MM_table . '.uid_foreign=' . $foreign_table . '.uid';
         } elseif (!$config['MM'] && $config['maxitems']>1) {
           // Case of a non true MM relation
-          $wherePart = ' AND ' . $foreign_table . '.uid IN (' . $config['_value'] . ')';
+          $wherePart = ($config['_value'] ?
+              ' AND ' . $foreign_table . '.uid IN (' . $config['_value'] . ')' :
+              '');
         } else {
           // Usual case
           $wherePart = ' AND ' . $table . '.' . $config['field'] . '=' . $foreign_table . '.uid';
@@ -2062,7 +2114,7 @@ class tx_savlibrary_defaultItemviewers {
   				  /* LIMIT    */	''
   		  );
 
-  		  // get all selected fields
+  		  // Gets all selected fields
   		  while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
           $config['mm_uid_local'] = $rows['mm_uid_local'];
           if (!$config['MM'] && $config['maxitems']>1) {
@@ -2087,7 +2139,7 @@ class tx_savlibrary_defaultItemviewers {
       }
     }  
 
-		// get the label of the allowed_table
+		// Gets the label of the allowed_table
 		$label = (
       $config['labelselect'] ?
       $config['labelselect'] :
@@ -2108,7 +2160,7 @@ class tx_savlibrary_defaultItemviewers {
       $defaultOrder
     );
     
-    // Process the foreign_table_where
+    // Processes the foreign_table_where
     if ($config['foreign_table_where']) {
       preg_match('/^AND (.*)? ORDER BY (.*)$/', $config['foreign_table_where'], $match);  
     }
@@ -2119,7 +2171,7 @@ class tx_savlibrary_defaultItemviewers {
       $config['orderselect'] = $match[2];
     }
 
-    // Process tags in whereselect clause				
+    // Processes tags in whereselect clause
     $config['whereselect'] = $this->savlibrary->queriers->processWhereClause($config['whereselect']); 
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -2186,7 +2238,7 @@ class tx_savlibrary_defaultItemviewers {
 		while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {
 
 		  if ($rows[$label]) {
-		    // Check if special fields were added
+		    // Checks if special fields were added
 		    if ($config['specialfields']) {
           $specialfields = explode(',', $config['specialfields']);
           foreach ($specialfields as $specialfield) {
@@ -2194,7 +2246,7 @@ class tx_savlibrary_defaultItemviewers {
           }
         }
     
-        // process the tags in the label
+        // Processes the tags in the label
         if (preg_match_all('/###([^#]+)###/', $rows[$label], $matches)) {
           foreach($matches[1] as $keyMatch=>$valueMatch) {
             $replaceValue = (
@@ -2210,7 +2262,7 @@ class tx_savlibrary_defaultItemviewers {
         
 			  $config['items'][$cpt] = array(
 			    'uid' => $rows['uid'],
-          'label'=> htmlentities(
+          'label'=> $this->savlibrary->htmlentitiesWithCharset(
             $GLOBALS['TCA'][$foreign_table]['columns'][$label]['config']['type']=='select' ?
             $this->savlibrary->getLL_db(
               $GLOBALS['TCA'][$foreign_table]['columns'][$label]['config']['items'][$rows[$label]][0]
@@ -2230,7 +2282,7 @@ class tx_savlibrary_defaultItemviewers {
           $config['codeArray'][$rows[$config['code']]] = $cpt;
         }
 
-        // Remove if not allowed
+        // Removes if not allowed
         if ($label == $this->savlibrary->conf['inputAdminField'] && $config['edit'] && !$this->savlibrary->userIsAdmin($rows)) {
 					unset($config['items'][$cpt]);
 				}
@@ -2239,7 +2291,7 @@ class tx_savlibrary_defaultItemviewers {
 		}
 
 		if ($MM_table) {
-		  // change the number of dispayed items if only one selected. In general, it occurs 
+		  // Changes the number of dispayed items if only one selected. In general, it occurs
 		  // when a where is added in the field parameter to select only one field
 		  if (count($config['items']) == 1){
 		    $config['size'] = 1;
@@ -2260,7 +2312,7 @@ class tx_savlibrary_defaultItemviewers {
 		} else {
 			if ($config['content']) {
 
-        // get the field from a query. The uid marker is replaced by the selected value
+        // Gets the field from a query. The uid marker is replaced by the selected value
         $query = $config['content']; 
         $mA['###uid###'] = intval($config['uid']);
         $mA['###uidSelected###'] = key($selected);
@@ -2275,7 +2327,7 @@ class tx_savlibrary_defaultItemviewers {
 
         $config['items'] = $items;
 
-        // Check if the query is a SELECT query and for errors
+        // Checks if the query is a SELECT query and for errors
         if (!$this->savlibrary->isSelectQuery($query)) {
           $this->savlibrary->addError(
             'error.onlySelectQueryAllowed',
@@ -2290,14 +2342,14 @@ class tx_savlibrary_defaultItemviewers {
           return $this->savlibrary->arrayToHTML($htmlArray);
         }
 
-        // Process the query
+        // Processes the query
   			if (!is_array($config['items'])) {
           $config['items'] = array();
         } 
 		    while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res)) {     
 			    $config['items'][] =  array(
 			      'uid' => $rows['uid'],
-            'label'=> htmlentities(stripslashes($rows['label'])),
+            'label'=> $this->savlibrary->htmlentitiesWithCharset(stripslashes($rows['label'])),
             'selected' => ($config['selected'] ? 1 : $selected[$rows['uid']])
           );
 		    }
@@ -2370,11 +2422,11 @@ class tx_savlibrary_defaultItemviewers {
 		$allowed_table = $config['allowed'];
 		$config['subform'] = '_subForm';
 		
-    // Check if there exists a MM relation. It generates a subform
+    // Checks if there exists a MM relation. It generates a subform
     if ($config['MM'] || $config['norelation']) {
       $uid = $this->savlibrary->uid;
 
-      // Get the number of items satisfying the query with no limit field
+      // Gets the number of items satisfying the query with no limit field
       $rows = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			 	/* SELECT   */   'count(*) as nbitem',		
 				/* FROM     */   $allowed_table .
@@ -2464,7 +2516,7 @@ class tx_savlibrary_defaultItemviewers {
 		  $fields = $config['fullFieldName'];
       $value = '';
       
-      // Build the subForm
+      // Builds the subForm
       $subForm = array();            
       $subForm['TYPE']= (
         $config['subformtemplate'] ?
@@ -2472,7 +2524,7 @@ class tx_savlibrary_defaultItemviewers {
         'subForm'
       );
       
-      // add the new button
+      // Adds the new button
       $subForm['CUTTERS']['CUT_title'] = (
         $this->savlibrary->inputIsAllowedInForm() ||
           (!$config['edit'] &&
@@ -2501,17 +2553,17 @@ class tx_savlibrary_defaultItemviewers {
         $subForm['MARKERS']['formTitle'] = $this->savlibrary->processLocalizationTags($config['subformtitle']);
       }
   
- 		  // add a new row if the new button has been activated
+ 		  // Adds a new row if the new button has been activated
       if ($this->savlibrary->newSubForm && $this->savlibrary->subFormName == $config['cryptedFieldName']) {
     		  $this->savlibrary->rowItem = 0;
     		  $row = array();
               		  
-    		  // Add the field that were kept in the subform
+    		  // Addq the field that were kept in the subform
           if (isset($config['keepfieldsinsubformvalues'])) {
             $row += $config['keepfieldsinsubformvalues'];          
           }
           
-          // Remove the values that may come from the parent form 
+          // Removeq the values that may come from the parent form
           $temp = $this->savlibrary->queriers->sql_fetch_assoc_with_tablename($res);
 
           if (is_array($temp)) {
@@ -2520,7 +2572,7 @@ class tx_savlibrary_defaultItemviewers {
             }
           }
 
-          // Check fields are set in the subform
+          // Checkq fields are set in the subform
           if (!isset($config[$this->savlibrary->cryptTag('0')])) {
             $out = '<span class="error">' .
               $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
@@ -2548,22 +2600,22 @@ class tx_savlibrary_defaultItemviewers {
           $cutRight = 1;
       } else {  
   
-        // return empty if no rows and not newSubform and no arrows
+        // Returns empty if no rows and not newSubform and no arrows
         if (!$config['edit'] && !$this->savlibrary->newSubForm && !$nbitem && !isset($this->savlibrary->limitSub[$config['cryptedFieldName']])) {
           return '';
         }
-         // Parse the fields
+         // Parses the fields
         $cpt = 0;
   		  while ($row = $this->savlibrary->queriers->sql_fetch_assoc_with_tablename($res)) {
-          // Add the field kept from the parent form
+          // Adds the field kept from the parent form
           if (isset($config['keepfieldsinsubformvalues'])) {
               $row += $config['keepfieldsinsubformvalues'];      
           }
  		    
-  		    // Process the field
+  		    // Processes the field
     		  $this->savlibrary->rowItem = $row[$allowed_table . '.uid'];
     		  
-          // Check fields are set in the subform
+          // Checks fields are set in the subform
           if (!isset($config[$this->savlibrary->cryptTag('0')])) {
             $out = '<span class="error">' .
               $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
@@ -2582,7 +2634,7 @@ class tx_savlibrary_defaultItemviewers {
           );
           $x['TYPE'] = 'subFormItem';          
 
-          // Set the class
+          // Sets the class
           if ($config['addupdown'] || $config['adddelete'] || $config['addsave']) {
             $iconClass = 'itemIconLeft';
           } else {
@@ -2594,7 +2646,7 @@ class tx_savlibrary_defaultItemviewers {
           }
 
           $controlIcons = '';
-          // Add the up and down icons if required
+          // Adds the up and down icons if required
           if ($config['addupdown']) {
             $controlIcons .=
               $this->savlibrary->downButton(
@@ -2611,7 +2663,7 @@ class tx_savlibrary_defaultItemviewers {
               );
           }
           
-          // Add the delete button if required
+          // Adds the delete button if required
           if ($config['adddelete']){
             $controlIcons .=
               $this->savlibrary->deleteItemButton(
@@ -2622,9 +2674,9 @@ class tx_savlibrary_defaultItemviewers {
               );
           }
           
-          // Add the save button with an anchor if required
+          // Adds the save button with an anchor if required
           if ($config['addsave']){
-            // build an id for the anchor
+            // Builds an id for the anchor
             $id = 'a_' . $this->cObj->data['uid'] . '_' . $cpt++;
 
             $controlIcons =
@@ -2637,13 +2689,13 @@ class tx_savlibrary_defaultItemviewers {
               );
           }
 
-          // Set the icons
+          // Sets the icons
           $x['REGIONS']['items'][0]['MARKERS']['icon'] = $controlIcons;
           
           $value .= $this->savlibrary->replaceTemplate($x);
         }  		  
 		  
-  		  // arrow selectors
+  		  // Arrow selectors
   		  $cutLeft = 0;
   		  $cutRight = 0;
   		  if($errors['_subFormId']){
@@ -2693,7 +2745,7 @@ class tx_savlibrary_defaultItemviewers {
          ),
       );
 
-      // Set the form parameters and call the browser
+      // Sets the form parameters and call the browser
       $formParams = array(
         'formAction' => 'browseSubForm',
         'uid' => $config['uid'],
@@ -2705,7 +2757,7 @@ class tx_savlibrary_defaultItemviewers {
   		$subForm['MARKERS']['Value'] = $value;
       $htmlArray[] = $this->savlibrary->replaceTemplate($subForm);  
       
-      // unset rowItem
+      // Unsets rowItem
       unset($this->savlibrary->rowItem);
          
     } else {
@@ -2722,7 +2774,7 @@ class tx_savlibrary_defaultItemviewers {
       	$row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
       }
    
-      // Add the field kept from the parent form
+      // Adds the field kept from the parent form
       if (isset($config['keepfieldsinsubformvalues']) && is_array($row)) {
           $row += $config['keepfieldsinsubformvalues'];      
       }
@@ -2730,7 +2782,7 @@ class tx_savlibrary_defaultItemviewers {
 		  $fields = $config['fullFieldName'];
       $value = '';
       
-      // Build the subForm
+      // Builds the subForm
       if (isset($config[$this->savlibrary->cryptTag('0')])) {
         if ($config['func'] == 'makeLink') { 
 
@@ -2751,11 +2803,11 @@ class tx_savlibrary_defaultItemviewers {
           $subForm = array();            
           $subForm[TYPE]= 'subForm';
      
-          // Set the CUTTERS
+          // Sets the CUTTERS
           $subForm['CUTTERS']['CUT_title'] = 1;
       	  $subForm['CUTTERS']['CUT_arrows'] = 1;
     	
-          // Parse the fields
+          // Parses the fields
       	  $this->savlibrary->rowItem = $config['_value'];
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
@@ -2777,7 +2829,7 @@ class tx_savlibrary_defaultItemviewers {
         }
       } else {
       
-        // Add the span element
+        // Adds the span element
         $htmlArray[] = utils::htmlSpanElement(
           array(
             utils::htmlAddAttribute('class', 'error'),
@@ -2816,39 +2868,39 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
     
-    // Check that sav_jpgraph is loaded
+    // Checks that sav_jpgraph is loaded
     if (t3lib_extMgm::isLoaded('sav_jpgraph')) {
     
-      // define the constant LOCALE for the use in the template
+      // Defines the constant LOCALE for the use in the template
       define(LOCALE, $GLOBALS['TSFE']->config['config']['locale_all']);
 
-      // define the constant CURRENT_PID for the use in the template
+      // Defines the constant CURRENT_PID for the use in the template
       define(CURRENT_PID, $GLOBALS['TSFE']->page['uid']);
 
-      // define the constant STORAGE_PID for the use in the template
+      // Defines the constant STORAGE_PID for the use in the template
       $temp = $GLOBALS['TSFE']->getStorageSiterootPids();
       define(STORAGE_PID, $temp['_STORAGE_PID']);
 
-      // Redefine the constant for TTF directory if necessary
+      // Redefines the constant for TTF directory if necessary
       $temp = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['sav_jpgraph']);
       if ($temp['plugin.']['sav_jpgraph.']['ttfDir']) {
         define('TTF_DIR', $temp['plugin.']['sav_jpgraph.']['ttfDir']);
       }
     
-      // Define the main directory
+      // Defines the main directory
       define('JP_maindir', t3lib_extMgm::extPath('sav_jpgraph') . 'src/');
 
-      // Define the cache dir
+      // Defines the cache dir
       define('CACHE_DIR', 'typo3temp/sav_jpgraph/');
     
-      // Require the xml class
+      // Requires the xml class
       require_once(t3lib_extMgm::extPath('sav_jpgraph'). 'class.typo3.php');
       require_once(t3lib_extMgm::extPath('sav_jpgraph'). 'class.xmlgraph.php');
       
-      // Create the xlmgraph
+      // Creates the xlmgraph
       $xmlGraph = new xmlGraph();
       
-      // Set the markers if any
+      // Sets the markers if any
       if ($config['markers']) {
         $markers = explode(',', $config['markers']);
         $temp = array();
@@ -2859,7 +2911,7 @@ class tx_savlibrary_defaultItemviewers {
         }
       }
       
-      // Define the file name for the resulting image
+      // Defines the file name for the resulting image
       if (!is_dir('typo3temp/sav_jpgraph')) {
         mkdir('typo3temp/sav_jpgraph');
       }
@@ -2867,19 +2919,19 @@ class tx_savlibrary_defaultItemviewers {
         $this->savlibrary->formName . '_' . $this->imageCounter . '.png';
       $this->imageCounter++;
       
-      // Set the file reference
+      // Sets the file reference
       $xmlGraph->setReferenceArray(
         'file',
         1,
         $imageFileName
         );
 
-      // Delete the file if it exists
+      // Deletes the file if it exists
       if (file_exists(PATH_site . $imageFileName)) {
         unlink(PATH_site . $imageFileName);
       }
 
-      // Process the template
+      // Processes the template
       $xmlGraph->loadXmlFile($config['graphtemplate']);
       $xmlGraph->processXmlGraph();
     }

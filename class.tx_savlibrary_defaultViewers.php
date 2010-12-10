@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Yolf (Laurent Foulloy) <yolf.typo3@orange.fr>
+*  (c) 2009 Laurent Foulloy <yolf.typo3@orange.fr>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,7 +25,7 @@
 /**
  * SAV Library: standard viewers
  *
- * @author	Yolf <yolf.typo3@orange.fr>
+ * @author	Laurent Foulloy <yolf.typo3@orange.fr>
  *
  */
 
@@ -75,7 +75,7 @@ class tx_savlibrary_defaultViewers {
 
 	public function showAll_defaultViewer(&$dataset, &$fields, $errors='') {
 
-    // If print icon is associated with a related view, call it
+    // If print icon is associated with a related view, calls it
     if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
       return $this->printForm_defaultViewer(
         $dataset,
@@ -86,12 +86,12 @@ class tx_savlibrary_defaultViewers {
 
     $showAllTemplate = $this->extConfig['showAllTemplates'][$this->savlibrary->formConfig['showAll']];
 
-		// Prepare the template
+		// Prepares the template
 		$tmpl = '<!-- ###item### begin -->'.
 				$showAllTemplate['itemTmpl'].'
 			<!-- ###item### end -->';
 			     
-		// Process the dataset
+		// Processes the dataset
     if (is_array($dataset)) {
   		$ta['REGIONS']['items']='';
   		foreach ($dataset as $key => $row) {
@@ -104,31 +104,31 @@ class tx_savlibrary_defaultViewers {
           0
         );
 
-  			// Make some processing to retrieve a simple item type
+  			// Makes some processing to retrieve a simple item type
   			$item = array();
 
   			if ($x['REGIONS']['items']) {
     			foreach($x['REGIONS']['items'] as $k => $v) {
 
-    			  // Clear the field value if the cutter is set
+    			  // Clears the field value if the cutter is set
     			  if ($v['CUTTERS']['CUT_value']) {
               $v['MARKERS'][$v['MARKERS']['field']] = '';
             } elseif ($v['WRAPPERS']['wrapitem']) {
-              // Check if there is a wrapper
+              // Checks if there is a wrapper
               $v['MARKERS'][$v['MARKERS']['field']] = $this->cObj->dataWrap(
                 $v['MARKERS'][$v['MARKERS']['field']],
                 $v['WRAPPERS']['wrapitem']
               );
             }
 
-            // Check if the classItem is set
+            // Checks if the classItem is set
             if ($v['MARKERS']['classItem']) {
-
               $item['classItem'] = $v['MARKERS']['classItem'];
             }
-            // Check if the field already exists in the MARKERS.
+            
+            // Checks if the field already exists in the MARKERS.
             if(!array_key_exists($v['MARKERS']['field'], $item)) {
-    				  // Add the fied
+    				  // Adds the field
     				  $item[$v['MARKERS']['field']] = $v['MARKERS'][$v['MARKERS']['field']];
     				  $item[$v['MARKERS']['field'] . '_fullFieldName'] =
                 $v['MARKERS'][$v['MARKERS']['field'] . '_fullFieldName'];
@@ -142,7 +142,7 @@ class tx_savlibrary_defaultViewers {
         $items['MARKERS'] = $item;
   			$items['TYPE'] = 'item';
   			
-        // Process labels associated with forms
+        // Processes labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
           foreach ($matches[1] as $keyMatch => $valueMatch) {
             $label = $this->savlibrary->getLL_db(
@@ -155,13 +155,13 @@ class tx_savlibrary_defaultViewers {
           }
         }      
 		
-  			// add the type and Value
+  			// Adds the type and Value
   			$value = $this->savlibrary->_doTemplateItem($items, $tmpl);
 
-        // process localization tags
+        // Processes localization tags
         $value = $this->savlibrary->processLocalizationTags($value);
  			
-        // Process additionnal markers
+        // Processes additionnal markers
         preg_match_all('/###([^#]*)###/', $value, $matches);
 
         foreach ($matches[1] as $match) {
@@ -178,18 +178,25 @@ class tx_savlibrary_defaultViewers {
   			$ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $value;
   			$ta['REGIONS']['items'][$key]['MARKERS']['classItem'] = $items['MARKERS']['classItem'];
 
-  			// Set the icons
+        // Check if the workspace is set
+        $ta['REGIONS']['items'][$key]['MARKERS']['workspace'] = (
+          $row['__workspace__'] ?
+          $row['__workspace__'] :
+          ''
+        );
+
+  			// Sets the icons
   			if ($this->savlibrary->userIsAdmin($row)) {
           if ($this->savlibrary->inputIsAllowedInForm()) {
             $content = '';
-  				  // Add the edit button if allowed
+  				  // Adds the edit button if allowed
             if (!$this->savlibrary->conf['noEditButton']) {
              	$content .= $this->savlibrary->editButton(
                 $this->savlibrary->formName,
                 $row['uid']
               );
             }
-  				  // Add the delete button if allowed
+  				  // Adds the delete button if allowed
             if ($this->savlibrary->userIsSuperAdmin() || (!$this->savlibrary->conf['noDeleteButton'] && !($this->savlibrary->conf['deleteButtonOnlyForCruser'] && $row['cruser_id']!=$GLOBALS['TSFE']->fe_user->user['uid']))) {
   				    $content .= ($content ? '<br />' : '') .
               $this->savlibrary->deleteButton(
@@ -207,24 +214,24 @@ class tx_savlibrary_defaultViewers {
   		}      
 		} else {
 		  switch($this->savlibrary->conf['showNoAvailableInformation']) {
-		    case 0: // Show a message
+		    case 0: // Shows a message
           $ta['REGIONS']['items'][0]['TYPE'] = 'item';
   			  $ta['REGIONS']['items'][0]['MARKERS']['Value'] =
             $this->savlibrary->getLibraryLL('general.noAvailableInformation');
   			  $ta['REGIONS']['items'][0]['MARKERS']['itemIconLeft'] = '';
   			  $ta['REGIONS']['items'][0]['CUTTERS']['CUT_itemIconLeft'] = 1;
           break;
-        case 1: // Do not show a message
+        case 1: // Does not show a message
   		    $ta['REGIONS']['items']='';     
   		    break;
-  		  case 2: // Do not show the extension
+  		  case 2: // Does not show the extension
 		      $ta['TYPE'] = 'showAllHidden';
           return $ta;
   		    break;            
       }
     }
 
-		// Show the new button if newButton is allowed
+		// Shows the new button if newButton is allowed
 		if ($this->savlibrary->inputIsAllowedInForm()) {
       if (!$this->savlibrary->userIsSuperAdmin() && $this->savlibrary->conf['noNewButton']) {
 			 $content = '&nbsp;';
@@ -253,7 +260,7 @@ class tx_savlibrary_defaultViewers {
     $CUT_titleIconRight = !$this->savlibrary->userIsAllowedToInputData();    
     $ta['MARKERS']['titleIconRight'] = '';
     
-    // Add the export icon
+    // Adds the export icon
     if ($this->savlibrary->userIsAllowedToExportData()) {
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->exportButton(
         $this->savlibrary->formName,
@@ -261,7 +268,7 @@ class tx_savlibrary_defaultViewers {
       );
     }
 
-    // Add the print icon
+    // Adds the print icon
     if ($this->savlibrary->inputIsAllowedInForm() || $this->savlibrary->userBelongsToAllowedGroup()) {
       if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['addPrintIcon']) {
         $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton(
@@ -271,14 +278,15 @@ class tx_savlibrary_defaultViewers {
       }  
     }        
     
-    // Add the help icon
+    // Adds the help icon
     if ($this->savlibrary->conf['helpPage']) {
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->helpButton(
         $this->savlibrary->formName,
         0
       );
     } 
-        
+
+    // Adds the toggleModeButton
     if ($this->savlibrary->userIsAllowedToInputData()) {
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->toggleModeButton(
         $this->savlibrary->formName,
@@ -292,7 +300,7 @@ class tx_savlibrary_defaultViewers {
       1
     );
 
-		// arrow selector
+		// Arrow selector
 		$cutLeft = 0;
 		$cutRight = 0;
 		
@@ -333,7 +341,7 @@ class tx_savlibrary_defaultViewers {
       ),
     );
 
-    // Set the form parameters and call the browser
+    // Sets the form parameters and call the browser
     $formParams = array(
       'formAction' => 'browse',
       'limit' => $this->savlibrary->limit,
@@ -375,6 +383,13 @@ class tx_savlibrary_defaultViewers {
     );
 		$ta['TYPE'] = 'showSingle';
 
+    // Class for the title bar in preview mode
+    if ( $GLOBALS['TSFE']->sys_page->versioningPreview && $dataset[0][$this->savlibrary->tableLocal . '.pid'] == -1) {
+      $ta['MARKERS']['workspace'] = 'draftWorkspace';
+    } else {
+      $ta['MARKERS']['workspace'] = '';
+    }
+
     // Add the print icon
     $ta['MARKERS']['titleIconRight'] = '';
     if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['addPrintIcon']) {
@@ -390,20 +405,22 @@ class tx_savlibrary_defaultViewers {
         $this->savlibrary->formName,
         0
       );
-    }      
-
+    }
+         
+    // Adds the close button
     $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->closeButton(
       $this->savlibrary->formName,
       $dataset[0]['uid']
     );
-
+    
+    // Adds the edit button
     if ($this->savlibrary->userIsAllowedToInputData() && $this->savlibrary->userIsAdmin($dataset[0])) {
+//      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->editButton(
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->inputModeButton(
         $this->savlibrary->formName,
         $dataset[0]['uid']
       );
     }
-		
 		return $ta;
 	}
 
@@ -436,6 +453,13 @@ class tx_savlibrary_defaultViewers {
       $row['uid']
     );
 
+    // Class for the title bar in preview mode
+    if ( $GLOBALS['TSFE']->sys_page->versioningPreview && $dataset[0][$this->savlibrary->tableLocal . '.pid'] == -1) {
+      $ta['MARKERS']['workspace'] = 'draftWorkspace';
+    } else {
+      $ta['MARKERS']['workspace'] = '';
+    }
+    
     // Add the help icon
     if ($this->savlibrary->conf['helpPage']) {
       $ta['MARKERS']['titleIconLeft'] .= $this->savlibrary->helpButton(
@@ -606,9 +630,14 @@ class tx_savlibrary_defaultViewers {
           
           // Check if label is associated with the field
           if ($matches[2][$keyMatch]) {
+            $label = (
+              $items['MARKERS'][$matches[1][$keyMatch] . '_Required'] ?
+              '<span class="required">*</span>' :
+              ''
+            );
             $tmpl = str_replace(
               $matches[0][$keyMatch],
-              '<div class="updateCol1">' . $matches[3][$keyMatch] . '</div>' .
+              '<div class="updateCol1">' . $matches[3][$keyMatch] . $label . '</div>' .
                 '<div class="updateCol2">###' . $matches[1][$keyMatch] . '###</div>' .
                 '<div class="updateCol3">###' . $matches[1][$keyMatch] . '_Edit###</div>' .
                 $checkbox,
@@ -767,7 +796,7 @@ class tx_savlibrary_defaultViewers {
   				// get the name
           $items['MARKERS'] = array_merge($items['MARKERS'], $v['MARKERS']);
   			}
-  			$items['TYPE'] = 'item';			
+  			$items['TYPE'] = 'item';
 
         // Process labels associated with forms
         if (preg_match_all('/\$\$\$label\[([^\]]+)\]\$\$\$/', $tmpl, $matches)) {
@@ -837,7 +866,8 @@ class tx_savlibrary_defaultViewers {
 
   			$ta['REGIONS']['items'][$key]['TYPE'] = 'item';
   			$ta['REGIONS']['items'][$key]['MARKERS']['Value'] = $value;
-  		}      
+  			$ta['REGIONS']['items'][$key]['MARKERS']['classItem'] = '';
+  		}
 		} else {
 		  if ($this->savlibrary->conf['showNoAvailableInformation']) {
   			$ta['REGIONS']['items'][0]['TYPE'] = 'item';
@@ -1838,6 +1868,18 @@ class tx_savlibrary_defaultViewers {
     // Process the replaceDistinct and cutter parts
     foreach ($this->xmlReferenceArray as $key => $value) {
       switch ($value['type']) {
+        case 'emptyifsameasprevious':
+          // Parse the template with the known markers
+          $buffer = utf8_decode($value['template']);
+          $buffer = $this->cObj->substituteMarkerArrayCached(
+            $buffer,
+            $markerArray,
+            array(),
+            array()
+          );
+          // Keep the value in the XML reference array
+          $this->xmlReferenceArray[$key]['fieldValue'] = $buffer;
+          break;
         case 'replacedistinct':
           if ($value['changed']) {
             // Parse the template with the previous known markers
@@ -2173,15 +2215,33 @@ class tx_savlibrary_defaultViewers {
         }
       }
     } else {
-      // No marker, just create the reference file with the template
+      // No REF_ marker, just create the reference file with the template
   		if ($fileHandle = fopen($filePath . $fileName, 'a')) {
 
-        // Replace the loalization markers
+        // Replace the localization markers
         $buffer = $template;
+
+        // Check if there exists SPECIAL_REF markers
+        if (preg_match_all('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', $buffer, $matches)) {
+          foreach($matches[0] as $keyMatch => $match) {
+            if ($this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'] != $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']) {
+              if (is_null($this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue'])) {
+                $buffer = str_replace($match, $this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'], $buffer);
+                $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']  = $this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'];
+              } else {
+                $buffer = preg_replace('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', '$1$3', $buffer);
+                $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']  = NULL;
+              }
+            } else {
+              $buffer = preg_replace('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', '$1$3', $buffer);
+            }
+          }
+        }
+
         $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
         $buffer = $this->savlibrary->processConstantTags($buffer);
         $buffer = $this->savlibrary->processLocalizationTags($buffer);
-
+        
 
         fwrite($fileHandle, $buffer);
         fclose($fileHandle);
@@ -2280,8 +2340,16 @@ class tx_savlibrary_defaultViewers {
         unset($element->$child);
       }
 
-      // Replace the node by the reference
-      $element[0] = '###' . $reference . '###';
+      // Replace the node by the reference or a special reference
+      switch ($this->xmlReferenceArray[$reference]['type']) {
+        case 'emptyifsameasprevious':
+          $element[0] = '###SPECIAL_' . $reference . '###';
+          break;
+        default:
+          $element[0] = '###' . $reference . '###';
+          break;
+      }
+
     } else {
 
       $template = $element->asXML();

@@ -2,7 +2,7 @@
 /***************************************************************
 *  Copyright notice
 *
-*  (c) 2009 Yolf (Laurent Foulloy) <yolf.typo3@orange.fr>
+*  (c) 2009 Laurent Foulloy <yolf.typo3@orange.fr>
 *  All rights reserved
 *
 *  This script is part of the TYPO3 project. The TYPO3 project is
@@ -25,7 +25,7 @@
 /**
  * SAV Library: standard queriers
  *
- * @author	Yolf <yolf.typo3@orange.fr>
+ * @author	Laurent Foulloy <yolf.typo3@orange.fr>
  *
  */
  
@@ -65,7 +65,7 @@ class tx_savlibrary_defaultQueriers {
 	 */
 	public function showAll_SELECT_defaultQuerier(&$query, $uid=0) {
 
-	  // Add or replace the query with the page TSconfig if any
+	  // Adds or replaces the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
     $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
       [$this->savlibrary->formConfig['title'] . '.']['showAll.']['query.'];
@@ -75,7 +75,7 @@ class tx_savlibrary_defaultQueriers {
       }  
     }
 
-		// Get the extKey from the caller if any
+		// Gets the extKey from the caller if any
 		$extKeyCaller = $this->savlibrary->sessionFilterSelected;
 
 		if ($extKeyCaller) {
@@ -87,7 +87,7 @@ class tx_savlibrary_defaultQueriers {
       $addTables = $extFilter['tableName'];
 
 		} else {
-        // Add a where clause depending on the configuration
+        // Adds a where clause depending on the configuration
 			 $addWhere = ' AND '.(
         isset($this->savlibrary->conf['noFilterShowAll']) ?
         $this->savlibrary->conf['noFilterShowAll'] :
@@ -95,7 +95,7 @@ class tx_savlibrary_defaultQueriers {
       );
 		}
 
-		// Add the permanent filter if any
+		// Adds the permanent filter if any
 		$addWhere .= (
       isset($this->savlibrary->conf['permanentFilter']) && $this->savlibrary->conf['permanentFilter'] ?
       ' AND ' . $this->savlibrary->conf['permanentFilter'] :
@@ -103,23 +103,23 @@ class tx_savlibrary_defaultQueriers {
     );
     $addWhere = $this->processWhereClause($addWhere);
 
-    // Get the where identifier if sent via the get method
+    // Gets the where identifier if sent via the get method
     if ($this->savlibrary->sessionExt[$this->savlibrary->formName]['where']) {
       $whereId = $this->savlibrary->sessionExt[$this->savlibrary->formName]['where'];
     }
 
     $tableReference = $this->buidTableReference($query, $addTables);
 
-    // Process the where clause
+    // Processes the where clause
     if ($query['where']) {    
       
       $query['where'] = $this->processWhereClause($query['where']);   
 
-      // Replace the table names by their aliases in the where clause
+      // Replaces the table names by their aliases in the where clause
       $query['where'] = $this->replaceTableNames($query['where']); 
     }
 
-    // Get the number of items satisfying the query with no limit field
+    // Gets the number of items satisfying the query with no limit field
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			/* SELECT   */	'count(' .
         ($query['group'] ? 'distinct ' . $query['group']:'*') . ') as nbitem' .
@@ -143,7 +143,7 @@ class tx_savlibrary_defaultQueriers {
 				''
 		);
 
-    // Check for errors
+    // Checks for errors
 	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
       return false;
     }
@@ -152,7 +152,7 @@ class tx_savlibrary_defaultQueriers {
 
 	  $nbitem = $row['nbitem'];
     
-		// Exec the query
+		// Executes the query
 		$order = (($GLOBALS['TCA'][$query['tableLocal']]['ctrl']['sortby'] && !($search && $searchOrder)) ? $query['tableLocal'] . '.' . $GLOBALS['TCA'][$query['tableLocal']]['ctrl']['sortby'] : $searchOrder);
       	
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -186,7 +186,7 @@ class tx_savlibrary_defaultQueriers {
 				($this->savlibrary->conf['maxItems'] ? ($this->savlibrary->conf['maxItems']*($this->savlibrary->limit)) . ',' . ($this->savlibrary->conf['maxItems']) : '')
 		);
 
-    // Check for errors
+    // Checks for errors
 	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
       return false;
     }
@@ -214,7 +214,7 @@ class tx_savlibrary_defaultQueriers {
 	 */
 	public function showSingle_SELECT_defaultQuerier(&$query, $uid=0) {
 
-	  // Add or replace the query with the page TSconfig if any
+	  // Adds or replaces the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
     $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
       [$this->savlibrary->formConfig['title'] . '.']['showSingle.']['query.'];
@@ -224,7 +224,7 @@ class tx_savlibrary_defaultQueriers {
       }  
     }
 
-		// Exec the query
+		// Executes the query
 		$tableReference = $this->buidTableReference($query, $addTables);
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -244,7 +244,7 @@ class tx_savlibrary_defaultQueriers {
         ''
 		);
 
-    // Check for errors
+    // Checks for errors
 	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
       return false;
     }
@@ -271,7 +271,7 @@ class tx_savlibrary_defaultQueriers {
 	 */
 	public function inputForm_SELECT_defaultQuerier(&$query, $uid=0) {
 	
-	  // Add or replace the query with the page TSconfig if any
+	  // Adds or replaces the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
     $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
       [$this->savlibrary->formConfig['title'] . '.']['inputForm.']['query.'];
@@ -286,7 +286,7 @@ class tx_savlibrary_defaultQueriers {
       return $array;
 		}
 
-		// Exec the query
+		// Executes the query
 		$tableReference = $this->buidTableReference($query, $addTables);
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -305,7 +305,7 @@ class tx_savlibrary_defaultQueriers {
 			/* LIMIT    */	''	
 		);
 
-    // Check for errors
+    // Checks for errors
 	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
       return false;
     }
@@ -330,7 +330,7 @@ class tx_savlibrary_defaultQueriers {
 	 */
 	public function updateForm_SELECT_defaultQuerier(&$query, $uid=0) {
 	
-		  // Add or replace the query with the page TSconfig if any
+		  // Adds or replaces the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
     $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
       [$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
@@ -346,21 +346,21 @@ class tx_savlibrary_defaultQueriers {
 		}
     $this->savlibrary->addMessage('message.clikToUpdate');
 
-    // Get the variable
+    // Gets the variable
     $extPOSTVars = t3lib_div::_POST($this->savlibrary->formName); 
     $error = false;
     
-    // Buid the configuration table
+    // Builds the configuration table
     $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
     $configTable = $this->buildConfigurationTable($viewConfiguration);
 
-    // Get the uploaded files
+    // Gets the uploaded files
     $errorForm = $this->uploadFiles($this->savlibrary->formName, $configTable, $extPOSTVars);
     if (is_array($errorForm)) {
       $error = true;
     }
 
-    // Verify the required fields
+    // Verifies the required fields
     if (is_array($extPOSTVars)) {
 
       foreach ($extPOSTVars as $keyVar => $valueVar) {
@@ -376,15 +376,15 @@ class tx_savlibrary_defaultQueriers {
       }           
     }     
 
-    // Check if it is the Admin mode
+    // Checks if it is the Admin mode
     if ($extPOSTVars['formAction'] == 'updateFormAdmin') {
-      // Prepare data for update
+      // Prepares data for update
       foreach($_POST[$this->savlibrary->formName] as $field => $value) {
         if(!$_POST['Check_'.$this->savlibrary->formName][$field]) {
           unset($_POST[$this->savlibrary->formName][$field]);
         } 
       }
-      // Update     
+      // Updates
       $errors = $this->savlibrary->queries_update(
         $this->extConfig['queries'][$this->savlibrary->formConfig['query']]
       );
@@ -393,7 +393,7 @@ class tx_savlibrary_defaultQueriers {
           $this->savlibrary->addError(current($error), ' [' . $key . ']');
         }      
       } else {
-        // Get the _submitted data
+        // Gets the _submitted data
         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
           /* SELECT  */ '_submitted_data_',
         	/* TABLE   */	$this->savlibrary->tableLocal,		
@@ -402,12 +402,12 @@ class tx_savlibrary_defaultQueriers {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         $submitted_data = unserialize($row['_submitted_data_']);
       
-        // Clear the data updated by the Admin
+        // Clears the data updated by the Admin
         unset($submitted_data[$this->savlibrary->formShortName]);
         unset($submitted_data['New_' . $this->savlibrary->formShortName]);
         unset($_POST['New_'.$this->savlibrary->formName]);
 
-        // update
+        // Updates
         $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         	/* TABLE   */	$this->savlibrary->tableLocal,		
         	/* WHERE   */	$this->savlibrary->tableLocal . '.uid=' . intval($uid),
@@ -417,7 +417,7 @@ class tx_savlibrary_defaultQueriers {
        	$this->savlibrary->addMessage('message.dataSaved', '', 'datasaved');
       } 
     } elseif ($extPOSTVars) {
-      // Get the previous data
+      // Gets the previous data
       $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
         /* SELECT  */ '_submitted_data_',
       	/* TABLE   */	$this->savlibrary->tableLocal,		
@@ -425,7 +425,7 @@ class tx_savlibrary_defaultQueriers {
      	);
       $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
-      // Merge with new one
+      // Merges with new one
       $arrayToMerge = (
         $error ?
         array('Temp_' . $this->savlibrary->formShortName => $extPOSTVars) :
@@ -442,7 +442,7 @@ class tx_savlibrary_defaultQueriers {
         unset($submitted_data['Temp_' . $this->savlibrary->formShortName]);
       }
 
-      // Check if data with the New_ tag were posted
+      // Checks if data with the New_ tag were posted
       $extNewPOSTVars = t3lib_div::_POST('New_' . $this->savlibrary->formName);
 
       if ($extNewPOSTVars) {
@@ -452,7 +452,7 @@ class tx_savlibrary_defaultQueriers {
         );
       }  
       
-      // update
+      // Updates
       $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
       	/* TABLE   */	$this->savlibrary->tableLocal,		
       	/* WHERE   */	$this->savlibrary->tableLocal . '.uid=' . intval($uid),
@@ -472,7 +472,7 @@ class tx_savlibrary_defaultQueriers {
       }
     }
 
-		// Exec the query
+		// Executes the query
 		$tableReference = $this->buidTableReference($query, $addTables);
 
 		$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -492,7 +492,7 @@ class tx_savlibrary_defaultQueriers {
         '1'
 		);
 
-    // Check for errors
+    // Checks for errors
 	  if ($GLOBALS['TYPO3_DB']->sql_error($res)) {
       return false;
     }
@@ -587,9 +587,9 @@ class tx_savlibrary_defaultQueriers {
 			return array('fatal' => 'notAuthenticated');
 		}
 
-    // Clear the cache when the data are updated for USER form
+    // Clears the cache when the data are updated for USER form
     if ($this->extConfig['forms'][$formId]['userPlugin']) {
-      // Clear the cache for the current page and the pagesToClear configuration
+      // Clears the cache for the current page and the pagesToClear configuration
       if ($this->savlibrary->conf['pagesToClear']) {
         $pagesToClear = $this->savlibrary->conf['pagesToClear'] .
           ',' . intval($GLOBALS['TSFE']->id);
@@ -604,23 +604,23 @@ class tx_savlibrary_defaultQueriers {
   		$GLOBALS['TYPO3_DB']->exec_DELETEquery('cache_pages', 'page_id IN (' . $pagesToClear . ')');
     }
 
-    // Get the view configuration
+    // Gets the view configuration
     if ($this->savlibrary->formConfig['updateForm']) {
 			$viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
 			
-		  // Set viewName for the page TSconfig
+		  // Sets viewName for the page TSconfig
       $this->savlibrary->viewName = 'updateForm';
 		} else {
 		  $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$this->savlibrary->folderTab]['fields'];
 
-		  // Set viewName for the page TSconfig
+		  // Sets viewName for the page TSconfig
       $this->savlibrary->viewName = 'inputForm';
 		}
 
-    // Buid the configuration table
+    // Builds the configuration table
     $configTable = $this->buildConfigurationTable($viewConfiguration);
 
-    // Check if the mailAways is set. If found, the first configuration field is taken for configuration
+    // Checks if the mailAways is set. If found, the first configuration field is taken for configuration
     foreach ($configTable as $field => $config) {
       if ($config['mail'] && $config['mailalways']) {
         $configMailAlways = $config;
@@ -628,7 +628,7 @@ class tx_savlibrary_defaultQueriers {
       }    
     }   
 
-    // Check if the update concerns subform items processing
+    // Checks if the update concerns subform items processing
     $getVars = $this->savlibrary->uncompressParams(t3lib_div::_GET('sav_library'));
        
     switch ($this->savlibrary->formAction) {
@@ -646,7 +646,7 @@ class tx_savlibrary_defaultQueriers {
         $MM_table = $configTable[$getVars['field']]['MM'];
         $uidItem = $getVars['uidItem'];
 
-        // Get the sorting value of the item
+        // Gets the sorting value of the item
       	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
       		/* SELECT  */  'sorting',
       		/* TABLE   */	$MM_table,		
@@ -656,7 +656,7 @@ class tx_savlibrary_defaultQueriers {
         $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
         $sorting = $row['sorting'];
         
-        // Get the minimum
+        // Gets the minimum
       	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
       		/* SELECT  */  '*',
       		/* TABLE   */	$MM_table,
@@ -668,7 +668,7 @@ class tx_savlibrary_defaultQueriers {
         $uidForeignMin = $row['uid_foreign'];
         $sortingMin = $row['sorting'];
 
-        // Get the maximum
+        // Gets the maximum
       	$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
       		/* SELECT  */  '*',
       		/* TABLE   */	$MM_table,
@@ -680,11 +680,11 @@ class tx_savlibrary_defaultQueriers {
         $uidForeignMax = $row['uid_foreign'];
         $sortingMax = $row['sorting'];
 
-        // Find the record to change
+        // Finds the record to change
         if ($sorting == $sortingMin && $this->savlibrary->formAction == 'upBtn') {
           $newSorting = $sortingMax + 1;
 
-          // update the first record
+          // Updates the first record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
         		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
@@ -692,7 +692,7 @@ class tx_savlibrary_defaultQueriers {
         		/* FIELDS  */	array('sorting' => $newSorting)
        		);
        		
-       		// reorder all the records
+       		// Reorders all the records
        		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting - 1 ' .
             ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
           $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdate);
@@ -700,7 +700,7 @@ class tx_savlibrary_defaultQueriers {
         } elseif ($sorting == $sortingMax && $this->savlibrary->formAction == 'downBtn') {
           $newSorting = $sortingMin - 1;
 
-          // update the first record
+          // Updates the first record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
         		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
@@ -708,7 +708,7 @@ class tx_savlibrary_defaultQueriers {
         		/* FIELDS  */	array('sorting' => $newSorting)
        		);
 
-       		// reorder all the records
+       		// Reorders all the records
        		$queryUpdate = 'UPDATE ' . $MM_table . ' SET sorting = sorting + 1 ' .
             ' WHERE ' . $MM_table . '.uid_local=' . intval($uid);
           $res = $GLOBALS['TYPO3_DB']->sql_query($queryUpdate);
@@ -726,7 +726,7 @@ class tx_savlibrary_defaultQueriers {
           $newSorting = $row['sorting'];
           $uidForeign = $row['uid_foreign'];
    
-          // update the first record
+          // Updates the first record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
         		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
@@ -734,7 +734,7 @@ class tx_savlibrary_defaultQueriers {
         		/* FIELDS  */	array('sorting' => $newSorting)
        		);
                
-          // update the second record
+          // Updates the second record
         	$res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
         		/* TABLE   */	$MM_table,
         		/* WHERE   */	$MM_table . '.uid_local=' . intval($uid) .
@@ -746,7 +746,7 @@ class tx_savlibrary_defaultQueriers {
      		return 0;
         break;
       case 'deleteItemBtn':    
-        // Set the deleted flag of the foreign table
+        // Sets the deleted flag of the foreign table
         $MM_table = $configTable[$getVars['field']]['MM'];
         $allowed_table = $configTable[$getVars['field']]['allowed'];
         $uidItem = $getVars['uidItem'];
@@ -757,7 +757,7 @@ class tx_savlibrary_defaultQueriers {
       		/* FIELDS  */	array('deleted' => 1)
      		);
                  
-        // Delete the relation
+        // Deletes the relation
         if (!$configTable[$getVars['field']]['norelation']) {
   				$res = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
             /* TABLE   */	$MM_table,		
@@ -769,7 +769,7 @@ class tx_savlibrary_defaultQueriers {
         break;    
     }
 
-    // Process the data
+    // Processes the data
 		$row = t3lib_div::_POST($this->savlibrary->formName);	
 
 		if (!is_array($row)) {
@@ -781,26 +781,26 @@ class tx_savlibrary_defaultQueriers {
 		}
 		$error = false;
 
-    // Get the uploaded files
+    // Gets the uploaded files
     $errorForm = $this->uploadFiles($this->savlibrary->formName, $configTable, $row);
     if (is_array($errorForm)) {
       $error = true;
     }
 
-		// Remove the fields or make special processing when special processing is needed
+		// Removes the fields or make special processing when special processing is needed
 		$regularRow = $row;
 		$special = array();
 
 		foreach ($row as $field => $values) {
 
-      // Get the configuration
+      // Gets the configuration
       $config = $configTable[$field];
 
 		  foreach ($values as $key => $value) {
 		  
   			// Verification
-  			// Check if the field is required 	
-  			if ($config['required'] || $config['eval'] == 'required') {
+  			// Checks if the field is required
+  			if ($config['required'] || strpos($config['eval'], 'required') !== false) {
 
           switch ($config['type']) {
             case 'select':
@@ -817,7 +817,7 @@ class tx_savlibrary_defaultQueriers {
               }
           }
         } 
-        // check if the max attribute is set
+        // Checks if the max attribute is set
         if ($config['max']) {
           switch ($config['type']) {
             case 'input':
@@ -830,19 +830,19 @@ class tx_savlibrary_defaultQueriers {
           }
         } 
    
-        // Check if verifier is used
+        // Checks if a verifier is used
         $func = $config['verifier'];
 
         if ($func) {
           if (method_exists($this->savlibrary->verifiers, $func)) {
-            // Process value
+            // Processes the value
             if (is_array($value)) {
               foreach($value as $keySimpleValue => $simpleValue) {
                 $temp = $this->savlibrary->verifiers->$func($simpleValue, $config['verifierparam'], $uid);
                 if (!$errorForm[$field] && $temp) {
                   $errorForm[$field][$key] = $temp;
                   
-                  // Check if warning is set
+                  // Checks if a warning is set
                   if ($config['verifiersetwarning']) {
                     unset($regularRow[$field][$key][$keySimpleValue]);
                     unset($value[$keySimpleValue]);
@@ -857,7 +857,7 @@ class tx_savlibrary_defaultQueriers {
               if (!$errorForm[$field] && $temp) {
                 $errorForm[$field][$key] = $temp;
                 
-                // Check if warning is set
+                // Checks if a warning is set
                 if ($config['verifiersetwarning']) {
                   unset($regularRow[$field][$key]);
                   unset($value);
@@ -876,13 +876,13 @@ class tx_savlibrary_defaultQueriers {
         if ($error_field) {
           $error = true;
   				$error_field = false;
-  				//remove the field
+  				// Removes the field
   				unset($regularRow[$field]);
   			}	else {
   				switch($config['type']) {
   				  case 'check' :
   				    if (is_array ($config['items'])) {
-  				      // Several checkboxes => build one integer
+  				      // Several checkboxes => builds one integer
   				      $pow = 1;
   				      $val = 0;
   				      foreach($value as $checked) {
@@ -906,7 +906,7 @@ class tx_savlibrary_defaultQueriers {
   						}
   						$line = substr($line,0,-1);
 
-  						//replace the field
+  						// Replaces the field
   						$regularRow[$field][$k] = $line;
   						break;
   					case 'group':
@@ -919,7 +919,7 @@ class tx_savlibrary_defaultQueriers {
               if ($config['foreign_table'] && $config['maxitems']>1) {
                 if ($config['MM']) {
                   $special[] = array($field => $regularRow[$field]);
-                  //remove the field
+                  // Removes the field
                   unset($regularRow[$field]);             
                 } else {
                 // Comma list field
@@ -931,7 +931,6 @@ class tx_savlibrary_defaultQueriers {
   						switch($config['eval']) {
   							case 'datetime':
   							case 'date':
-
   								$regularRow[$field][$key] = $this->savlibrary->date2timestamp($value , $config, $errorDate);	
 
                   if ($errorDate)	{
@@ -944,9 +943,9 @@ class tx_savlibrary_defaultQueriers {
   						break;
   				}				
   			}
-  		  // check if a mail should be sent. Get the previous data for the post-processing.	  
+  		  // Checks if a mail should be sent. Get the previous data for the post-processing.
         if ($config['mail'] || isset($configMailAlways)) {
-    		  // check if a mail should be sent
+    		  // Checks if a mail should be sent
           if ($value || isset($configMailAlways)) {
             $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
             $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
@@ -968,13 +967,13 @@ class tx_savlibrary_defaultQueriers {
 	    }
 		}
 
-		// return errors if any
+		// Returns errors if any
 		if($error) {
 			$this->savlibrary->errorInForm = true;
 			return $errorForm;
 		}
 
-		// Process the regular rows. Explode the key to get the table and field names
+		// Processes the regular rows. Explode the key to get the table and field names
 		$vars = array();
 		foreach($regularRow as $key => $value) {
 		  foreach ($value as $k => $v) {
@@ -988,7 +987,7 @@ class tx_savlibrary_defaultQueriers {
   
          if ($uidWhere) {
           
-            // update the fields
+            // Updates the fields
     			  if ($GLOBALS['TCA'][$table]['ctrl']['tstamp']) {
               $fields[$GLOBALS['TCA'][$table]['ctrl']['tstamp']] = time();
     				}
@@ -1003,7 +1002,7 @@ class tx_savlibrary_defaultQueriers {
           
           } else {
 
-            // Insert the fields in the storage page if any or in the current
+            // Inserts the fields in the storage page if any or in the current
             // page by default
             $fields['pid'] = (
               $this->savlibrary->conf['storagePage'] ?
@@ -1033,7 +1032,7 @@ class tx_savlibrary_defaultQueriers {
               return;   
             }
                                
-            // Check if it is a relation table
+            // Checks if it is a relation table
             $parentField = $configTable[$table]['parentField'];
             if ($parentField) {
               $config = $configTable[$parentField];
@@ -1042,7 +1041,7 @@ class tx_savlibrary_defaultQueriers {
                 if ($config['MM']) {
                   $MM_table = $config['MM'];
               
-                  // Get the number of items in the MM table
+                  // Gets the number of items in the MM table
     						  $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   						      /* SELECT */  'count(*) AS nbitem, max(sorting) as maxsorting', 
   							    /* FROM   */	$MM_table,		
@@ -1051,14 +1050,14 @@ class tx_savlibrary_defaultQueriers {
                   $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res); 
                   $maxSorting = $row['maxsorting'];           
                                  
-                  // Insert the relation in the MM table
+                  // Inserts the relation in the MM table
      						  $vars = array('uid_local' => $uid, 'uid_foreign' => $new_uid,'sorting' => (int) $maxSorting +1);
     						  $res = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
     							  /* TABLE   */	$MM_table,		
     							  /* FIELDS  */	$vars
     						  );            
 						  
-                  // Update the local table field with the number of records
+                  // Updates the local table field with the number of records
                   $vars = array($config['field'] => (int) $nbitem +1);
                   $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
     						    /* TABLE   */	$config['table'],		
@@ -1069,7 +1068,7 @@ class tx_savlibrary_defaultQueriers {
                   $this->savlibrary->uid = $uid; 
                                         
                 } elseif ($config['allowed']) {
-                  // Update the relation
+                  // Updates the relation
                   $vars = array($config['field'] => (int) $new_uid);
                   $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
     						    /* TABLE   */	$config['table'],		
@@ -1091,9 +1090,9 @@ class tx_savlibrary_defaultQueriers {
  
     // Post-Processing if any
 
-  	// check if a mail (MailAlways) should be sent
+  	// Checks if a mail (MailAlways) should be sent
     if (isset($configMailAlways)) {
-      // Get the dataset
+      // Gets the dataset
       $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
       $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
       $temp = $this->$func($query, $this->savlibrary->uid);
@@ -1127,14 +1126,14 @@ class tx_savlibrary_defaultQueriers {
           );
       }
       
-      // Get the new items (posted as New_) 
+      // Gets the new items (posted as New_)
       $newPOSTVars = t3lib_div::_POST('New_' . $this->savlibrary->formName);
 
       unset($dataset);
 
 		  foreach($newPOSTVars as $keyField => $valueField) { 
 		    $value = current($valueField);
-        // process special type
+        // Processes special type
         if ($configTable[$keyField]['type'] == 'input' && ($configTable[$keyField]['eval'] == 'date' || $configTable[$keyField]['eval'] == 'datetime')) {
           $value = $this->savlibrary->date2timestamp(
             $value ,
@@ -1164,7 +1163,7 @@ class tx_savlibrary_defaultQueriers {
         }
       }
 
-      // Put it in the order of the post
+      // Puts it in the order of the post
       $mA['###ITEMS_MANUAL###'] = '';
       foreach($newPOSTVars as $keyField => $valueField) {  
         $mA['###ITEMS_MANUAL###'] = $mA['###ITEMS_MANUAL###'] . $temp[$keyField];
@@ -1174,7 +1173,7 @@ class tx_savlibrary_defaultQueriers {
     }
 
 		foreach($regularRow as $keyField => $valueField) {
-  		// check if a mail should be sent		
+  		// Checks if a mail should be sent
       if (($configTable[$keyField]['mail'] && (
             ($this->savlibrary->formAction=='updateBtn' && $keyField == $this->savlibrary->fieldFromButton) ||
             $configTable[$keyField]['mailauto'] ||
@@ -1183,7 +1182,7 @@ class tx_savlibrary_defaultQueriers {
 
         $mailSent = 0;
   			foreach($valueField as $key => $value) {
-          // Get the dataset
+          // Gets the dataset
           $func = trim($this->savlibrary->savlibraryConfig['queriers']['select']['showSingle']);
           $query = $this->extConfig['queries'][$this->savlibrary->formConfig['query']];
           if ($this->savlibrary->rowItemFromButton) {
@@ -1193,11 +1192,11 @@ class tx_savlibrary_defaultQueriers {
           $temp = $this->$func($query, $this->savlibrary->uid);
           $dataset = current($temp);  
       
-          // Remove timestamp
+          // Removes timestamp
           unset($previousData[$key][$configTable[$keyField]['table'] . '.tstamp']);
           unset($dataset[$configTable[$keyField]['table'] . '.tstamp']);
           
-          // Check if mail must be sent 			
+          // Checks if mail must be sent
           $mailToSend = 0; 
           if ($configTable[$keyField]['mailauto']) {
             if ($value && $previousData[$key] != $dataset) {  			
@@ -1216,7 +1215,7 @@ class tx_savlibrary_defaultQueriers {
 
           if ($mailToSend) {
           
-            // Check if a language configuration is set for the message
+            // Checks if a language configuration is set for the message
             if ($configTable[$keyField]['mailmessagelanguagefromfield']) {            
               $configTable[$keyField]['mailmessagelanguage'] =
                 $regularRow[$configTable[$keyField]['table'] . '.' .
@@ -1235,10 +1234,10 @@ class tx_savlibrary_defaultQueriers {
               0
             );
 
-            // Reset language if a language configuration is set for the message         
+            // Resets language if a language configuration is set for the message
             if ($configTable[$keyField]['mailmessagelanguage']) {
               $GLOBALS['TSFE']->lang = $lang;
-              // unset the cached language file which is obtained through the title field
+              // Unsets the cached language file which is obtained through the title field
               $title = $GLOBALS['TCA'][$configTable[$keyField]['table']]['ctrl']['title'];
               if (preg_match('/EXT:[^:]+/', $title, $match)) {
                 unset($GLOBALS['TSFE']->LL_files_cache[$match[0]]);            
@@ -1255,7 +1254,7 @@ class tx_savlibrary_defaultQueriers {
               );
             }
 
-            // Set the mail reveiver from field if any
+            // Sets the mail reveiver from field if any
             if (isset($configTable[$keyField]['mailreceiverfromfield'])) {
               $configTable[$keyField]['mailreceiver'] =
                 $this->savlibrary->getValue(
@@ -1267,7 +1266,7 @@ class tx_savlibrary_defaultQueriers {
 
             $mailSent = $this->sendEmail($configTable[$keyField], $mA);
 
-            // update the mail Flag
+            // Updates the mail Flag
             if (!$configTable[$keyField]['mailauto'] && !$configTable[$keyField]['mailiffieldsetto']) {
               $res = $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
             		/* TABLE   */	$configTable[$keyField]['table'],		
@@ -1279,12 +1278,12 @@ class tx_savlibrary_defaultQueriers {
         } 
       } 
 
-      // Check if a query should be executed
+      // Checks if a query should be executed
       if ($configTable[$keyField]['query']) {
         $fieldQuery = $configTable[$keyField]['query']; 
 
   			foreach($valueField as $key => $value) {
-          // Check if the use of the query property is allowed
+          // Checks if the use of the query property is allowed
           if (!$this->savlibrary->conf['allowQueryProperty']) {
             $error = true;
             $errorForm[$keyField][$key] = 'error.queryPropertyNotAllowed';
@@ -1298,7 +1297,7 @@ class tx_savlibrary_defaultQueriers {
             $mA["###value###"] = $val;
             $mA["###user###"] = $GLOBALS['TSFE']->fe_user->user['uid'];
             if ($configTable[$keyField]['queryforeach']) {
-              // Get the table name and the field
+              // Gets the table name and the field
               if(strpos($configTable[$keyField]['queryforeach'], '.') === false) {
                 $foreachField = $this->savlibrary->cryptTag(
                   $this->savlibrary->tableLocal . '.' . $configTable[$keyField]['queryforeach']
@@ -1360,15 +1359,15 @@ class tx_savlibrary_defaultQueriers {
   			switch($config['type']) {
   				case 'select':
   				  if($config['MM']) {
-  				    // the table has multiple links
+  				    // The table has multiple links
               $foreign_table = $config['foreign_table'];
               $MM_table = $config['MM'];
  
-               // Get the uid
+               // Gets the uid
               $temp = current($field);
               $uid = $key;           
 
-              // Delete the previous records in the MM table if $uid exists
+              // Deletes the previous records in the MM table if $uid exists
               if ($key) {
   						  $res = $GLOBALS['TYPO3_DB']->exec_DELETEquery(
                   /* TABLE   */	$MM_table,		
@@ -1380,14 +1379,14 @@ class tx_savlibrary_defaultQueriers {
                   $uid
                 );
               } elseif (!$this->savlibrary->uid) {
-                // Insert the fields in the storage page if any or in the current
+                // Inserts the fields in the storage page if any or in the current
                 // page by default
                 $fields['pid'] = (
                   $this->savlibrary->conf['storagePage'] ?
                   $this->savlibrary->conf['storagePage'] :
                   $GLOBALS['TSFE']->id
                 );
-     				  // Controls
+     				    // Controls
       				  if ($GLOBALS['TCA'][$table]['ctrl']['cruser_id']) {
       					  $fields[$GLOBALS['TCA'][$table]['ctrl']['cruser_id']] =
                     $GLOBALS['TSFE']->fe_user->user['uid'];
@@ -1420,9 +1419,9 @@ class tx_savlibrary_defaultQueriers {
                 $new_uid_special = $new_uid; // Case where a MM table is associated with a record created a regular
               }
 
-              // Insert the new records
+              // Inserts the new records
 
-              // Check if items are in the table. This may happen in special cases when a new record is created and items are already in the table
+              // Checks if items are in the table. This may happen in special cases when a new record is created and items are already in the table
               // For example, fe_user associated with the current user. In that case, the new records have to be added and, therefore, the position 
               // should take into account existing items.
     					$res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
@@ -1442,7 +1441,7 @@ class tx_savlibrary_defaultQueriers {
                     'sorting' => (int) $initPos + $pos + 1
                   );
   						    
-  						    // Because no primary key is used, check if the record exists
+  						    // Because no primary key is used, checks if the record exists
     						  $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   						      /* SELECT */  '*', 
   							    /* FROM   */	$MM_table,		
@@ -1476,7 +1475,7 @@ class tx_savlibrary_defaultQueriers {
       }									
 		}
 
-		// return errors if any
+		// Returns errors if any
 		if($error) {
 			$this->savlibrary->errorInForm = true;
 			return $errorForm;
@@ -1495,88 +1494,109 @@ class tx_savlibrary_defaultQueriers {
    ***************************************************************/
 
 	/**
-	 * upload Files
+	 * Uploads Files
 	 *
    * @param $table string (table name)
  	 *
 	 * @return string
 	 */
   public function uploadFiles($formName, &$configTable, &$row) {
-		// check for uploaded files
-		if (is_array($GLOBALS['_FILES'][$formName])) {
+
+		// Checks for uploaded files
+		$files = $GLOBALS['_FILES'][$formName];
+
+		if (is_array($files)) {
       $error = false;
-			foreach($GLOBALS['_FILES'][$formName]['name'] as $keyField => $valueField) {
-			
+			foreach ($files['name'] as $fieldKey => $field) {
+
         $errorField = false;
 
-				if (array_key_exists($keyField, $configTable)) {
-				  foreach ($valueField as $key => $value) {
+				if (array_key_exists($fieldKey, $configTable)) {
+				  foreach ($field as $uid => $fileNames) {
+            $value = '';
+            foreach ($fileNames as $fileNameKey => $fileName) {
 
-            // Insert the file name in the row
-            $value = str_replace(' ', '_', $value);
-            if ($value) {
+              $trimmedFileName = str_replace(' ', '_', $fileName);
+                
+              if ($trimmedFileName) {
 
-              $config = $configTable[$keyField];
+                $config = $configTable[$fieldKey];
 
-              // Verification
-              $func = $config['verifier'];
-              if ($func) {
-                if (method_exists($this->savlibrary->verifiers, $func)) {
-                  $temp = $this->savlibrary->verifiers->$func($value, $config['verifierparam']);
-                  if (!$errorForm[$keyField][$key] && $temp) {
-                    $errorForm[$keyField][$key] = $temp;
+                // Verification
+                $func = $config['verifier'];
+                if ($func) {
+                  if (method_exists($this->savlibrary->verifiers, $func)) {
+                    $temp = $this->savlibrary->verifiers->$func($value, $config['verifierparam']);
+                    if (!$errorForm[$fieldKey][$uid] && $temp) {
+                      $errorForm[$fieldKey][$uid] = $temp;
+                      $errorField = true;
+                    }
+                  } else {
                     $errorField = true;
+				            $errorForm[$fieldKey][$uid] = 'error.verifierUnknown';
                   }
-                } else {
-                  $errorField = true;
-				          $errorForm[$keyField][$key] = 'error.verifierUnknown';
                 }
-              }
 
-              if (!$errorField) {
-  						  $valueField = $value;
-					       // check if the file extention is allowed
-                $path_parts = pathinfo($valueField);
+                if (!$errorField) {
+                  // Checks the size
+                  if ($files['size'][$fieldKey][$uid][$fileNameKey] > $config['max_size'] * 1024) {
+  						      $error = true;
+  						      $errorForm[$fieldKey][$uid] = 'error.maxFileSizeExceededInUpload';
+                  }
+  
+                  // Checks if the file extention is allowed
+                  $path_parts = pathinfo($trimmedFileName);
+                  if (($config['allowed'] && strpos($config['allowed'], $path_parts['extension']) === false)
+                    || (!$config['allowed'] && (strpos($config['disallowed'], $path_parts['extension']) !== false))
+                    ) {
+  						      $error = true;
+  						      $errorForm[$fieldKey][$uid] = 'error.extensionNotAllowed';
+                  } else {
 
-                if (($config['allowed'] && strpos($config['allowed'], $path_parts['extension']) === false)
-                  || (!$config['allowed'] && (strpos($config['disallowed'], $path_parts['extension']) !== false))
-                  ) {
-						      $error = true;
-						      $errorForm[$keyField][$key] = 'error.extensionNotAllowed';
-                } else {
+    						    // Creates the directories if necessary
+    						    $uploadfolder = $config['uploadfolder'] . ($row['addtouploadfolder'][$uid] ? '/' . $row['addtouploadfolder'][$uid] : '');
 
-                  // Add the field to the row
-  						    $row[$keyField][$key] = $value;
+    						    $dirs = explode('/',$uploadfolder);
+    						    $path = '.';
+    						    foreach($dirs as $dir){
+                      $path .= '/' . $dir;
+    						      if (!is_dir($path)) {
+                        if(!mkdir($path)) {
+                          $error = true;
+                          $errorForm[$fieldKey][$uid] = 'error.mkdirIncorrect';
+                        }
+    							    }
+    						    }
 
-  						    // create the directories if necessary
-  						    $uploadfolder = $config['uploadfolder'] . ($row['addtouploadfolder'][$key] ? '/' . $row['addtouploadfolder'][$key] : '');
-
-  						    $dirs = explode('/',$uploadfolder);
-  						    $path = '.';
-  						    foreach($dirs as $dir){
-                    $path .= '/' . $dir;
-  						      if (!is_dir($path)) {
-                      if(!mkdir($path)) {
-                        $error = true;
-                        $errorForm[$keyField][$key] = 'error.mkdirIncorrect';
-                      }
-  							    }
-  						    }
-
-  						    // Move the file in the uploadfolder
-  						    if (!move_uploaded_file($GLOBALS['_FILES'][$formName]['tmp_name'][$keyField][$key], $uploadfolder . '/' . $valueField)) {
-                    $error = true;
-  							    $errorForm[$keyField][$key] = 'error.uploadedIncorrect';
-  						    }
-  					    }
-					    } else {
-                $error = true;
+    						    // Moves the file in the uploadfolder
+    						    if (!move_uploaded_file($files['tmp_name'][$fieldKey][$uid][$fileNameKey], $uploadfolder . '/' . $trimmedFileName)) {
+                      $error = true;
+    							    $errorForm[$fieldKey][$uid] = 'error.uploadedIncorrect';
+    						    }
+    					    }
+    					    
+    					    // If there is no error, the filename is kept
+    					    if(!$error) {
+                    $value .= ($value ? ';' : '') . $trimmedFileName;
+                  }
+  					    } else {
+                  $error = true;
+                }
+              } else {
+                // No file name, we keep the value in the row
+                $value .= ($value ? ';' : '') . $row[$fieldKey][$uid][$fileNameKey];
               }
 					  }
+					  
+	          // Adds the field to the row
+            if (!$errorField) {
+    					$row[$fieldKey][$uid] = $value;
+            }
 					}
 				}
 			}
-			// Unset the hidden parameter with the additional path to the uploadfolder
+
+			// Unsets the hidden parameter with the additional path to the uploadfolder
 			unset($row['addtouploadfolder']);
 			if ($error) {
         return $errorForm;
@@ -1591,7 +1611,7 @@ class tx_savlibrary_defaultQueriers {
 
 
 	/**
-	 * Get allowed Pages from the starting point and the storage page
+	 * Gets allowed Pages from the starting point and the storage page
 	 *
    * @param $table string (table name)
  	 *
@@ -1601,13 +1621,13 @@ class tx_savlibrary_defaultQueriers {
     if (!$table) {
       return '';
     } else {
-      // Add the starting point pages
+      // Adds the starting point pages
       if ($this->cObj->data['pages']) {
         $pageListArray = explode(',', $this->cObj->data['pages']);
       } else {
         $pageListArray = array();
       }
-      // Add the storage page
+      // Adds the storage page
       if ($this->savlibrary->conf['storagePage']) {
         $pageListArray[] = $this->savlibrary->conf['storagePage'];
       }
@@ -1619,7 +1639,7 @@ class tx_savlibrary_defaultQueriers {
   }
 
 	/**
-	 * Send an email.
+	 * Sends an email.
 	 *
    * @param $config array (configuration array containing email parameters)
 	 * @param $mA array (Marker array)
@@ -1645,7 +1665,7 @@ class tx_savlibrary_defaultQueriers {
           array()
         );
 
-      // Check if the query is a SELECT query and for errors
+      // Checks if the query is a SELECT query and for errors
       if (!$this->savlibrary->isSelectQuery($mailReceiverFromQuery)) {
         $this->savlibrary->addError('error.onlySelectQueryAllowed', $config['field']);
         return false;
@@ -1654,7 +1674,7 @@ class tx_savlibrary_defaultQueriers {
         return false;
       }
 
-        // Process the query
+        // Processes the query
       $row = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($res);
 
       foreach ($row as $k => $v) {
@@ -1668,19 +1688,19 @@ class tx_savlibrary_defaultQueriers {
     } 
 
     
-    // Check if a language configuration is set for the message
+    // Checks if a language configuration is set for the message
     if ($config['mailmessagelanguage']) {
 
-      // Save the current language key
+      // Saves the current language key
       $LLkey = $this->savlibrary->extObj->LLkey;
         
-      // Load the new LOCAL_LANG
+      // Loads the new LOCAL_LANG
       $this->savlibrary->extObj->LLkey = $config['mailmessagelanguage'];
       $this->savlibrary->extObj->LOCAL_LANG_loaded = false;
       $this->savlibrary->extObj->pi_loadLL();
     }          
 
-    // Check if the message contains localization variable,
+    // Checks if the message contains localization variable,
     //that is tags in the locallang.xml file. Tags are defined as §§§tag§§§.
     $mailMessage = $config['mailmessage'];
     if (preg_match_all('/\$\$\$([^§]+)\$\$\$/', $mailMessage, $matches)) {
@@ -1693,7 +1713,7 @@ class tx_savlibrary_defaultQueriers {
       }      
     }
 
-    // Check if the subject contains localization variable, that is tags in
+    // Checks if the subject contains localization variable, that is tags in
     // the locallang.xml file. Tags are defined as §§§tag§§§.
     $mailSubject = $config['mailsubject'];
     if (preg_match_all('/\$\$\$([^§]+)\$\$\$/', $mailSubject, $matches)) {
@@ -1706,14 +1726,14 @@ class tx_savlibrary_defaultQueriers {
       }      
     }
     
-    // Reset language          
+    // Resets language
     if ($config['mailmessagelanguage']) {
       $this->savlibrary->extObj->LLkey = $LLkey;
       $this->savlibrary->extObj->LOCAL_LANG_loaded = false;
       $this->savlibrary->extObj->pi_loadLL();
     }     
     
-    // Add markers       
+    // Adds markers
     $mA['###linkToPage###'] = str_replace(
       '<a href="',
       '<a href="' . t3lib_div::getIndpEnv('TYPO3_SITE_URL'),
@@ -1767,7 +1787,7 @@ class tx_savlibrary_defaultQueriers {
 
   
 	/**
-	 * Process ###field### tags.
+	 * Processes ###field### tags.
 	 *
    * @param $x string (string to process)
 	 * @param $row array (data used to replace the tags)
@@ -1785,11 +1805,11 @@ class tx_savlibrary_defaultQueriers {
 
       $tag = $matches[1][$key];
 
-      // Clean the tag 
+      // Cleans the tag
       $tag = preg_replace('/\\\\[^ ]+ /','' ,$tag);
 
-      // If the crypted tag is in the configuration, get the replacement string.
-      // Otherwise, replace NL by NL+\\par
+      // If the crypted tag is in the configuration, gets the replacement string.
+      // Otherwise, replaces NL by NL+\\par
       if ($config[$this->savlibrary->cryptTag($tag)]) {
         $temp = explode('->', $config[$this->savlibrary->cryptTag($tag)]);
         switch(trim($temp[0])) {
@@ -1834,7 +1854,7 @@ class tx_savlibrary_defaultQueriers {
   }
 
 	/**
-	 * Replace table names by their alias
+	 * Replaces table names by their alias
 	 *
    * @param $x string (string to process)
  	 *
@@ -1863,7 +1883,7 @@ class tx_savlibrary_defaultQueriers {
 
   
 	/**
-	 * Read rows and return an array with the tablenames
+	 * Reads rows and return an array with the tablenames
 	 *
    * @param $res integer (mySQL ressource)
 	 * @param $cpt integer (item counter)
@@ -1895,7 +1915,7 @@ class tx_savlibrary_defaultQueriers {
 
        
 	/**
-	 * Process tags in whereselect clause
+	 * Processes tags in whereselect clause
 	 *
    * @param $where string (string to process)
  	 *
@@ -1903,7 +1923,7 @@ class tx_savlibrary_defaultQueriers {
 	 */ 
   public function processWhereClause($where) {  
 
-    // Replace tags in the where clause if any
+    // Replaces tags in the where clause if any
     $where = str_replace('###user###', $GLOBALS['TSFE']->fe_user->user['uid'], $where);
     $where = str_replace('###uid###', $this->savlibrary->uid, $where);
     $temp = $GLOBALS['TSFE']->getStorageSiterootPids();
@@ -1914,7 +1934,7 @@ class tx_savlibrary_defaultQueriers {
       foreach ($matches[2] as $key => $match) {
         $groups = explode (',', str_replace(' ', '', $match)); 
         $clause = '';       
-        // Get the group list of uid
+        // Gets the group list of uid
         $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 				    /* SELECT   */	'uid,title',	
 				    /* FROM     */	'fe_groups',
@@ -1931,7 +1951,7 @@ class tx_savlibrary_defaultQueriers {
           }     
         }
     
-        // Replace the tag
+        // Replaces the tag
         if ($matches[1][$key]=='!') {
           $where = preg_replace(
             '/###group_list[ ]*!=([^#]*)###/',
@@ -1948,7 +1968,7 @@ class tx_savlibrary_defaultQueriers {
       }
     }
 
-    // Process conditionnal part
+    // Processes conditionnal part
     if (preg_match_all('/###([^:]+):([^#]+)###/', $where, $matches)) {
 
       foreach ($matches[1] as $key => $match) {
@@ -1957,7 +1977,7 @@ class tx_savlibrary_defaultQueriers {
         
         $func = $matchFunc[1];
         if ($func && method_exists($this->savlibrary, $func)) {
-          // Check if there is one parameter
+          // Checks if there is one parameter
           if ($matchFunc[2]) {
             if ($this->savlibrary->$func($matchFunc[2])) {
               $replace .= ' AND ' . $matches[2][$key];
@@ -1983,14 +2003,14 @@ class tx_savlibrary_defaultQueriers {
   }
 
 	/**
-	 * Build the configuration table from the view configuration
+	 * Builds the configuration table from the view configuration
 	 *
    * @param $viewConfiguration array (view configuration)
  	 *
 	 * @return array (Configuration table)
 	 */  
   protected function buildConfigurationTable($viewConfiguration) {
-    // Buid the configuration table
+    // Builds the configuration table
     $configTable = array();
 
     foreach ($viewConfiguration as $field => $config) {
@@ -2055,7 +2075,7 @@ class tx_savlibrary_defaultQueriers {
   }
   
 	/**
-	 * Build the aliases for tables
+	 * Builds the aliases for tables
 	 *
    * @param $tableName string (table name)
  	 *
@@ -2079,7 +2099,7 @@ class tx_savlibrary_defaultQueriers {
 
 
 	/**
-	 * Build the table reference
+	 * Builds the table reference
 	 *
    * @param $query array (query array)
 	 * @param $addTables string (additional tables)
@@ -2115,7 +2135,7 @@ class tx_savlibrary_defaultQueriers {
     }
 		t3lib_div::loadTCA('fe_users');
 
-    // Add the columns for existing tables
+    // Adds the columns for existing tables
     if (isset($this->extConfig['TCA'][$tableName])) {
       $temp = $this->extConfig['TCA'][$tableName];
       foreach ($temp as $fieldTemp => $descrTemp) {
@@ -2126,7 +2146,7 @@ class tx_savlibrary_defaultQueriers {
     $tableReference = $tableName;
 
     $tableArray = array();
-    // Build the reference       
+    // Builds the reference
     foreach ($TCA as $field => $descr) {
       $config = $descr['config'];
 
@@ -2156,10 +2176,16 @@ class tx_savlibrary_defaultQueriers {
         } elseif ($config['foreign_table']) {
           $alias1 = $this->buidAliasTable($config['foreign_table']);          
 
+          // Checks if there is a comma-separated MM relation
+          if ($config['maxitems'] > 1) {
+           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
+            ' ON (FIND_IN_SET(' . $alias1['table'] . '.uid, ' . $descr['tableLocal'] . '.' . $field . ')>0)';
+          } else {
           $tableReference .= ' LEFT JOIN ' . $alias1['def'] .
             ' ON (' . $alias1['table'] . '.uid=' . $descr['tableLocal'] . '.' . $field . ')';
+          }
           
-          // Check if a link is defined
+          // Checks if a link is defined
           $view = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
           if (is_array($view) && $this->savlibrary->folderTab == $this->savlibrary->cryptTag('0')) {
             reset($view);
@@ -2173,12 +2199,11 @@ class tx_savlibrary_defaultQueriers {
             $tableReference .= ' LEFT JOIN ' . $alias2['def'] .
               ' ON (' . $alias1['table'] . '.' . $extendLink . '=' . $alias2['table'] . '.uid)';
           }
-                  
         }
       }
     }
 
-    // Check for duplicate table names with addTables
+    // Checks for duplicate table names with addTables
     $addTablesArray = array();
     $temp = explode(',', $addTables);
     foreach ($temp as $key => $table) {
@@ -2188,8 +2213,8 @@ class tx_savlibrary_defaultQueriers {
     }
     $addTables = implode(',', $addTablesArray);
     
-    // Add the foreign table
-    // Check that the 'tableForeign' start either by LEFT JOIN, INNER JOIN or RIGHT JOIN or a comma
+    // Adds the foreign table
+    // Checks that the 'tableForeign' start either by LEFT JOIN, INNER JOIN or RIGHT JOIN or a comma
     if ($query['tableForeign']) {
       if (!preg_match('/^[\s]*(?i)(,|inner join|left join|right join)\s?([^ ]*)/', $query['tableForeign'], $match)) {
         $this->savlibrary->addError('error.incorrectQueryForeignTable');

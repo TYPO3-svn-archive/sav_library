@@ -17,11 +17,11 @@ $EM_CONF[$_EXTKEY] = array(
 	'author' => 'Yolf (Laurent Foulloy)',
 	'author_email' => 'yolf.typo3@orange.fr',
 	'shy' => '',
-	'dependencies' => 'kickstarter',
+	'dependencies' => '',
 	'conflicts' => '',
 	'priority' => '',
 	'module' => '',
-	'state' => 'beta',
+	'state' => 'stable',
 	'internal' => '',
 	'uploadfolder' => 0,
 	'createDirs' => '',
@@ -32,7 +32,6 @@ $EM_CONF[$_EXTKEY] = array(
 	'version' => '3.1.3',
 	'constraints' => array(
 		'depends' => array(
-			'kickstarter' => '0.4.0',
 		),
 		'conflicts' => array(
 		),

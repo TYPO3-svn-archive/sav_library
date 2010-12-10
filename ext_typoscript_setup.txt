@@ -1,7 +1,7 @@
 /***************************************************************
  * Copyright notice
  *
- * (c) 2009 Yolf (Laurent Foulloy) <yolf.typo3@orange.fr>
+ * (c) 2009 Laurent Foulloy <yolf.typo3@orange.fr>
  * All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is 
@@ -24,7 +24,7 @@
 /**
  * Default TS setup - Extension 'SAV Library'
  *
- * @author		Yolf <yolf.typo3@orange.fr>
+ * @author		Laurent Foulloy <yolf.typo3@orange.fr>
  * @version		0.0
  */
 
@@ -57,7 +57,7 @@ plugin.sav_library {
     .sav-library A:active {
       color:#4176FF; 
     } 
-  
+
       /**
       * Errors or messages
       */
@@ -73,7 +73,8 @@ plugin.sav_library {
     .sav-library-errors LI.error {
       background-color:inherit;
       color:red;
-    }   
+      padding-bottom:5px;
+    }
     .sav-library-messages LI.datasaved {
       background-color:inherit;
       color:red;
@@ -85,7 +86,8 @@ plugin.sav_library {
       */   
     .sav-library IMG {float:left; padding:0px 1px 0px 1px; margin:0px;border-width:0px;}      
     .sav-library IMG.toggleModeButton {width:18px; height:16px;}      
-    .sav-library IMG.inputModeButton {width:18px; height:16px;}           
+    .sav-library IMG.editButton {padding:0px 5px 0px 5px;}
+    .sav-library IMG.inputModeButton {width:18px; height:16px;}
     .sav-library IMG.printButton {width:18px; height:16px;}  
     .sav-library INPUT.generateRTFButton {width:20px; height:20px;}    
     .sav-library IMG.exportButton {padding-right:5px;}        
@@ -94,6 +96,7 @@ plugin.sav_library {
     .sav-library IMG.orderAscAbove {padding:3px 5px 0px 5px;}
     .sav-library IMG.orderDescBelow {clear:left;padding:3px 5px 0px 5px;}
     .sav-library IMG.printButton {width:18px; height:16px;}
+    .sav-library IMG.fileIcon {padding:0px 3px 0px 0px;}
     .sav-library INPUT.exportokButton {float:left;padding-right:5px;}
     .sav-library INPUT.submitButton {font-size:9px;margin-top:1px;}        
     .sav-library IMG.rightArrowButton {float:none; padding-left:2px;margin:0px;}      
@@ -131,7 +134,10 @@ plugin.sav_library {
       color:inherit;
       margin:0px;
       padding:0px; 
-    }    
+    }
+    .sav-library DIV.draftWorkspace {
+      background-color:#a9699C;
+    }
     .sav-library DIV.title DIV.titleIconLeft {
       float:left;
       background-color:inherit;
@@ -311,6 +317,10 @@ plugin.sav_library {
       padding:0px; 
     }    
         
+    .sav-library DIV.showAll DIV.items DIV.draftWorkspace {
+      background-color:#f1dbdd;
+    }
+
     .sav-library DIV.showAll DIV.items DIV.item DIV.itemIconLeft, .sav-library DIV.updateForm DIV.items DIV.item DIV.itemIconLeft, .sav-library DIV.printForm DIV.items DIV.item  DIV.itemIconLeft {
       float:left;
       padding:2px 5px 2px 2px; 
@@ -592,7 +602,13 @@ plugin.sav_library {
       vertical-align: baseline;
     }       
   
-  	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.checkbox {
+  	.sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.file {
+      clear:left;
+      float:left;
+      padding:0px 5px 0px 0px;
+		  margin:0px;
+    }
+    .sav-library DIV.showSingle DIV.items DIV.item DIV.value DIV.inner DIV.checkbox {
       float:left;
       padding:0px;
 		  margin:0px;
@@ -618,7 +634,7 @@ plugin.sav_library {
       clear:left;
       padding:0px;    
 		  margin:0px;
-    }   	
+    }
   	.sav-library DIV.showSingle DIV.items DIV.item DIV.export DIV.inner INPUT {
       float:left;
       padding:0px 5px 0px 5px;    
@@ -839,7 +855,10 @@ plugin.sav_library {
       float:left;
       padding:0px;    
 		  margin:0px;
-    }        
+    }
+    .sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner INPUT.file {
+      clear:left;
+    }
   	.sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner SELECT.multiple {
       float:left;
       padding:0px;
@@ -966,8 +985,8 @@ plugin.sav_library {
       vertical-align:middle;
     }
 
-    
-    /* Media print */ 
+
+    /* Media print */
     @media print {
 
       .break{
@@ -976,15 +995,15 @@ plugin.sav_library {
         width:1px;
         page-break-after:always;
         border: 1px solid white;
-      }   
-  
+      }
+
       .sav-library DIV.showAll, .sav-library DIV.printForm {float:left;border:none;overflow:visible;color:black;background-color:inherit;}
       .sav-library DIV.showAll DIV.title, .sav-library DIV.printForm DIV.title {font-size:12px;font-weight:bold;color:black;background-color:inherit;}
       .sav-library DIV.showAll DIV.block, .sav-library DIV.printForm DIV.block {float:none;border:none;}
-      .sav-library DIV.showAll DIV.blockTitle, .sav-library DIV.printForm DIV.blockTitle {border-top:solid 1px #004898;margin-top:10px;} 
-      .sav-library DIV.showAll DIV.items, .sav-library DIV.printForm DIV.items {float:none;border:none;}     
+      .sav-library DIV.showAll DIV.blockTitle, .sav-library DIV.printForm DIV.blockTitle {border-top:solid 1px #004898;margin-top:10px;}
+      .sav-library DIV.showAll DIV.items, .sav-library DIV.printForm DIV.items {float:none;border:none;}
       .sav-library DIV.showAll DIV.items DIV.item, .sav-library DIV.printForm DIV.items DIV.item {float:left;border:none;}
-        
+
      	* html .sav-library DIV.showAll DIV.items DIV.item DIV.value {
         float:left;
         padding:0px;
@@ -995,17 +1014,17 @@ plugin.sav_library {
         float:left;
         background-color:#ddddee;
         color:inherit;
-        padding:5px;   
+        padding:5px;
         margin:0px;
         width:150px;
       }
     	* html .sav-library DIV.inputForm DIV.items DIV.item DIV.value DIV.inner {
         float:left;
-        padding:2px 0px 0px 0px;     
+        padding:2px 0px 0px 0px;
         margin:0px;
         width:150px;
       }
-    }         
+    }
       
 	)
 }
