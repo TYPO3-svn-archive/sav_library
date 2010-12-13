@@ -88,6 +88,7 @@
 			<label index="error.isValidInterval">The input is not in the given interval.</label>
 			<label index="error.isValidPattern">The input does not verify the expected pattern.</label>
 			<label index="error.isValidQuery">The input does not verify the query verifier.</label>
+			<label index="error.maxFileSizeExceededInUpload">The size of the file exceeds the allowed size.</label>
 			<label index="error.missingDot">Separate the field name from the table name by a dot &quot;.&quot; in: %s.</label>
 			<label index="error.missingEqualSign">The sign = is missing in parameter: %s.</label>
 			<label index="error.missingLabel">Please contact the webMaster. Missing label: %s.</label>
