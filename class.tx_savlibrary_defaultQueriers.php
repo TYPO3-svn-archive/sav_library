@@ -1526,7 +1526,7 @@ class tx_savlibrary_defaultQueriers {
                 $func = $config['verifier'];
                 if ($func) {
                   if (method_exists($this->savlibrary->verifiers, $func)) {
-                    $temp = $this->savlibrary->verifiers->$func($value, $config['verifierparam']);
+                    $temp = $this->savlibrary->verifiers->$func($trimmedFileName, $config['verifierparam']);
                     if (!$errorForm[$fieldKey][$uid] && $temp) {
                       $errorForm[$fieldKey][$uid] = $temp;
                       $errorField = true;
