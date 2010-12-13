@@ -2572,7 +2572,7 @@ class tx_savlibrary_defaultItemviewers {
             }
           }
 
-          // Checkq fields are set in the subform
+          // Checks if fields are set in the subform
           if (!isset($config[$this->savlibrary->cryptTag('0')])) {
             $out = '<span class="error">' .
               $this->savlibrary->getLibraryLL('error.noFieldSelectedInSubForm') .
@@ -2580,6 +2580,7 @@ class tx_savlibrary_defaultItemviewers {
             return $out;
           }
 
+          $this->savlibrary->processSubForm = true;
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
@@ -2589,7 +2590,8 @@ class tx_savlibrary_defaultItemviewers {
             $config['errors'],
             $config['edit']
           );
-          
+          $this->savlibrary->processSubForm = false;
+
           $x['TYPE']= 'subFormItem';
           foreach ($x['REGIONS']['items'] as $key => $val) {
             $x['REGIONS']['items'][$key]['MARKERS']['icon'] = '';
@@ -2622,7 +2624,8 @@ class tx_savlibrary_defaultItemviewers {
               '</span>';
             return $out;
           }
-  		  
+
+          $this->savlibrary->processSubForm = true;
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
@@ -2632,6 +2635,7 @@ class tx_savlibrary_defaultItemviewers {
             $config['errors'],
             $config['edit']
           );
+          $this->savlibrary->processSubForm = false;
           $x['TYPE'] = 'subFormItem';          
 
           // Sets the class
@@ -2809,6 +2813,7 @@ class tx_savlibrary_defaultItemviewers {
     	
           // Parses the fields
       	  $this->savlibrary->rowItem = $config['_value'];
+          $this->savlibrary->processSubForm = true;
 		      $x = $this->savlibrary->generateFormTa(
             $config['name'],
             $row,
@@ -2818,6 +2823,7 @@ class tx_savlibrary_defaultItemviewers {
             $config['errors'],
             $config['edit']
           );
+          $this->savlibrary->processSubForm = false;
 
           $x['TYPE']= 'subFormItem';
           $x['MARKERS']['icon'] = '';
