@@ -87,7 +87,7 @@ class tx_savlibrary_defaultItemviewers {
 
     $htmlArray = array();
     
-    if (!$config['value']) {
+    if (!$config['value'] && !$config['keepzero']) {
       $htmlArray[] = '';
     } elseif ($config['tsobject']) {
       $htmlArray[] = $config['value'];
