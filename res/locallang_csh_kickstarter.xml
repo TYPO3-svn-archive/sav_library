@@ -125,7 +125,7 @@
         Sets the &quot;alt&quot; attribute with the content of the field whose name is given by field_name.
         
         &lt;b&gt;default = string;&lt;/b&gt;
-        Defines the default image if the content of the field is null otherwise the default image is “unknown.gif” taken in the directory sav_library/res/images.
+        Defines the default image if the content of the field is null otherwise the default image is "unknown.gif" taken in the directory sav_library/res/images.
         
         &lt;b&gt;tsProperties = string;&lt;/b&gt;
         It makes it possible to use the graphic possibilities of TYPO3. If set, an IMAGE cObject is generated with the given TS properties.
@@ -556,7 +556,7 @@
           'fieldmane-' =&gt; array('order' =&gt; 'tablename.fieldname desc'),
 
         &lt;b&gt;orderLinkInTitleSetup = string;&lt;/b&gt;
-        This property controls the display of the link when orderLinkInTitle is set. The format is “param1:param2:param3” where “param1” to “param3” can take the following values:
+        This property controls the display of the link when orderLinkInTitle is set. The format is "param1:param2:param3" where "param1" to "param3" can take the following values:
         . value: the field value is displayed,
         . link: the field value is displayed with a link with toggle the sort,
         . asc: an icon is displayed with a link to make an ascending sort,
@@ -567,7 +567,7 @@
 
         &lt;b&gt;query = SQL statements;&lt;/b&gt;
         The query will be executed once the input form data have been saved. Therefore, it can only be used with &quot;input&quot; or &quot;update&quot; views.
-        Because any query may be executed, for security reason, this property can only be used if an admin user has checked the field “Allow the use of the “query” property” in the advanced folder of the flexform.
+        Because any query may be executed, for security reason, this property can only be used if an admin user has checked the field "Allow the use of the "query" property" in the advanced folder of the flexform.
         It may be useful, for example, to update a specific table when the current data are saved. Several queries can be used in the SQL statements. Each query must be separated using &quot;\;&quot;.
         Special markers can be used in the statement :
         . ###uid### will be replaced by the current record uid.
@@ -649,14 +649,16 @@
         &lt;b&gt;graphTemplate = string;&lt;/b&gt;
         File name of the XML template from the site root.
         &lt;b&gt;markers = string;&lt;/b&gt;
-        Comma-separated list of definitions. Example: “marker#begin = ###beginPeriod###” means that the “marker” whose id is “begin”
-        in the template will be replaced by the marker “###beginPeriod###”, that is by the alias “beginPeriod”.
+        Comma-separated list of definitions. Example: "marker#begin = ###beginPeriod###" means that the "marker" whose id is "begin"
+        in the template will be replaced by the marker "###beginPeriod###", that is by the alias "beginPeriod".
       </label>
 			<label index="input.description">Attributes for &quot;String input&quot;</label>
 			<label index="input.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
 			<label index="input.syntax">
         &lt;b&gt;size = integer;&lt;/b&gt;
         Size of the field.
+        &lt;b&gt;keepZero=1;&lt;/b&gt;
+        If set and the field is equal to zero the "0" is displayed otherwise an empty field is displayed.
       </label>
 			<label index="link.description">Attributes for &quot;Link&quot;</label>
 			<label index="link.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
