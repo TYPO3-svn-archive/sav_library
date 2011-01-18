@@ -57,7 +57,10 @@ plugin.sav_library {
     .sav-library A:active {
       color:#4176FF; 
     } 
-
+    .sav-library .red {
+      color:red;
+    }
+    
       /**
       * Errors or messages
       */
@@ -125,7 +128,6 @@ plugin.sav_library {
       width:5px;
     }  
 
-    
         /* Title */
     .sav-library DIV.title {
       float:left;
@@ -369,7 +371,7 @@ plugin.sav_library {
       float:left;
       font-weight:bold;
       border-bottom:solid 1px #004898;
-      width:30%; 
+      width:30%;
       min-width:210px;
       padding-bottom:5px; 
       margin-bottom:5px;
@@ -421,13 +423,19 @@ plugin.sav_library {
       min-height:25px; 
     }
     .sav-library DIV.updateForm DIV.updateCol3 INPUT {
+      float:left;
       font-size:12px;
     }
     .sav-library DIV.updateForm DIV.updateCol3 SELECT {
+      float:left;
       font-size:12px;
     }
     .sav-library DIV.updateForm DIV.updateCol3 TEXTAREA {
+      float:left;
       font-size:12px;
+    }
+    .sav-library DIV.updateForm DIV.updateCol3 BR.checkbox{
+      clear:left;
     }
     .sav-library DIV.updateForm DIV.updateCol4 {
       float:right;

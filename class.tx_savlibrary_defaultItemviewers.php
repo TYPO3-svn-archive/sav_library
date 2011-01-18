@@ -778,6 +778,8 @@ class tx_savlibrary_defaultItemviewers {
       $htmlArray[] = utils::htmlTextareaElement(
         array(
           utils::htmlAddAttribute('name', $config['elementControlName']),
+          utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+          utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
           utils::htmlAddAttribute('cols', $config['cols']),
           utils::htmlAddAttribute('rows', $config['rows']),
           utils::htmlAddAttribute('onchange', 'document.changed=1;'),
@@ -1762,6 +1764,8 @@ class tx_savlibrary_defaultItemviewers {
         utils::htmlAddAttribute('name', $config['elementControlName'] .'[]'),
         utils::htmlAddAttribute('size', $config['size']),
         utils::htmlAddAttribute('onchange', 'document.changed=1;'),
+        utils::htmlAddAttributeIfNotNull('class', $config['classhtmltag']),
+        utils::htmlAddAttributeIfNotNull('style', $config['stylehtmltag']),
       ),
       $this->savlibrary->arrayToHTML($htmlOptionArray)
     );
