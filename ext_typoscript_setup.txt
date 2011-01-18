@@ -374,7 +374,12 @@ plugin.sav_library {
       padding-bottom:5px; 
       margin-bottom:5px;
     }    
-    
+    .sav-library DIV.showAll DIV.blockComment, .sav-library DIV.updateForm DIV.blockComment, .sav-library DIV.printForm DIV.blockComment  {
+      float:left;
+      clear:left;
+      padding-bottom:5px;
+      margin-bottom:5px;
+    }
 
       /* Update form */
     .sav-library DIV.updateForm DIV.label {
@@ -393,15 +398,15 @@ plugin.sav_library {
     .sav-library DIV.updateForm DIV.updateCol1 {
       clear:both; 
       float:left; 
-      width:20%;
-      min-width:140px; 
+      width:30%;
+      min-width:100px;
       font-weight:bold; 
       min-height:25px;    
     }
     .sav-library DIV.updateForm DIV.updateCol2 {
       float:left; 
       width:30%; 
-      min-width:210px; 
+      min-width:100px;
       min-height:25px; 
       padding:0px 10px 0px 10px;
     }
@@ -411,8 +416,8 @@ plugin.sav_library {
     }
     .sav-library DIV.updateForm DIV.updateCol3 {
       float:left; 
-      width:40%; 
-      min-width:300px; 
+      width:35%;
+      min-width:200px;
       min-height:25px; 
     }
     .sav-library DIV.updateForm DIV.updateCol3 INPUT {
