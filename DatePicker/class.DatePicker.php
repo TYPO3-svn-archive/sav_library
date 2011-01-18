@@ -49,7 +49,7 @@ class DatePicker {
 
   public function buildDatePickerSetup($datePickerConfiguration) {
     $datePickerSetup[] = '<a href="#">';
-    $datePickerSetup[] = '<img id="button_' . $datePickerConfiguration['id'] . '" src="typo3conf/ext/sav_library_mvc/Resources/Private/Icons/calendar.gif" alt="" title="" />';
+    $datePickerSetup[] = '<img id="button_' . $datePickerConfiguration['id'] . '" src="typo3conf/ext/sav_library/res/icons/calendar.gif" alt="" title="" />';
     $datePickerSetup[] = '</a>';
     $datePickerSetup[] = '<script type="text/javascript">';
     $datePickerSetup[] = '/*<![CDATA[*/';
