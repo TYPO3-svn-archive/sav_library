@@ -2517,6 +2517,7 @@ class tx_savlibrary_defaultItemviewers {
             ''
           )
 		  );
+
 		  $fields = $config['fullFieldName'];
       $value = '';
       
