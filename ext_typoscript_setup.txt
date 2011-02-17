@@ -418,7 +418,7 @@ plugin.sav_library {
     }
     .sav-library DIV.updateForm DIV.updateCol3 {
       float:left; 
-      width:35%;
+      width:34%;
       min-width:200px;
       min-height:25px; 
     }
@@ -449,7 +449,7 @@ plugin.sav_library {
       background-color:green; 
       margin-right:10px;
     }
-
+    
       /* Print form */
     .sav-library DIV.printForm DIV.label {
       float:left; 
