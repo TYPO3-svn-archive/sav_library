@@ -351,7 +351,7 @@ class tx_savlibrary_defaultQueriers {
     $error = false;
     
     // Builds the configuration table
-    $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
+    $viewConfiguration = $this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['fields'];
     $configTable = $this->buildConfigurationTable($viewConfiguration);
 
     // Gets the uploaded files
@@ -606,12 +606,12 @@ class tx_savlibrary_defaultQueriers {
 
     // Gets the view configuration
     if ($this->savlibrary->formConfig['updateForm']) {
-			$viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']][$this->savlibrary->folderTab]['fields'];
+			$viewConfiguration = $this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['fields'];
 			
 		  // Sets viewName for the page TSconfig
       $this->savlibrary->viewName = 'updateForm';
 		} else {
-		  $viewConfiguration = $this->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$this->savlibrary->folderTab]['fields'];
+		  $viewConfiguration = $this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['fields'];
 
 		  // Sets viewName for the page TSconfig
       $this->savlibrary->viewName = 'inputForm';
@@ -997,7 +997,7 @@ class tx_savlibrary_defaultQueriers {
         			/* WHERE   */	$table.'.uid=' . intval($uidWhere),
         			/* FIELDS  */	$fields
        			  );
-		
+
     				$this->savlibrary->uid = $uid;
           
           } else {
@@ -1101,7 +1101,7 @@ class tx_savlibrary_defaultQueriers {
       $ta = $this->savlibrary->generateFormTa(
         'items',
         $dataset,
-        $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']],
+        $this->extConfig['views'][$this->savlibrary->viewId],
         $errors,
         0
       );
@@ -1144,7 +1144,7 @@ class tx_savlibrary_defaultQueriers {
         $dataset[$configTable[$keyField]['fullFieldName']] = $value;
       }   
 
-      $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->extConfig['views'][$this->savlibrary->formConfig['updateForm']], $errors, 0);
+      $ta = $this->savlibrary->generateFormTa('items', $dataset, $this->extConfig['views'][$this->savlibrary->viewId], $errors, 0);
       foreach ($ta['REGIONS']['items'] as $item) {
         if (array_key_exists($item['MARKERS'][$item['MARKERS']['field'] . '_cryptedFieldName'], $newPOSTVars)) {
           $keyCryptedField = $item['MARKERS'][$item['MARKERS']['field'] . '_cryptedFieldName'];
@@ -1229,7 +1229,7 @@ class tx_savlibrary_defaultQueriers {
             $ta = $this->savlibrary->generateFormTa(
               'items',
               $dataset,
-              $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]],
+              $this->extConfig['views'][$this->savlibrary->viewId],
               $errors,
               0
             );
@@ -2186,7 +2186,7 @@ class tx_savlibrary_defaultQueriers {
           }
           
           // Checks if a link is defined
-          $view = $this->extConfig['views'][$this->savlibrary->formConfig[$this->savlibrary->viewName]];
+          $view = $this->extConfig['views'][$this->savlibrary->viewId];
           if (is_array($view) && $this->savlibrary->folderTab == $this->savlibrary->cryptTag('0')) {
             reset($view);
             $folderTab = key($view);

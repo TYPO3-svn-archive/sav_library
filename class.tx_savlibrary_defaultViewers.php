@@ -76,10 +76,10 @@ class tx_savlibrary_defaultViewers {
 	public function showAll_defaultViewer(&$dataset, &$fields, $errors='') {
 
     // If print icon is associated with a related view, calls it
-    if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
+    if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['relViewPrintIcon']) {
       return $this->printForm_defaultViewer(
         $dataset,
-        $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['relViewPrintIcon']],
+        $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['relViewPrintIcon']],
         $errors
       );
     }
@@ -270,7 +270,7 @@ class tx_savlibrary_defaultViewers {
 
     // Adds the print icon
     if ($this->savlibrary->inputIsAllowedInForm() || $this->savlibrary->userBelongsToAllowedGroup()) {
-      if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->folderTab]['addPrintIcon']) {
+      if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['addPrintIcon']) {
         $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton(
           $this->savlibrary->formName,
           0
@@ -366,10 +366,10 @@ class tx_savlibrary_defaultViewers {
 	public function showSingle_defaultViewer ($dataset, $fields, $errors='') {
 
     // If print icon is associated with a related view, call it
-    if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']) {
+    if (t3lib_div::_GET('print') && $this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['relViewPrintIcon']) {
       return $this->printForm_defaultViewer(
         $dataset,
-        $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['relViewPrintIcon']],
+        $this->extConfig['views'][$this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['relViewPrintIcon']],
         $errors
       );
     }
@@ -392,7 +392,7 @@ class tx_savlibrary_defaultViewers {
 
     // Add the print icon
     $ta['MARKERS']['titleIconRight'] = '';
-    if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->formConfig['showSingle']][$this->savlibrary->folderTab]['addPrintIcon']) {
+    if ($this->savlibrary->extObj->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['addPrintIcon']) {
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->printButton(
         $this->savlibrary->formName,
         $dataset[0]['uid']
@@ -415,7 +415,6 @@ class tx_savlibrary_defaultViewers {
     
     // Adds the edit button
     if ($this->savlibrary->userIsAllowedToInputData() && $this->savlibrary->userIsAdmin($dataset[0])) {
-//      $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->editButton(
       $ta['MARKERS']['titleIconRight'] .= $this->savlibrary->inputModeButton(
         $this->savlibrary->formName,
         $dataset[0]['uid']
@@ -437,10 +436,8 @@ class tx_savlibrary_defaultViewers {
 	 */
 
 	public function inputForm_defaultViewer($dataset, $fields, $errors='') {
-	
-    // local variables
-    $viewId = $this->savlibrary->formConfig['inputForm'];
 
+    // Gets the data
 		$row = $dataset[0];
 		if (!$row['uid']) {
 			$row['uid'] = 0;
@@ -469,7 +466,7 @@ class tx_savlibrary_defaultViewers {
     }      
 		
     // Add the print icon
-    if ($this->extConfig['views'][$this->savlibrary->formConfig['inputForm']][$this->savlibrary->folderTab]['addPrintIcon']) {
+    if ($this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['addPrintIcon']) {
       $ta['MARKERS']['titleIconLeft'] .= $this->savlibrary->printButton(
         $this->savlibrary->formName,
         $dataset[0]['uid']
@@ -1254,8 +1251,8 @@ class tx_savlibrary_defaultViewers {
 
       // Build Alias fields. An alias field is defined by a reqValue attribute in the showAll form
       $aliasFields = array();
-      if (is_array($this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->cryptTag('0')]['fields'])) {
-        foreach ($this->extConfig['views'][$this->savlibrary->formConfig['showAll']][$this->savlibrary->cryptTag('0')]['fields'] as $keyField => $valueField) {
+      if (is_array($this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->cryptTag('0')]['fields'])) {
+        foreach ($this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->cryptTag('0')]['fields'] as $keyField => $valueField) {
           if (array_key_exists('reqvalue', $valueField['config'])) {
             $name = 'showAll_' . $valueField['config']['field'];
             $this->savlibrary->queriers->sqlFieldsExport[$cpt++]->name = $name;

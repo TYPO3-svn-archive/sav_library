@@ -585,15 +585,33 @@ class tx_savlibrary_defaultItemviewers {
 	 * @return string (item to display)
 	 */	  
   public function viewRadioEditMode(&$config) {
-  
+
     $htmlArray = array();
     
     if (is_array($config['items'])) {
       $cols = ($config['cols'] ? $config['cols'] : 1);
       $cpt = 0;
       $val = $config['value'];
+
+      // Checks if one item is selected
       foreach ($config['items'] as $key => $value) {
-        $checked = ($val == $value[1] ? 'checked' : '');
+        if ($val == $value[1]) {
+          $selectedItemIkey = $key;
+        }
+      }
+      // Sets the default if no item where selected and a default exists
+      if (!isset($selectedItemIkey) && isset($config['default'])) {
+        foreach ($config['items'] as $key => $value) {
+          if ($config['default'] == $value[1]) {
+            $selectedItemIkey = $key;
+          }
+        }
+      }
+
+      // Builds the radio buttons
+      foreach ($config['items'] as $key => $value) {
+        $checked = (isset($selectedItemIkey) && $selectedItemIkey == $key ? 'checked' : '');
+//        $checked = ($val == $value[1] ? 'checked' : '');
 
         // Adds the radio input element
         $htmlArray[] = utils::htmlInputRadioElement(
@@ -681,7 +699,7 @@ class tx_savlibrary_defaultItemviewers {
 				$this->RTEcounter++;
 				
 				$pageTSConfig = t3lib_BEfunc::getPagesTSconfig($GLOBALS['TSFE']->id);
-				$thisConfig = $pageTSConfig['RTE.']['default.']['FE.'];
+				$thisConfig = array_merge(array('rteResize' => 1), $pageTSConfig['RTE.']['default.']['FE.']);
 			  $specConf = array(
           'richtext' => 1,
           'rte_transform' => array(

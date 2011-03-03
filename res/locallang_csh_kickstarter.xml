@@ -686,10 +686,10 @@
 			<label index="radio.syntax">
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.     
-
         &lt;b&gt;displayAsImage = 1;&lt;/b&gt;
         If set, the radio buttons are displayed as images instead of labels.
-
+        &lt;b&gt;default = integer;&lt;/b&gt;
+        Default value for the radio buttons.
       </label>
 			<label index="rel.description">Attributes for &quot;Database relation&quot;</label>
 			<label index="rel.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
