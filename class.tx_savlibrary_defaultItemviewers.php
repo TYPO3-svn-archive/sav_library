@@ -590,6 +590,8 @@ class tx_savlibrary_defaultItemviewers {
     
     if (is_array($config['items'])) {
       $cols = ($config['cols'] ? $config['cols'] : 1);
+      $cols = ($config['horizontallayout'] ? count($config['items']) : $cols);
+
       $cpt = 0;
       $val = $config['value'];
 
