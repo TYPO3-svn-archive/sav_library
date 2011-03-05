@@ -330,7 +330,7 @@ class tx_savlibrary_defaultQueriers {
 	 */
 	public function updateForm_SELECT_defaultQuerier(&$query, $uid=0) {
 	
-		  // Adds or replaces the query with the page TSconfig if any
+		// Adds or replaces the query with the page TSconfig if any
     $pageTSConfig = $GLOBALS['TSFE']->getPagesTSconfig();
     $fieldTSConfig = $pageTSConfig[$this->savlibrary->tsConfigPluginName . '.']
       [$this->savlibrary->formConfig['title'] . '.']['updateForm.']['query.'];
@@ -349,7 +349,7 @@ class tx_savlibrary_defaultQueriers {
     // Gets the variable
     $extPOSTVars = t3lib_div::_POST($this->savlibrary->formName); 
     $error = false;
-    
+
     // Builds the configuration table
     $viewConfiguration = $this->extConfig['views'][$this->savlibrary->viewId][$this->savlibrary->folderTab]['fields'];
     $configTable = $this->buildConfigurationTable($viewConfiguration);
