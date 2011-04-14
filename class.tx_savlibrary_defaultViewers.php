@@ -906,7 +906,9 @@ class tx_savlibrary_defaultViewers {
 	 */
 
 	public function export_defaultViewer ($dataset, $fields, $errors='') {
-
+    // Fields configuration is not used. Resets the variables
+    $fields = array();
+    
     // Check if data were posted
     $extPOSTVars = t3lib_div::_POST($this->savlibrary->formName);
 
@@ -957,19 +959,21 @@ class tx_savlibrary_defaultViewers {
       } elseif (isset($extPOSTVars['saveExportConfiguration'])) {
         unset($extPOSTVars['saveExportConfiguration']);
   			$fields['tstamp'] = time();
-        
+
         if (!$extPOSTVars['configuration'][0]) {  
   				$fields['cruser_id'] = $GLOBALS['TSFE']->fe_user->user['uid'];
   				$fields['crdate'] = time();
           $fields['pid'] = $GLOBALS['TSFE']->id;
           $fields['cid'] = $this->cObj->data['uid'];
-                     
+
    				$res = $GLOBALS['TYPO3_DB']->exec_INSERTquery(
     				/* TABLE   */	$table,
     				/* FIELDS  */	$fields
     			);
+
     			$extPOSTVars['configuration'][0] = $GLOBALS['TYPO3_DB']->sql_insert_id($res);
-    		} else {
+
+        } else {
           $res = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
   				  /* SELECT   */	'*',
   				  /* FROM   */	$table,

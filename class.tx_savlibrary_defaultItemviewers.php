@@ -613,7 +613,6 @@ class tx_savlibrary_defaultItemviewers {
       // Builds the radio buttons
       foreach ($config['items'] as $key => $value) {
         $checked = (isset($selectedItemIkey) && $selectedItemIkey == $key ? 'checked' : '');
-//        $checked = ($val == $value[1] ? 'checked' : '');
 
         // Adds the radio input element
         $htmlArray[] = utils::htmlInputRadioElement(
@@ -734,8 +733,7 @@ class tx_savlibrary_defaultItemviewers {
         
         // Adds onchange
 				$out = preg_replace('/<textarea ([^>]*)>/',
-          '<textarea $1' . ' cols="' . $config['cols'] . '" rows="' .
-          $config['rows'] . '" onchange="document.changed=1;">'	,
+          '<textarea $1 onchange="document.changed=1;">'	,
           $out
         );
 				
@@ -784,6 +782,13 @@ class tx_savlibrary_defaultItemviewers {
         );
 		    $js[] = '</script>';
         $GLOBALS['TSFE']->additionalHeaderData['rtehtmlarea'] .= implode('', $js);
+
+        // Corrects the bug #0017763
+        if ($this->RTEcounter == 1) {
+          $this->additionalHeaderData_rtehtmlarea = $GLOBALS['TSFE']->additionalHeaderData['rtehtmlarea'];
+        } else {
+          $GLOBALS['TSFE']->additionalHeaderData['rtehtmlarea'] = $this->additionalHeaderData_rtehtmlarea;
+        }
 
         // Replaces [ and ] in the id
 		    $this->updateRTEList .= preg_replace('/RTEarea\[\'([^\']*)\'\]/e',

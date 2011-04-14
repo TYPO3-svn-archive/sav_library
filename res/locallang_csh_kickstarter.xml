@@ -73,6 +73,9 @@
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
         Do not display the default date.
+
+        &lt;b&gt;resetToDefault = 1;&lt;/b&gt;
+        If set, the field value is reset to the current date in the input mode.
       </label>
 			<label index="datetime.description">Attributes for &quot;datetime&quot;</label>
 			<label index="datetime.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
@@ -82,6 +85,9 @@
         
         &lt;b&gt;noDefault = 1;&lt;/b&gt;
         Do not display the default date and time.
+        
+        &lt;b&gt;resetToDefault = 1;&lt;/b&gt;
+        If set, the field value is reset to the current date in the input mode.
       </label>
 			<label index="files.description">Attributes for &quot;files&quot;</label>
 			<label index="files.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
@@ -687,9 +693,11 @@
         &lt;b&gt;cols = integer;&lt;/b&gt;
         Number of columns to display.     
         &lt;b&gt;displayAsImage = 1;&lt;/b&gt;
-        If set, the radio buttons are displayed as images instead of labels.
+        If set to 1, the radio buttons are displayed as images instead of labels.
         &lt;b&gt;default = integer;&lt;/b&gt;
         Default value for the radio buttons.
+        &lt;b&gt;horizontalLayout = 1;&lt;/b&gt;
+        If set to 1, radio buttons are displayed horizontally in edit forms.
       </label>
 			<label index="rel.description">Attributes for &quot;Database relation&quot;</label>
 			<label index="rel.seeAlso">sav_library:all,sav_library:functions,sav_library:general</label>
