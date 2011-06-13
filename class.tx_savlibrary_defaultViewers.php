@@ -1669,7 +1669,6 @@ class tx_savlibrary_defaultViewers {
             // Exec the command
             exec ($cmd);
 
-
             return $ta;
           }
         }
@@ -1695,7 +1694,7 @@ class tx_savlibrary_defaultViewers {
    ***************************************************************/
 
  	/**
-	 * Process a row
+	 * Processes a row
 	 *
 	 * @param	$row array		row of data
 	 * @param $extPOSTVars  array POST array
@@ -1729,7 +1728,7 @@ class tx_savlibrary_defaultViewers {
               'input'
             );
 
-           	// Process the query
+           	// Processes the query
             $queryReqValue = $config['reqvalue'];
             $table = $config['table'];
             if (preg_match_all('/###row\[([^\]]+)\]###/', $queryReqValue, $matches)) {
@@ -1752,7 +1751,7 @@ class tx_savlibrary_defaultViewers {
                 array()
             );
 
-            // Check if the query is a SELECT query and for errors
+            // Checks if the query is a SELECT query and for errors
             if (!$this->savlibrary->isSelectQuery($queryReqValue)) {
               $this->savlibrary->addError(
                 'error.onlySelectQueryAllowed',
@@ -1767,7 +1766,7 @@ class tx_savlibrary_defaultViewers {
               continue;
             }
 
-            // Process the query
+            // Processes the query
 		        $value='';
 		        while ($rows = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($resLocal)) {
 		          if (array_key_exists('value',$rows)) {
@@ -1818,7 +1817,7 @@ class tx_savlibrary_defaultViewers {
             $value = $config['value'];
           }
           
-          // Convert
+          // Converts
           $arrValues['###' . $field . '###'] = $value;
         } elseif (preg_match('/ (as|AS) ' . $field . '/', $extPOSTVars['additionalFields'][0])) {
           $arrValues['###' . $field . '###'] = stripslashes($row[$field]);
@@ -1830,7 +1829,7 @@ class tx_savlibrary_defaultViewers {
 
    
  	/**
-	 * Process the XML file
+	 * Processes the XML file
 	 *
 	 * @param	$row array		row of data
 	 * @param $markerArray  array of markers
@@ -1841,23 +1840,23 @@ class tx_savlibrary_defaultViewers {
 
     // Special processing
     foreach ($markerArray as $key => $value) {
-      // Replace & by &amp;
+      // Replaces & by &amp;
       $markerArray[$key] = str_replace('& ', '&amp; ', $markerArray[$key]);
 
-      // Suppress empty tags
+      // Suppresses empty tags
       $markerArray[$key] = preg_replace('/<[^\/>][^>]*><\/[^>]+>/', '', $markerArray[$key]);
     }
 
-    // Set the file Path
+    // Sets the file Path
     $filePath = PATH_site . 'typo3temp/' . $this->extKey . '/';
     
-    // Check if a replaceDistinct id has changed
+    // Checks if a replaceDistinct id has changed
     foreach ($this->xmlReferenceArray as $key => $value) {
       switch ($value['type']) {
         case 'replacedistinct':
           if ($row[$value['id']] != $value['fieldValue']) {
             if (!is_null($value['fieldValue'])) {
-              // Set all the previous replaceDistinct ids to "changed"
+              // Sets all the previous replaceDistinct ids to "changed"
               $this->recursiveChangeField($key, 'changed', true);
             }
             $this->xmlReferenceArray[$key]['fieldValue'] = $row[$value['id']];
@@ -1866,7 +1865,7 @@ class tx_savlibrary_defaultViewers {
       }
     }
 
-    // Process the replaceDistinct and cutter parts
+    // Processes the replaceDistinct and cutter parts
     foreach ($this->xmlReferenceArray as $key => $value) {
       switch ($value['type']) {
         case 'emptyifsameasprevious':
@@ -1878,12 +1877,12 @@ class tx_savlibrary_defaultViewers {
             array(),
             array()
           );
-          // Keep the value in the XML reference array
+          // Keeps the value in the XML reference array
           $this->xmlReferenceArray[$key]['fieldValue'] = $buffer;
           break;
         case 'replacedistinct':
           if ($value['changed']) {
-            // Parse the template with the previous known markers
+            // Parses the template with the previous known markers
             $buffer = utf8_decode($value['template']);
             $buffer = $this->cObj->substituteMarkerArrayCached(
               $buffer,
@@ -1916,7 +1915,7 @@ class tx_savlibrary_defaultViewers {
           // Set the file name
           $fileName = $key . '.xml';
 
-          // Set the field value
+          // Sets the field value
           $value['fieldValue'] = $row[$value['id']];
           
           // The processing of the cutters depends on their place with respect to the replaceAlways attribute
@@ -1960,10 +1959,10 @@ class tx_savlibrary_defaultViewers {
               break;
           }
 
-          // Check if the field must be replaced
+          // Checks if the field must be replaced
           if ($value['changed'] && !$condition) {
 
-            // replace markers in the template
+            // Replaces markers in the template
             $buffer = utf8_decode($value['template']);
             $buffer = $this->cObj->substituteMarkerArrayCached(
                 $buffer,
@@ -1989,21 +1988,21 @@ class tx_savlibrary_defaultViewers {
             }
           }
 
-          // Update the previous fied value
+          // Updates the previous fied value
           $this->xmlReferenceArray[$key]['previousFieldValue'] = $value['fieldValue'];
 
           break;
       }
     }
     
-    // Process the replaceAlways part
+    // Processes the replaceAlways part
     foreach ($this->xmlReferenceArray as $key => $value) {
       switch ($value['type']) {
         case 'replacealways':
 
 		      $fileName = $key . '.xml';
 
-          // replace markers in the template
+          // Replaces markers in the template
           $buffer = utf8_decode($value['template']);
           $buffer = $this->cObj->substituteMarkerArrayCached(
             $buffer,
@@ -2019,14 +2018,14 @@ class tx_savlibrary_defaultViewers {
       }
     }
 
-    // Keep the marker array
+    // Keeps the marker array
     $this->previousMarkerArray = $markerArray;
 
     return true;
   }
 
  	/**
-	 * Process the last markers in the XML file
+	 * Processes the last markers in the XML file
 	 *
 	 * @param	$row array		row of data
 	 * @param $markerArray  array of markers
@@ -2035,7 +2034,7 @@ class tx_savlibrary_defaultViewers {
 	 */
 	public function postprocessXmlReferenceArray($row, $markerArray) {
 
-    // Mark all references as changed
+    // Marks all references as changed
     $replacedistinct = FALSE;
     foreach($this->xmlReferenceArray as $key => $value) {
       $this->xmlReferenceArray[$key]['changed'] = true;
@@ -2046,7 +2045,7 @@ class tx_savlibrary_defaultViewers {
       }
     }
     
-    // Process all the references one more time
+    // Processes all the references one more time
     if ($replacedistinct) {
       if (!$this->processXmlReferenceArray($row, $markerArray)) {
         return false;
@@ -2056,7 +2055,7 @@ class tx_savlibrary_defaultViewers {
     // Set the file Path
     $filePath = PATH_site . 'typo3temp/' . $this->extKey . '/';
 
-    // Convert to utf8 only for replaceLast
+    // Converts to utf8 only for replaceLast
     $utf8Encode = false;
     $altPattern =  '';
 
@@ -2068,7 +2067,7 @@ class tx_savlibrary_defaultViewers {
           $altPattern = '/(?s)(.*)(###)(REF_[^#]+)(###)(.*)/';
         case 'replacelastbutone':
 
-          // Parse the template with the previous known markers
+          // Parses the template with the previous known markers
           $buffer = utf8_decode($value['template']);
           $buffer = $this->cObj->substituteMarkerArrayCached(
             $buffer,
@@ -2091,7 +2090,7 @@ class tx_savlibrary_defaultViewers {
   
   
  	/**
-	 * Change a giben field value for all the child of a node
+	 * Changes a given field value for all the child of a node
 	 *
 	 * @param	$keySearch string key
 	 * @param	$setField string field to change
@@ -2109,7 +2108,7 @@ class tx_savlibrary_defaultViewers {
   }
   
  	/**
-	 * Unlink the file associated with a replaceAlways item
+	 * Unlinks the file associated with a replaceAlways item
 	 *
 	 * @param	$filePath string	file path
 	 * @param	$keySearch string key
@@ -2129,7 +2128,7 @@ class tx_savlibrary_defaultViewers {
   }
 
  	/**
-	 * Check if the key is a child of a replaceAlways item
+	 * Checks if the key is a child of a replaceAlways item
 	 *
 	 * @param	$keySearch string key
 	 *
@@ -2167,7 +2166,7 @@ class tx_savlibrary_defaultViewers {
 
   		  if ($fileHandle = fopen($filePath . $fileName, 'a')) {
 
-          // replace markers in the template
+          // Replaces markers in the template
           $buffer = $matches[1][$keyMatch];
           $buffer = ($utf8Encode ? utf8_encode($buffer): $buffer);
           $buffer = $this->savlibrary->processConstantTags($buffer);
@@ -2216,26 +2215,37 @@ class tx_savlibrary_defaultViewers {
         }
       }
     } else {
-      // No REF_ marker, just create the reference file with the template
+      // No REF_ marker, just creates the reference file with the template
   		if ($fileHandle = fopen($filePath . $fileName, 'a')) {
 
-        // Replace the localization markers
+        // Replaces the localization markers
         $buffer = $template;
 
-        // Check if there exists SPECIAL_REF markers
+        // Checks if there exists SPECIAL_REF markers
         if (preg_match_all('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', $buffer, $matches)) {
+
           foreach($matches[0] as $keyMatch => $match) {
-            if ($this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'] != $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']) {
-              if (is_null($this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue'])) {
-                $buffer = str_replace($match, $this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'], $buffer);
-                $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']  = $this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'];
-              } else {
-                $buffer = preg_replace('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', '$1$3', $buffer);
-                $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']  = NULL;
-              }
+
+            // First item, replaces thee marker by the field value and sets xmlFusion to true
+            if (is_null($this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue'])) {
+              $buffer = str_replace($match, $this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'], $buffer);
+              $this->xmlFusion = true;
             } else {
-              $buffer = preg_replace('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', '$1$3', $buffer);
+              // Next items
+              if ($this->xmlFusion == true) {
+                // Fusion with the previous item is set, just removes the marker
+                $buffer = preg_replace('/(<[^>]+>)###SPECIAL_(REF_[^#]+)###(<\/[^>]+>)/', '$1$3', $buffer);
+              } else {
+                // Fusion is not set, uses the previous field value to replace the marker
+                $buffer = str_replace($match, $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue'], $buffer);
+                $this->xmlFusion = true;
+              }
+              // Checks if current and previous fields are the different to clear the fusion
+              if ($this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'] != $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']) {
+                $this->xmlFusion = false;
+              }
             }
+            $this->xmlReferenceArray[$matches[2][$keyMatch]]['previousFieldValue']  = $this->xmlReferenceArray[$matches[2][$keyMatch]]['fieldValue'];
           }
         }
 
@@ -2268,7 +2278,7 @@ class tx_savlibrary_defaultViewers {
 	 */
   function processXml($element) {
 
-    // Process recursively all nodes
+    // Processes recursively all nodes
     foreach ($element->children() as $child) {
       if(!$this->processXml($child)) {
         return false;
@@ -2287,7 +2297,7 @@ class tx_savlibrary_defaultViewers {
       $this->xmlReferenceArray[$reference]['previousFieldValue'] = NULL;
       $this->xmlReferenceArray[$reference]['parent'] = NULL;
 
-      // Check if a reference id has to be set
+      // Checks if a reference id has to be set
       switch ($this->xmlReferenceArray[$reference]['type']) {
         case 'replacedistinct':
         case 'cutifnull':
@@ -2310,25 +2320,25 @@ class tx_savlibrary_defaultViewers {
           break;
       }
       
-      // Remove the repeat attributes
+      // Removes the repeat attributes
       unset($element[0]['sav_type']);
       unset($element[0]['sav_id']);
       unset($element[0]['sav_value']);
 
-      // Set the template
+      // Sets the template
       $template = $element->asXML();
 
-      // Check if there is an xml header in the template
+      // Checks if there is an xml header in the template
       if(preg_match('/^<\?xml[^>]+>/', $template, $match)) {
 
-        // Remove the header
+        // Removes the header
         $template = str_replace($match[0], '', $template);
         $this->xmlReferenceArray[$reference]['template'] = $template;
         if (!$this->xmlReferenceArray[$reference]['type']) {
           $this->xmlReferenceArray[$reference]['type'] = 'replacelastbutone';
         }
 
-        // Set the template with relaceLast type
+        // Sets the template with relaceLast type
         $lastReference = 'REF_' . (int)$this->referenceCounter++;
         $this->xmlReferenceArray[$lastReference]['template'] = $match[0] . '###' . $reference . '###';
         $this->xmlReferenceArray[$lastReference]['type'] = 'replacelast';
@@ -2336,12 +2346,12 @@ class tx_savlibrary_defaultViewers {
         $this->xmlReferenceArray[$reference]['template'] = $template;
       }
 
-      // Delete all the children
+      // Deletes all the children
       foreach ($element->children() as $child) {
         unset($element->$child);
       }
 
-      // Replace the node by the reference or a special reference
+      // Replaces the node by the reference or a special reference
       switch ($this->xmlReferenceArray[$reference]['type']) {
         case 'emptyifsameasprevious':
           $element[0] = '###SPECIAL_' . $reference . '###';
@@ -2354,11 +2364,11 @@ class tx_savlibrary_defaultViewers {
     } else {
 
       $template = $element->asXML();
-      // Check if there is an xml header in the template
+      // Checks if there is an xml header in the template
       if(preg_match('/^<\?xml[^>]+>/', $template, $match)) {
         $reference = 'REF_' . (int)$this->referenceCounter++;
 
-        // Remove the header
+        // Removes the header
         $template = str_replace($match[0], '', $template);
         $this->xmlReferenceArray[$reference]['template'] = $template;
         if (!$this->xmlReferenceArray[$reference]['type']) {
@@ -2369,11 +2379,11 @@ class tx_savlibrary_defaultViewers {
         $lastReference = 'REF_' . (int)$this->referenceCounter++;
         $this->xmlReferenceArray[$lastReference]['template'] = $match[0] . '###' . $reference . '###';
         $this->xmlReferenceArray[$lastReference]['type'] = 'replacelast';
-        // Delete all the children
+        // Deletes all the children
         foreach ($element->children() as $child) {
           unset($element->$child);
         }
-        // Replace the node by the reference
+        // Replaces the node by the reference
         $element[0] = '###' . $reference . '###';
       }
     }
@@ -2382,7 +2392,7 @@ class tx_savlibrary_defaultViewers {
 
 
 	/**
-	 * build an item array
+	 * Builds an item array
 	 *
 	 * @param	$markers array		item array containing the marker configurations
 	 * @param	$cutters array		item array containing the cuuter configurations

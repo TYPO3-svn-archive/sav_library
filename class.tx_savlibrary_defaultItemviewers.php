@@ -2122,7 +2122,7 @@ class tx_savlibrary_defaultItemviewers {
                 ) .
   			        (
                   ($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ?
-                  ' AND ' . $table . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' :
+                  ' AND ' . $table . '.pid IN (' . $this->savlibrary->extObj->pi_getPidList($this->savlibrary->extObj->cObj->data['pages'], $this->savlibrary->extObj->cObj->data['recursive']) . ')' :
                   ''
                 ) .
   						  (
@@ -2226,7 +2226,7 @@ class tx_savlibrary_defaultItemviewers {
         ) .
  			  (
           ($this->savlibrary->extObj->cObj->data['pages'] && !$config['overridestartingpoint']) ?
-          ' AND ' . $foreign_table . '.pid IN (' . $this->savlibrary->extObj->cObj->data['pages'] . ')' :
+          ' AND ' . $foreign_table . '.pid IN (' . $this->savlibrary->extObj->pi_getPidList($this->savlibrary->extObj->cObj->data['pages'], $this->savlibrary->extObj->cObj->data['recursive']) . ')' :
           ''
         ).
 				(
