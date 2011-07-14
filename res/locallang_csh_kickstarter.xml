@@ -617,6 +617,11 @@
         Localization markers $$$tag$$$ can also be used. The tag will be replaced by its value according to the configuration language.
         Do not forget that the configuration field is ended by a semi-column, therefore if you need a semi-column in your TS write it &quot;\;&quot;
 
+        &lt;b&gt;value = string;&lt;/b&gt;
+        The value of the field will be directly provided by the string instead of the record value.
+        Localization by means of the file locallang.xml can be used with $$$tag$$$ which will be replaced by its value according to the configuration language.
+        Markers ###fieldname### are allowed and will be replaced by their current value.
+        
         &lt;b&gt;verifier = verifier_name;&lt;/b&gt;
         Verifiers can be used to check if a field satisfy a constraint. Each field can have one verifier. Each verifier is associated with a parameter.
         Verifiers can be defined by the user. They must be added in the class tx_savlibrary_verifiers defined in the file: class.tx_savlibrary_verifiers.php.
